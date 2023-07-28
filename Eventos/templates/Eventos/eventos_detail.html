@@ -1,0 +1,176 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block title %}Eventos{% endblock %}
+{% block titulo-pagina %}Eventos{% endblock %};
+{% block breadcrumb %}
+<ol class="breadcrumb float-sm-right px-3">
+    <li class="breadcrumb-item "><a href="{% url 'eventos_listar' %}"
+            class="text-muted text-decoration-none">Eventos</a></li>
+    <li class="breadcrumb-item "> {{ object.nombre}}</li>
+</ol>
+{% endblock %};
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-3">
+        <div class="card card-primary card-outline">
+            <div class="card-header mr-2 ml-2 mt-2 p-0">
+                {% if object.foto != "default.png"%}
+                <img class="card-img-top" src="{{object.foto.url}}" alt="Foto evento" />
+                {% else %}
+                <img class="card-img-top" src="{% static 'images/perfil.png'%}" alt="Foto evento" />
+                {% endif %}
+            </div>
+            <div class="card-footer card-comments p-2">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item"></li>
+                    <li class="nav-item">
+                        <div class="comment-text">
+                            Estado
+                            <span class="username">
+                                {% if object.activo %}
+                                <span class="text-success">Activo</span>
+                                {% else %}
+                                <span class="text-danger">Desactivado</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-5">
+        <div class="row">
+            <div class="col">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Datos del Evento
+                        </div>
+                    </div>
+                    <div class="card-footer card-comments p-2">
+                        <ul class="nav nav-pills flex-column">
+
+                            <li class="nav-item">
+                                <div class="comment-text">
+                                    Nombre
+                                    <span class="username">{{object.nombre|default_if_none:"-"|default:"-"}}</span>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="comment-text">
+                                    Fecha
+                                    <span class="username">{{object.fecha|default_if_none:"-"|default:"-"}} -
+                                        {{object.hora|default_if_none:"-"|default:"-"}}:{{object.minutos|default_if_none:"-"|default:"-"}}</span>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="comment-text">
+                                    Modo
+                                    <span class="username">{{object.modo|default_if_none:"-"|default:"-"}}</span>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="comment-text">
+                                    Lugar
+                                    <span class="username">{{object.lugar|default_if_none:"-"|default:"-"}}</span>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="comment-text">
+                                    Calle
+                                    <span class="username">{{object.calle|default_if_none:"-"|default:"-"}}
+                                        {{object.altura|default_if_none:"-"|default:"-"}}</span>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="comment-text">
+                                    Telefono
+                                    <span class="username">{{object.telefono|default_if_none:"-"|default:"-"}}</span>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="comment-text">
+                                    Web
+                                    <span class="username">{{object.web|default_if_none:"-"|default:"-"}}</span>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="comment-text">
+                                    Observaciones
+                                    <span
+                                        class="username">{{object.observaciones|default_if_none:"-"|default:"-"}}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <div class="card-title">
+                    Participantes
+                </div>
+            </div>
+            <div class="card-footer card-comments p-2">
+                <ul class="nav nav-pills flex-column">
+
+                    <li class="nav-item">
+                        <div class="comment-text">
+                            <span class="username">
+                                <ul class="list-unstyled m-0">
+                                    {%for b in object.grupos_invitados.all %}
+                                    <li class="badge bg-secondary h6">{{b}}</li>
+                                    {%empty%}
+                                    <li><span class="font-weight-bold">Sin grupos invitados</span></li>
+                                    {%endfor%}
+                                    {%for b in object.invitados_individuales.all %}
+                                    <li class="badge bg-secondary h6">{{b}}</li>
+                                    {%empty%}
+                                    <li><span class="font-weight-bold">Sin individuos invitados</span></li>
+                                    {%endfor%}
+                                </ul>
+                            </span>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-sm-12 text-center">
+        <a href="{% url 'eventos_eliminar' object.id %}" class="btn btn-secondary">Eliminar</a>
+        <a href="{% url 'eventos_editar' object.id %}">
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </a>
+
+
+    </div>
+</div>
+
+
+{% endblock content %}
+
+
+{% block customJS %}
+<script>
+    $(document).ready(function () {
+
+        // desaparecer los Success messages
+        setTimeout(function () {
+            $(".alert").alert('close');
+        }, 3000);
+
+
+    });
+
+</script>
+{% endblock %}

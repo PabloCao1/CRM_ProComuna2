@@ -1,0 +1,89 @@
+{% extends "layouts/base.html" %};
+{% load static %};
+
+{% block head %}
+{% endblock %}
+
+{% block title %}Usuarios{% endblock %};
+
+{% block titulo-pagina %}Usuarios{% endblock %};
+
+{% block menu-adicional %}
+{% endblock %};
+
+{% block content %}
+<div class="card card-gray-dark card-outline">
+  <div class="card-footer">
+    <div class="row align-items-center">
+      <div class="col-sm-3">
+        <a href="{% url 'usuarios_crear'%}" class=" btn btn-primary">Agregar</a>
+      </div>
+      <div class="col-sm-9 ">
+        <form method='GET'>
+          <div class="form-row justify-content-sm-end">
+            <div class="form-group col-sm-3 mb-0 mb-0 pb-0">
+              <input type="text" class="form-control form-control-border border-width-2" ptype='text' name='busqueda'
+                value='{{ request.GET.busqueda }}' placeholder="Búsqueda..." aria-label="Search">
+            </div>
+            <div class="form-group col-sm-1 mb-0 pb-0">
+              <button type="submit" class="btn btn-primary btn-block"><i class='fas fa-search'></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Opcion Onepage-->
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive text-nowrap">
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr >
+            <th>Usuario</th>
+            <th>Nombre</th>
+            <th class="d-none d-sm-table-cell">Email</th>
+            <th class="d-none d-sm-table-cell">Último Ingreso</th>
+            <th class="d-none d-sm-table-cell">Permisos</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in object_list %}
+          <tr class="clickable-row " role="button" data-href="{% url 'usuarios_ver' o.usuario_id %}"
+            title="ver detalle">
+            <td><span class="font-weight-bold 
+              {% if o.usuario.is_active %} text-success {% else %}text-danger{% endif %}">
+                {{o.usuario}}</span>
+            </td>
+            <td><span class="text-black h6">{{o.usuario.first_name}} {{o.usuario.last_name}}</span></td>
+            <td><span class="d-none d-sm-table-cell">{{o.usuario.email}}</span></td>
+            <td class="d-none d-sm-table-cell"> {{o.usuario.last_login |date }}</td>
+            <td class="d-none d-sm-table-cell">
+              {%for p in o.usuario.user_permissions.all %}
+              <span class="badge badge-info " title="{{p.name}}">{{p.name}}</span>
+              {%empty%}
+              <span class="font-weight-bold">-</span>
+              {%endfor%}
+            </td>
+            
+          </tr>
+          {% empty %}
+          <td class="text-center text-muted" colspan="6">-Sin Usuarios-</tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block customJS %}
+<script>
+
+
+
+
+</script>
+{% endblock %}

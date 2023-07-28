@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Usuario{% endblock %}
+{% block titulo-pagina %}Usuario {% endblock %};
+
+{% block breadcrumb %}
+<ol class="breadcrumb float-sm-right px-3">
+    <li class="breadcrumb-item"><a href="{% url 'usuarios_listar' %}"
+            class="text-muted text-decoration-none">Usuarios</a></li>
+    <li class="breadcrumb-item active"> Eliminar</li>
+</ol>
+{% endblock %};
+
+{% block content %}
+<div class="row align-items-center mt-sm-5">
+    <div class="col-md-5 m-auto">
+        <div class="card card-gray-dark  mb-5 mt-2 ">
+            <div class="card-header shadow-none bg-transparent border border-danger text-center h3 text-danger">
+                Atención!
+            </div>
+            <div class="card-body mt-3">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <div class="h5 text-center">Eliminar el registro </div>
+                    <div class="h4 px-2 font-weight-bold text-center">{{object.username|upper}}</div>
+                    <div class="h5 text-center"> de manera permanente?</div>
+                    <div class="col-sm-12 text-center mt-5 mb-5">
+                        <a href="{% url 'usuarios_listar' %}"><button type="button"
+                                class="btn btn-secondary">Cancelar</button></a>
+                        <button type="submit" class="btn btn-primary">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content%}

@@ -1,0 +1,140 @@
+{% extends "layouts/base.html" %} {% load static %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<!-- fullCalendar -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.min.js'></script>
+<link href="{% static '/plugins/color-picker/bootstrap-colorselector.css' %}" rel="stylesheet" />
+<!--jquery confirm
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>-->
+
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Calendario {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- /.col -->
+            <div class="col-md-9">
+                <div class="card card-gray-dark">
+                    <div class="card-body p-0">
+                        <!-- THE CALENDAR -->
+                        <div id="calendario">
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="col-md-3">
+                <div class="sticky-top mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-check-circle"></i>&nbsp;Calendarios Visibles
+                            </h5>
+                        </div>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action bg-gradient-purple"><i
+                                    class="fas fa-smile mr-2"></i> Eventos<input class="cs ml-2" value="1"
+                                    type="checkbox" checked></a>
+
+                            <a href="#" class="list-group-item list-group-item-action bg-gradient-cyan"><i
+                                    class="fas fa-chalkboard-teacher mr-2"></i> Otros<input class="cs ml-2"
+                                    value="2" type="checkbox" checked></a>
+
+                            <a href="#" class="list-group-item list-group-item-action bg-gradient-pink"><i
+                                    class="fas fa-sticky-note mr-2"></i> Otro<input class="cs ml-2"
+                                    value="3" type="checkbox" checked></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+
+
+{% endblock content%} {% block customJS %}
+<!-- fullCalendar-->
+<script src="{% static '/plugins/fullcalendar/locales-all.js' %}"></script>
+<script src="{% static '/plugins/color-picker/bootstrap-colorselector.js' %}"></script>
+
+<script>
+    var date = new Date()
+    var d = date.getDate(),
+        m = date.getMonth(),
+        y = date.getFullYear()
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendario');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'prev,next,today',
+                center: 'title',
+                right: 'timeGridDay,timeGridWeek,dayGridMonth,listWeek'
+            },
+            initialView: 'dayGridMonth',
+            scrollTime: '07:00:00',
+            navLinks: 'True',
+            themeSystem: 'Flatly',
+            handleWindowResize: 'True',
+            locale: 'es',
+            nowIndicator: 'True',
+            eventClick: function (info) {
+
+                //$("#modalEvento").modal("show");
+                info.jsEvent.preventDefault();
+
+
+            },
+
+            eventDidMount: function (arg) {
+                var cs = document.querySelectorAll(".cs");
+                cs.forEach(function (v) {
+                    if (v.checked) {
+                        if (arg.event.extendedProps.cid === v.value) {
+                            arg.el.style.display = "auto";
+                        }
+                    } else {
+                        if (arg.event.extendedProps.cid === v.value) {
+                            arg.el.style.display = "none";
+                        }
+                    }
+                });
+                if (arg.event.extendedProps.background) {
+                    arg.el.style.background = arg.event.extendedProps.background;
+                }
+
+
+            },
+
+
+            events: function (fetchInfo, successCallback, failureCallback) {
+                successCallback([
+
+
+
+                ]);
+            },
+        });
+        calendar.render();
+        var csx = document.querySelectorAll(".cs")
+        csx.forEach(function (el) {
+            el.addEventListener('change', function () {
+                calendar.refetchEvents();
+                console.log(el);
+            })
+        });
+    });
+</script>
+{% endblock customJS %}

@@ -1,0 +1,161 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} Usuarios{% endblock %}
+{% block titulo-pagina %} Usuarios{% endblock %};
+
+{% block breadcrumb %}
+<ol class="breadcrumb float-sm-right px-3">
+  <li class="breadcrumb-item"><a href="{% url 'usuarios_listar' %}" class="text-muted text-decoration-none">Usuarios</a>
+  </li>
+  <li class="breadcrumb-item active"> 
+    {%if request.resolver_match.url_name == "usuarios_editar"%} Editar 
+    {%else%}
+    Crear 
+    {% endif %}</li>
+</ol>
+{% endblock %};
+
+{% block content %}
+
+<form class="needs-validation" novalidate method="POST" enctype="multipart/form-data">
+  <!-- Security token -->
+  {% csrf_token %}
+  <div class="card card-gray-dark ">
+    <div class="card-header">
+      <h3 class="card-title">Cargar datos</h3>
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="form-row justify-content-center mb-3">
+        <div class="form-group ">
+          <div class="">
+            <img src="{% static 'images/perfil.png' %}" data-holder-rendered="true" alt="avatar"
+              class="avatar p-1 img-circle " height="150" id="blah">
+          </div>
+          <label for="id_imagen" class="btn btn-primary btn-block mt-2">
+            <span id="label_id_imagen">Agregar imagen</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-row d-none">
+        <div class="form-group col-12">
+          {{form.imagen}}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-12">
+          {{form.username| as_crispy_field}}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-12">
+          {{form.dni| as_crispy_field}}
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group col-12">
+          {{form.first_name| as_crispy_field}}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-12">
+          {{form.last_name| as_crispy_field}}
+        </div>
+      </div>
+
+
+      <div class="form-row">
+        <div class="form-group col-12">
+          {{form.email| as_crispy_field}}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-12">
+          {{form.telefono| as_crispy_field}}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-12">
+          {{form.user_permissions| as_crispy_field}}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-12">
+          {{form.password1| as_crispy_field}}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-12">
+          {{form.password2| as_crispy_field}}
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-sm-12 text-center mt-5 mb-5">
+    <a href="{% url 'usuarios_listar' %}"><button type="button" class="btn btn-secondary">Cancelar</button></a>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </div>
+</form>
+
+{% endblock content%}
+
+{% block customJS %}
+<script>
+  id_imagen.onchange = (evt) => {
+    const [file] = id_imagen.files;
+    if (file) {
+      blah.src = URL.createObjectURL(file);
+      document.querySelector('#label_id_imagen').innerText = 'Cambiar imagen';
+    }
+  };
+
+
+  // nombre_img = document.getElementById('id_imagen').files[0].name
+  // document.querySelector('#label_nombre_imagen').innerText = nombre_img;
+
+  $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+  });
+
+  // Disable form submissions if there are invalid fields
+  (function () {
+    'use strict';
+    window.addEventListener('load', function () {
+      // Get the forms we want to add validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function (form) {
+        form.addEventListener('submit', function (event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+{% endblock customJS%}

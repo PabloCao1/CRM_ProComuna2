@@ -1,0 +1,185 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}CRM{% endblock %}</title>
+  <!-- Favicon icon -->
+  <link rel="icon" type="image/png" href="{% static '/images/favico.png' %}" />
+
+  <!-- CSS -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}" />
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}" />
+  <!-- sweetalert2 -->
+  <link rel="stylesheet" href="{% static 'plugins/sweetalert2/sweetalert2.min.css' %}" />
+  <!-- Chart -->
+  <link rel="stylesheet" href="{% static 'plugins/chart.js/chart.min.css' %}" />
+  <!-- Icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}" />
+  <!-- Dist css -->
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}" />
+  <!-- CUSTOM CSS -->
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+
+  {% block custom_head%}{% endblock custom_head%}
+</head>
+
+<body class="hold-transition sidebar-mini layout-navbar-fixed layout-fixed {% if request.user.usuarios.darkmode %} dark-mode {% endif %}" >
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <!-- INICIO NAVBAR----------------->
+    {% include 'layouts/navbar.html' %}
+    <!-- FIN NAVBAR----------------->
+
+    <!-- INICIO MENU PRINCIPAL ------------>
+    {% include 'layouts/menu.html' %}
+    <!-- FIN MENU PRINCIPAL ------------>
+
+    <!-- INICIO PARTE PRINCIPAL ----------------->
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h3>{% block titulo-pagina %}{% endblock %}</h3>
+            </div>
+            <div class="col-sm-6">
+              {% block breadcrumb %}{% endblock %}
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row justify-content-center">
+            <div class="col-12 px-sm-5 pt-2 pb-5">
+              <!-- Default box -->
+              {% block content %} {% endblock content %}
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- FIN PARTE PRINCIPAL ----------------->
+
+    <footer class="main-footer text-sm">
+      <div class="float-right d-none d-sm-block">
+        Version 0.1
+      </div>
+      <strong>GOPA - GCBA</strong>
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+  <!--**********************************
+        Scripts
+    ***********************************-->
+  <!-- jQuery -->
+  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+  <!-- Chart -->
+  <script src="{% static 'plugins/chart.js/chart.min.js' %}"></script>
+  <script src="{% static 'plugins/chart.js/chart.bundle.min.js' %}"></script>
+  <!-- Bootstrap 4 -->
+  <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <!-- SweetAlert2-->
+  <script src="{% static 'plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+  <!-- BS-Custom-file-input -->
+  <script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+  <!-- Select2 -->
+  <script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+  <!-- AdminLTE App -->
+  <script src="{% static 'plugins/js/adminlte.min.js' %}"></script>
+  <!-- Custom js -->
+  <script src="{% static 'js/custom.js' %}"></script>
+
+  {% if messages %} {% for m in messages %}
+  <script language="JavaScript" type="text/javascript">
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-start",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "{{ m.tags }}",
+      title: "{{ m }}",
+    });
+
+  </script>
+  {% endfor %} {% endif %}
+
+  <script>
+    //control color logout icon
+    $("#logout_icon").hover(function () {
+      $(this).addClass("text-danger");
+      $(this).removeClass("text-success");
+    }, function () {
+      $(this).addClass("text-success");
+      $(this).removeClass("text-danger");
+    });
+
+    $('#logout-link').click(function (event) {
+      event.preventDefault();
+      if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+        window.location.href = $(this).attr('href');
+      }
+    });
+
+    //control Darkmode como opcion de usuario
+    $("#darkmode").on('click', function () {
+      var checked = $('body').hasClass('dark-mode');
+
+      if (checked) {
+        $('body').removeClass('dark-mode')
+        $("#darkmode_icon").removeClass("fas").addClass("far").attr("title", "Cambiar a modo oscuro");
+      } else {
+        $('body').addClass('dark-mode')
+        $("#darkmode_icon").removeClass("far").addClass("fas").attr("title", "Cambiar a modo claro");
+      }
+      $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+          xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+        }
+      });
+
+      $.ajax({
+        url: '/set_dark_mode/',
+        type: 'POST',
+        data: { 'dark_mode': checked },
+        success: function (data) {
+          console.log(data);
+        }
+      });
+    });
+
+  </script>
+
+  {% block customJS %}
+  {% endblock customJS%}
+</body>
+
+</html>

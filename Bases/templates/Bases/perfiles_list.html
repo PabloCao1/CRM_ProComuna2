@@ -1,0 +1,358 @@
+{% extends "layouts/base.html" %};
+{% load static %};
+
+{% block head %}
+
+<!-- Datatables -->
+<link rel="stylesheet" href="{% static 'plugins/Datatables/datatables.min.css' %}">
+{% endblock %}
+
+{% block title %}Perfiles{% endblock %};
+
+{% block titulo-pagina %}Perfiles{% endblock %};
+
+{% block menu-adicional %}
+{% endblock %};
+
+{% block content %}
+
+<form method='GET'>
+  <div class="card card-gray-dark card-outline mb-5">
+    <div class="card-header">
+      <div class="row d-flex justify-content-between px-2">
+        <div class="col-12 col-sm-2 mb-0 p-0">
+          <a href="{% url 'perfiles_crear'%}" class="btn btn-primary d-block">Agregar</a>
+        </div>
+        <div class="col-12 col-sm-3 mb-0 p-0">
+          <div class="form-row">
+            <div class="form-group col-sm-8 mb-0 mb-0 pb-0">
+              <input type="text" class="form-control form-control-border border-width-2" type='text' name='busqueda'
+                value='{{ request.GET.busqueda }}' placeholder="Búsqueda ..." aria-label="Search">
+            </div>
+            <div class="form-group col-sm-4 mb-0 pb-0">
+              <button type="submit" class="btn btn-primary btn-block"><i class='fas fa-search'></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body m-0 p-0">
+      <div class="accordion" id="accordionExample">
+
+        <div class="card  card-light m-0">
+          <div class="card-header p-0" id="headingTwo">
+            <button class="btn btn-block collapsed text-center text-primary btn-default m-0 p-0" type="button"
+              data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Opciones de filtrado
+            </button>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body  m-0 p-0">
+              <div class="row m-0 p-0">
+
+                <div class="col-sm-2 px-0 mx-0">
+                  <div class="card h-100 ">
+                    <div class="card-header pt-2 pb-0">
+                      <h6 class="font-weight-bold">Bases </h6>
+                    </div>
+                    <div class="card-body">
+                      <!-- <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="base_general" name="base_general" checked="">
+                          <label for="base_general">
+                            General
+                          </label>
+                        </div>
+                      </div> -->
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="base_voluntarios" name="base_voluntarios">
+                          <label for="base_voluntarios">
+                            Voluntarios
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="base_fiscal" name="base_fiscal" >
+                          <label for="base_fiscal">
+                            Fiscales
+                          </label>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3 px-0 mx-0">
+                  <div class="card h-100">
+                    <div class="card-header pt-2 pb-0">
+                      <h6 class="font-weight-bold">Datos de Contacto </h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="con_email" name="con_email">
+                          <label for="con_email">
+                            Con email
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="con_celular" name="con_celular">
+                          <label for="con_celular">
+                            Con celular
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="con_domicilio" name="con_domicilio">
+                          <label for="con_domicilio">
+                            Con Domicilio
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3 px-0 mx-0">
+                  <div class="card h-100">
+                    <div class="card-header pt-2 pb-0">
+
+                      <h6 class="font-weight-bold">Rango etario </h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="hasta_30_anios" name="hasta_30_anios">
+                          <label for="hasta_30_anios">
+                            Hasta 30 años
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="de_31_a_45_anios" name="de_31_a_45_anios">
+                          <label for="de_31_a_45_anios">
+                            De 31 a 45 años
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="mas_de_46_anios" name="mas_de_46_anios">
+                          <label for="mas_de_46_anios">
+                            Más de 46 años
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-2 px-0 mx-0">
+                  <div class="card h-100">
+                    <div class="card-header pt-2 pb-0">
+                      <h6 class="font-weight-bold">Sexo </h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="sexo_f" name="sexo_f">
+                          <label for="sexo_f">
+                            Femenino
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="sexo_m" name="sexo_m">
+                          <label for="sexo_m">
+                            Masculino
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="sexo_x" name="sexo_x">
+                          <label for="sexo_x">
+                            X
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-2 px-0 mx-0">
+                  <div class="card h-100">
+                    <div class="card-header pt-2 pb-0">
+
+                      <h6 class="font-weight-bold">Estado </h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="estado_activo" name="estado_activo">
+                          <label for="estado_activo">
+                            Activo
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="estado_inactivo" name="estado_inactivo">
+                          <label for="estado_inactivo">
+                            Inactivo
+                          </label>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- Resultados-->
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive text-nowrap  p-3">
+      <table class="table table-sm table-hover" id="export_table">
+        <thead>
+          <tr>
+            <th>Ingreso</th>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Edad</th>
+            <th class="d-none d-sm-table-cell">Sexo</th>
+            <th class="d-none d-sm-table-cell">Es militante</th>
+            <th class="d-none d-sm-table-cell">Es empleado</th>
+            <th class="d-none d-sm-table-cell">Bases</th>
+            <th class="d-none d-sm-table-cell text-center">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in object_list %}
+          <tr class="clickable-row " role="button" data-href="{% url 'perfiles_ver' o.id %}" title="ver detalle">
+            <td>{{o.fecha_ingreso|date:"d/m/y"}}</td>
+            <td><span class="font-weight-bold small h6
+              {% if o.activo %} text-success {% else %}text-danger{% endif %}">
+                {{o.apellidos|default:""}}
+                {{o.nombres|default:"-"}}</span></td>
+            <td>{{o.documento}}</td>
+            <td>{{o.edad|default:"-"}}</td>
+            <td class="d-none d-sm-table-cell">{{o.sexo}}</td>
+            <td class="d-none d-sm-table-cell">
+              {{ o.es_militante|yesno:'SÍ,NO' }}
+            </td>
+            <td class="d-none d-sm-table-cell">
+              {{ o.es_empleadoGCBA|yesno:'SÍ,NO' }}
+            </td>
+            <td class="d-none d-sm-table-cell">
+              {% if o.es_fiscal or o.es_voluntario %}
+              {% if o.es_fiscal %}
+              <div class="badge badge-info h6 text-center"> Fiscales</div>
+              {%endif%}
+              {% if o.es_voluntario %}
+              <div class="badge badge-info h6 text-center"> Voluntarios</div>
+              {%endif%}
+              {%else%}
+              <div class="badge badge-secondary h6 text-center"> General</div>
+              {%endif%}
+            </td>
+            <td class="d-none d-sm-table-cell text-center">
+              <span class="d-none">{{o.activo}}</span>
+              {% if o.activo %} <i class="fas fa-circle text-success"></i>
+              {% else %} <i class="fas fa-circle text-danger"></i>
+              {% endif %}
+            </td>
+
+            {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block customJS %}
+
+<!-- Datatablles -->
+
+<script src="{% static 'plugins/DataTables/datatables.min.js' %}"></script>
+<script>
+  $("#export_table").DataTable({
+
+    pageLength: 25,
+    responsive: true,
+    dom: 'Bfrtip',
+    buttons: [{
+      //Botón para Excel
+      extend: 'excel',
+      exportOptions: { columns: ':not(.notexport)' },
+      footer: true,
+      title: 'crm',
+      filename: 'reporte_crm',
+      text: '<button class="btn btn-sm btn-default mx-0"><i class="fas fa-table text-success" title="Descargar en Excel"></i></button>'
+    },
+    //Botón para PDF
+    {
+      extend: 'pdf',
+      exportOptions: { columns: ':not(.notexport)' },
+      footer: true,
+      title: 'crm',
+      filename: 'reporte_crm',
+      text: '<button class="btn btn-sm btn-default mx-0"><i class="fas fa-file-pdf text-danger" title="Descargar en PDF"></i></button>',
+    },
+    //Botón para Imprimir
+    {
+      extend: 'print',
+      exportOptions: { columns: ':not(.notexport)' },
+      footer: true,
+      title: 'crm',
+      text: '<button class="btn btn-sm btn-default mx-0"><i class="fas fa-print text-primary" title="Imprimir"></i></button>'
+    }
+    ],
+    order: [[0, "asc"]],
+    language: {
+      lengthMenu: "Mostrar _MENU_ filas por página.",
+      zeroRecords: "No se encontraron registros.",
+      info: "<p class='ml-3 text-muted pt-3'>Página _PAGE_ de _PAGES_</p>",
+      infoEmpty: "No hay registros disponibles",
+      infoFiltered: "(filtrado por _MAX_ registros.)",
+      search: "",
+      searchPlaceholder: "Filtrar resultados",
+      paginate: {
+        next: "Siguiente",
+        previous: "Anterior",
+      },
+    },
+  });
+  $('.dt-buttons').addClass('float-left  pb-3')
+  $('.dataTables_filter').addClass('float-right pb-3')
+  $('.pagination').addClass('float-right')
+  $('.buttons-html5').removeClass('btn-secondary').addClass('px-1')
+  $('.buttons-print').removeClass('btn-secondary').addClass('px-1')
+</script>
+
+
+{% endblock %}

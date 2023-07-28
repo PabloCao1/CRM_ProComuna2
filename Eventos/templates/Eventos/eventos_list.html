@@ -1,0 +1,200 @@
+{% extends "layouts/base.html" %};
+{% load static %};
+
+{% block head %}
+
+{% endblock %}
+
+{% block title %}Eventos{% endblock %};
+
+{% block titulo-pagina %}Eventos{% endblock %};
+
+{% block menu-adicional %}
+{% endblock %};
+
+{% block content %}
+<div class="card card-gray-dark card-outline">
+  <div class="card-header">
+    <div class="row d-flex justify-content-between px-2">
+      <div class="col-sm-2">
+        <a href="{% url 'eventos_crear'%}" class="btn btn-primary col">Agregar</a>
+      </div>
+      <div class="col-sm-4">
+        <form method='GET'>
+          <div class="form-row justify-content-sm-end">
+            <div class="form-group col-sm-8 mb-0 mb-0 pb-0">
+              <input type="text" class="form-control form-control-border border-width-2" ptype='text' name='busqueda'
+                value='{{ request.GET.busqueda }}' placeholder="Búsqueda..." aria-label="Search">
+            </div>
+            <div class="form-group col-sm-4 mb-0 pb-0">
+              <button type="submit" class="btn btn-primary btn-block"><i class='fas fa-search'></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive text-nowrap  p-3">
+      <table class="table table-sm table-hover" >
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th class="d-none d-sm-table-cell">Lugar</th>
+            <th class="d-none d-sm-table-cell">Hora</th>
+            <th class="d-none d-sm-table-cell text-center">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in object_list %}
+          <tr class="clickable-row " role="button" data-href="{% url 'eventos_ver' o.id %}" title="ver detalle">
+            <td><span class="font-weight-bold small
+              {% if o.activo %} text-success {% else %}text-danger{% endif %}">
+                {{o.nombre|upper}}</span></td>
+            <td>{{o.fecha}}</td>
+            <td class="d-none d-sm-table-cell">{{o.lugar}}</td>
+            <td class="d-none d-sm-table-cell">{{o.hora}} {{o.minutos}}</td>
+            <td class="d-none d-sm-table-cell text-center">
+              <span class="d-none">{{o.activo}}</span>
+              {% if o.activo %} <i class="fas fa-circle text-success"></i>
+              {% else %} <i class="fas fa-circle text-danger"></i>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block customJS %}
+<script>
+  $(document).ready(function () {
+
+
+    var pageTittle = document.title;
+    $logo = "https://www.msm.gov.ar/wp-content/uploads/2015/11/Municipalidad-de-San-Miguel-PNG.png"
+    var fechaHora = new Date().toLocaleString().replace(",", "").replace(/:.. /, " ");
+
+    $("#tabla").DataTable({
+      fixedHeader: {
+        header: true
+      },
+      dom: 'Blfrtip',
+      buttons: [{
+        //Botón para Excel-------------------------------------------------------------------------------------
+        extend: 'excel',
+        exportOptions: { columns: ':not(.notexport)', },
+        titleAttr: 'Exportar como Excel',
+        if(pageTittle) {
+          filename = pageTittle.replace(/[\[\]\*\/\\\?\:]/g, '');
+        }, else: { filename: 'reporte' },
+        footer: true,
+        text: '<button class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel"></i></button>',
+        header: false,
+        customize: function (xlsx) {
+          var sheet = xlsx.xl.worksheets['sheet1.xml'];
+          $('row[r=3] c', sheet).attr('s', '2'); //bold fila 3
+        },
+        customizeData: function (data) {
+          //agrego una fila vacia para separar el header
+          var desc = [[''],];
+          data.body.unshift(data.header);
+          for (var i = 0; i < desc.length; i++) {
+            data.body.unshift(desc[i]);
+          };
+        }
+      },
+      //Botón para PDF-------------------------------------------------------------------------------------
+      {
+        extend: 'pdfHtml5',
+        exportOptions: {
+          columns: ':not(.notexport)',
+          modifier: {
+            fillColor: '#14afe4'
+          }
+        },
+        footer: true,
+        title: pageTittle,
+        titleAttr: 'Exportar como PDF',
+        //toma el titulo la página como nombre del archivo
+        if(pageTittle) {
+          filename = pageTittle.replace(/[\[\]\*\/\\\?\:]/g, '');
+        }, else: { filename: 'reporte' },
+        text: '<button class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf"></i></button>',
+        customize: function (doc) {
+          doc.styles.tableHeader.fillColor = '#14afe4';
+          doc.styles.tableHeader.margin = 5;
+          doc.styles.tableHeader.fontSize = 12;
+          doc['footer'] = (function (page, pages) {
+            return {
+              columns: [
+                'Municipalidad de San Miguel',
+                { alignment: 'center', text: fechaHora },
+                {
+                  alignment: 'right',
+                  text: ['Página ', { text: page.toString() }, ' de ', { text: pages.toString() }]
+                },
+              ],
+              margin: [10, 0]
+            }
+          });
+        },
+      },
+      //Botón para Imprimir-------------------------------------------------------------------------------------
+      {
+        extend: 'print',
+        exportOptions: { columns: ':not(.notexport)' },
+        footer: true,
+        title: pageTittle,
+        titleAttr: 'Imprimir',
+        text: '<button class="btn btn-sm btn-outline-dark"><i class="fas fa-print"></i></button>',
+        customize: function (win) {
+          $(win.document.body)
+            .css('font-size', '10pt')
+          $(win.document.body).find('table')
+            .addClass('compact')
+            .css('font-size', 'inherit')
+        }
+      }],
+      language: {
+        "decimal": "",
+        "emptyTable": "Sin resultados",
+        "info": "Mostrando _START_ a _END_ de <strong> _TOTAL_ Entradas </strong>",
+        "infoEmpty": "Mostrando 0 de 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "",
+        "searchPlaceholder": "Filtrar resultados...",
+        "zeroRecords": "<span class='text-muted'>Sin resultados encontrados</span>",
+        "paginate": {
+          "first": "Primero",
+          "last": "Ultimo",
+          "next": "Siguiente",
+          "previous": "Anterior"
+        }
+      },
+    });
+
+    $('.dt-buttons').addClass("mb-3 d-sm-inline float-sm-right  {%if not perms.usuarios.rol_imprimir %} d-none {%endif%}");
+    $('.dataTables_filter').addClass("px-3");
+    // $('.dataTables_length').addClass("px-3 mb-3 d-sm-inline float-sm-left");
+    $('.buttons-html5').removeClass("btn-secondary");
+    $('.buttons-print').removeClass("btn-secondary");
+    // // $('#tabla_wrapper').addClass("");
+    // // $('.dataTables_info').addClass("float-md-left mt-3");
+    // // $('.dataTables_paginate ').addClass("mt-3");
+    // $('.buttons-html5').addClass("p-1");
+    // $('.buttons-print').addClass("p-1");
+
+  });
+</script>
+{% endblock %}

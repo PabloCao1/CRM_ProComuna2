@@ -1,0 +1,264 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block title %}Eventos{% endblock %}
+{% block titulo-pagina %}Eventos{% endblock %};
+{% block breadcrumb %}
+<ol class="breadcrumb float-sm-right px-3">
+  <li class="breadcrumb-item"><a href="{% url 'eventos_listar' %}" class="text-muted text-decoration-none">Eventos</a>
+  </li>
+  <li class="breadcrumb-item active"> {%if request.resolver_match.url_name == "eventos_editar" %} Editar {% else %}
+    Crear {% endif %}</li>
+</ol>
+{% endblock %};
+{% load crispy_forms_tags %}
+
+{% block content %}
+<form class="needs-validation " novalidate method="POST">
+  <!-- Security token -->
+  {% csrf_token %}
+
+  <div class="row d-none">
+    {{form.foto| as_crispy_field}}
+  </div>
+
+  <div class="row">
+    <div class="col-sm-3  order-1 order-sm-2">
+      <div class="form-row justify-content-center ">
+
+        <div class="form-group col-12 
+            {%if request.resolver_match.url_name != 'eventos_editar' %}
+            d-none
+            {%endif%}   ">
+          <div class="card card-gray-dark mx-3">
+            <div class="card-header ">
+              <div class="card-title">Estado</div>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="d-none">
+              {{form.activo}}
+            </div>
+            <div class="card-body py-2 px-1">
+              {%if object.activo%}
+              <button type="button" class="btn btn-flat btn-block bg-success p-2" id="label_activo">Desactivado</button>
+              {%else%}
+              <button type="button" class="btn btn-flat btn-block bg-danger p-2" id="label_activo">Desactivado</button>
+              {%endif%}
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-12">
+          <div class="card card-gray-dark mx-3">
+            <div class="card-header">
+              <div class="card-title">Foto de evento</div>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body p-1">
+              <div class="box-profile">
+                <div class="text-center">
+                  {% if object.foto and object.foto != "default.png"%}
+                  <img src="{{object.foto.url}}" data-holder-rendered="true" alt="avatar" class="avatar p-1"
+                    height="150" id="blah" />
+                  {% else %}
+                  <img src="{% static 'images/capacitacion.png' %}" data-holder-rendered="true" alt="avatar"
+                    class="avatar p-1" height="150" id="blah">
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="id_foto" class="btn btn-primary btn-block">
+                  <span>
+                    {%if request.resolver_match.url_name == 'eventos_editar' %} Cambiar foto
+                    {% else %} Agregar foto
+                    {% endif %}
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-12 ">
+          <div class="card card-gray-dark mx-3">
+            <div class="card-header ">
+              <div class="card-title">Bases</div>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body px-3 pb-1">
+              {{form.grupos_invitados}}
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-12 ">
+          <div class="card card-gray-dark mx-3">
+            <div class="card-header ">
+              <div class="card-title">Invitados</div>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body px-3 pb-1">
+              {{form.invitados_individuales| as_crispy_field}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-9 order-2 order-sm-1">
+      <div class="card card-gray-dark mx-3">
+        <div class="card-header ">
+          <div class="card-title">
+            {%if request.resolver_match.url_name == "eventos_editar" %} Editar
+            {% else %}
+            Cargar
+            {% endif %}
+            datos del Evento
+          </div>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+            </button>
+          </div>
+
+        </div>
+        <div class="card-body mt-3">
+          <div class="row">
+            <div class="col">
+              {{ form.nombre | as_crispy_field}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              {{ form.modo | as_crispy_field}}
+            </div>
+          </div>
+          <div class="row" name="place" id="place">
+            <div class="col">
+              {{ form.lugar | as_crispy_field}}
+            </div>
+          </div>
+          <div class="row" name="url" id="url">
+            <div class="col">
+              {{ form.WEB | as_crispy_field}}
+            </div>
+          </div>
+          <div class="row" name="direccion" id="direccion">
+            <div class="col">
+              {{ form.calle | as_crispy_field}}
+            </div>
+            <div class="col">
+              {{ form.altura | as_crispy_field}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              {{ form.fecha | as_crispy_field}}
+            </div>
+            <div class="col-sm-3">
+              {{ form.hora | as_crispy_field}}
+            </div>
+            <div class="col-sm-3">
+              {{ form.minutos | as_crispy_field}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              {{ form.telefono | as_crispy_field}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              {{ form.observaciones | as_crispy_field}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 text-center mt-5 mb-5">
+    <a href="{% url 'perfiles_listar' %}"><button type="button" class="btn btn-secondary">Cancelar</button></a>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </div>
+</form>
+
+{% endblock content%}
+
+{% block customJS %}
+<script>
+
+  $(document).ready(function () {
+
+    // Disable form submissions if there are invalid fields
+    (function () {
+      'use strict';
+      window.addEventListener('load', function () {
+        // Get the forms we want to add validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function (form) {
+          form.addEventListener('submit', function (event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+
+    id_foto.onchange = (evt) => {
+      const [file] = id_foto.files;
+      if (file) {
+        blah.src = URL.createObjectURL(file);
+      }
+    };
+
+    $(function () {
+      //Initialize Select2 Elements
+      $('.select2').select2()
+
+      //Initialize Select2 Elements
+      $('.select2bs4').select2({
+        theme: 'bootstrap4'
+      })
+    });
+
+
+    // custom checkbox actvio
+    $('#label_activo').click(function () {
+      if ($('#label_activo').hasClass("bg-success")) {
+        $('#label_activo').removeClass("bg-success").addClass("bg-danger").text('Desactivado');
+        $('#id_activo').prop('checked', false);
+      } else {
+        $('#label_activo').removeClass("bg-danger").addClass("bg-success").text('Activo');
+        $('#id_activo').prop('checked', true);
+      };
+    });
+  });
+</script>
+<script type="text/javascript">
+  $("#id_modo").change(function () {
+    if ($(this).val() == "VIRTUAL") {
+      $('#url').show();
+    } else {
+      $('#url').hide();
+    }
+    if ($(this).val() == "PRESENCIAL") {
+      $('#place').show();
+      $('#direccion').show();
+    } else {
+      $('#place').hide();
+      $('#direccion').hide();
+    }
+  });
+  $("#id_modo").trigger("change");
+</script>
+{% endblock customJS%}
