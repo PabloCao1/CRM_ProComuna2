@@ -55,6 +55,18 @@ class Perfiles(models.Model):
                 age -= 1
             return age
         return None
+    
+    def clean(self):
+        # Separar y capitalizar las palabras en el campo "apellido"
+        self.apellidos = ' '.join(word.title() for word in self.apellidos.split())
+        # Separar y capitalizar las palabras en el campo "nombre"
+        self.nombres = ' '.join(word.title() for word in self.nombres.split())
+
+        if self.calle:
+            self.calle = self.calle.capitalize()
+
+        if self.fecha_nacimiento and self.fecha_nacimiento > date.today():
+            raise ValidationError('La fecha de nacimiento debe ser menor o igual a la fecha actual.')
 
     def get_absolute_url(self):
         return reverse('perfiles_ver', kwargs={'pk': self.pk})

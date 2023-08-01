@@ -18,7 +18,7 @@
 <div class="row">
     <!-- botones -->
     <div class="col-12 my-3 mx-2 d-print-none">
-        {% if request.user.id == object.id %}
+        {% if request.user.usuarios.id == object.id %}
             <a href="{% url 'perfil_editar' object.id %}" class="btn btn-primary mr-1">Editar</a>
             <a href="{% url 'cambiar_password' %}" class="btn btn-secondary mr-1">Cambiar Contraseña</a>
         {% elif perms.Usuarios.rol_admin %}

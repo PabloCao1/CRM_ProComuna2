@@ -111,7 +111,7 @@ class UsuariosCreateView(PermisosMixin,SuccessMessageMixin,FormView):
                 usuario.imagen= filename  
             usuario.save()    
             messages.success(self.request, ('Usuario creado con éxito.'))
-            return redirect('usuarios_ver',user.id)
+            return redirect('usuarios_ver',user.usuarios.id)
         else:
             messages.error(self.request, ('No fue posible crear el usuario.'))
             return redirect('usuarios_listar')
@@ -142,7 +142,7 @@ class UsuariosUpdateView(PermisosMixin,SuccessMessageMixin,UpdateView):
             messages.success(self.request, ('Usuario modificado con éxito.'))
         else:
             messages.error(self.request, ('No fue posible modificar el usuario.'))
-        return redirect('usuarios_ver', pk=user.id)
+        return redirect('usuarios_ver', pk=user.usuarios.id)
 
 #endregion------------------------------------------------------------------------------------------
 
@@ -230,7 +230,7 @@ class PerfilUpdateView(UserPassesTestMixin,SuccessMessageMixin,UpdateView):
             messages.success(self.request, ('Perfil modificado con éxito.'))
         else:
             messages.error(self.request, ('No fue posible modificar el perfil.'))      
-        return redirect('usuarios_ver', pk=user.id)
+        return redirect('usuarios_ver', pk=user.usuarios.id)
     
 class PerfilChangePassView(LoginRequiredMixin,SuccessMessageMixin,PasswordChangeView):
     '''

@@ -5,6 +5,6 @@ from django.contrib.auth.decorators import login_required
 from .views import *
 
 urlpatterns = [
-    path('index/',login_required(TemplateView.as_view(template_name='index.html')),name='index'),
+    path('dashboard/',login_required(Dashboard.as_view()),name='index'),
 ]
 

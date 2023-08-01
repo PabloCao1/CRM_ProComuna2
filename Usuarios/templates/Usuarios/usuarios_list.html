@@ -51,7 +51,7 @@
         </thead>
         <tbody>
           {% for o in object_list %}
-          <tr class="clickable-row " role="button" data-href="{% url 'usuarios_ver' o.usuario_id %}"
+          <tr class="clickable-row " role="button" data-href="{% url 'usuarios_ver' o.id %}"
             title="ver detalle">
             <td><span class="font-weight-bold 
               {% if o.usuario.is_active %} text-success {% else %}text-danger{% endif %}">
