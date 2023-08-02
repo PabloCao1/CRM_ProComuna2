@@ -7,6 +7,7 @@ from Usuarios.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import *
 from .forms import *
+from .choices import *
 from django.db.models import Q
 from django.core.paginator import Paginator,EmptyPage
 from django.urls import reverse_lazy
@@ -146,12 +147,22 @@ class PerfilesCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
     form_class = PerfilesForm
     success_message = "Registrado correctamente"  
 
+    
+    def get_context_data(self, **kwargs):
+        context = super(PerfilesCreateView, self).get_context_data(**kwargs)
+        context['barrios_comunas_map'] = BARRIOS_COMUNAS_MAP
+        return context
+
 
 class PerfilesUpdateView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
     model = Perfiles
     form_class = PerfilesForm    
     success_message = "Editado correctamente"   
 
+    def get_context_data(self, **kwargs):
+        context = super(PerfilesUpdateView, self).get_context_data(**kwargs)
+        context['barrios_comunas_map'] = BARRIOS_COMUNAS_MAP
+        return context
 
 class EdicionMultipleFormView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
     model= Perfiles
@@ -167,7 +178,7 @@ class EdicionMultipleFormView(LoginRequiredMixin,SuccessMessageMixin,UpdateView)
         voluntario = BaseVoluntariosPerfiles.objects.filter(fk_perfil_v=pk).first()
         fiscal = BaseFiscalesPerfiles.objects.filter(fk_perfil_f=pk).first()
         
-                
+        context['barrios_comunas_map'] = BARRIOS_COMUNAS_MAP
         context['es_voluntario'] = True if voluntario else False
         context['es_fiscal'] = True if fiscal else False
         context['form_voluntarios'] = self.form_voluntarios(instance=voluntario)

@@ -37,7 +37,7 @@
 <!-- ./botones -->
 
 <div class="row">
-    <div class="col-sm-5 pb-3">
+    <div class="col-sm-4 pb-3">
         <div class="card card-gray-dark card-outline h-100">
             <div class="card-header">
                 <div class="card-title">
@@ -93,7 +93,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-4 pb-3">
+    <div class="col-sm-3 pb-3">
         <div class="card card-gray-dark card-outline  h-100">
             <div class="card-header">
                 <div class="card-title">
@@ -126,11 +126,68 @@
                             <span class="username">{{object.facebook|default:"-"}}</span>
                         </div>
                     </li>
+
+                    <li class="nav-item">
+                        <div class="comment-text">
+                            Domicilio
+                            <span class="username">{{object.direccion_completa|default:"-"}}</span>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="col-sm-3  text-center">
+    <div class="col-sm-3 pb-3">
+        <div class="card card-gray-dark card-outline  h-100">
+            <div class="card-header">
+                <div class="card-title">
+                    Otros datos
+                </div>
+            </div>
+            <div class="card-footer card-comments p-2">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <div class="comment-text">
+                            Afinidad equipo fútbol
+                            <span class="username">{{object.equipo_futbol|default:"-"}}</span>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="comment-text">
+                            Es socio del club
+                            <span class="username">{{object.equipo_futbol|default:"-"}}</span>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="comment-text">
+                            Profesión/Actividad
+                            <span class="username">{{object.profesion|default:"-"}}</span>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="comment-text">
+                            Está matriculado
+                            <span class="username">{{object.matriculado|yesno:'SI,NO'}}</span>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="comment-text">
+                            Es empleado del GCBA
+                            <span class="username">{{object.es_empleadoGCBA|yesno:'SI,NO'}}</span>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <div class="comment-text">
+                            Es militante
+                            <span class="username">{{object.es_militante|yesno:'SI,NO'}}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2 pr-0 text-center">
         {% if object.activo %}
         <div class="card bg-success py-3 mb-1">
             <h5 class="font-weight-bold my-1">
@@ -148,21 +205,21 @@
         {% if object.es_fiscal %}
         <div class="card bg-secondary py-2 mb-1">
             <h5 class="font-weight-bold my-1">
-                 EN BASE FISCALES
+                 BASE FISCALES
             </h5>
         </div>
         {%endif%}
         {% if object.es_voluntario %}
         <div class="card bg-secondary py-2 mb-1">
             <h5 class="font-weight-bold my-1">
-                 EN BASE VOLUNTARIOS
+                 BASE VOLUNTARIOS
                 </h5>
         </div>
         {%endif%}
         {%else%}
         <div class="card bg-secondary py-2 mb-1">
             <h5 class="font-weight-bold my-1">
-                 EN BASE GENERAL
+                 BASE GENERAL
                 </h5>
         </div>
         {%endif%}
@@ -189,24 +246,12 @@
                 ES EMPLEADO GCBA
             </h5>
         </div>
-        {% else %}
-        <div class="card bg-secondary py-2 mb-1">
-            <h5 class="font-weight-bold my-1">
-                NO ES EMPLEADO GCBA
-            </h5>
-        </div>
         {% endif %}
         
         {% if object.es_militante %}
         <div class="card bg-secondary py-2 mb-1">
             <h5 class="font-weight-bold my-1">
                 ES MILITANTE
-            </h5>
-        </div>
-        {% else %}
-        <div class="card bg-secondary py-2 mb-1">
-            <h5 class="font-weight-bold my-1">
-                NO ES MILITANTE 
             </h5>
         </div>
         {% endif %}

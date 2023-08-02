@@ -22,8 +22,8 @@ class Perfiles(models.Model):
     altura              = models.PositiveSmallIntegerField(null=True, blank=True)
     piso                = models.CharField(max_length=10, null=True, blank=True)
     departamento        = models.CharField(max_length=10, null=True, blank=True)
-    barrio              = models.CharField(max_length=50, choices= CHOICE_BARRIOS, null=True, blank=True)
-    comuna              = models.CharField(max_length=50, choices=CHOICE_COMUNAS, null=True, blank=True)
+    barrio              = models.CharField(max_length=50, null=True, blank=True)
+    comuna              = models.CharField(max_length=50,null=True, blank=True)
     provincia           = models.CharField(max_length=50, choices=CHOICE_PROVINCIAS, default='CABA', null=True, blank=True)
     telefono            = models.PositiveIntegerField(null=True, blank=True)
     email               = models.EmailField(null=True, blank=True)
@@ -63,6 +63,22 @@ class Perfiles(models.Model):
                 age -= 1
             return age
         return None
+
+    def direccion_completa(self):
+        direccion = self.calle if self.calle else ''
+        if self.altura:
+            direccion += ' ' + str(self.altura) 
+        if self.piso:
+            direccion += '- Piso ' + self.piso 
+        if self.departamento:
+            direccion += '- Depto. ' + self.departamento 
+        if self.barrio:
+            direccion +=  ' - ' +self.barrio 
+        if self.comuna:
+            direccion +=  ' - ' +self.comuna 
+        if self.provincia:
+            direccion +=  ' - ' +self.provincia
+        return direccion.strip()
     
     def clean(self):
         if self.apellidos:

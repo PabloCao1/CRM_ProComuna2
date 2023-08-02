@@ -296,7 +296,7 @@
                 {{o.nombres |default:"-"}} {{o.nombres |default:""}}</span></td>
             <td>{{o.documento}}</td>
             <td> {% if o.edad%}{{o.edad}} años {%else%} - {%endif%}</td>
-            <td class="d-none d-sm-table-cell">{{o.sexo}}</td>
+            <td class="d-none d-sm-table-cell">{{o.sexo|default:"-"}}</td>
             <td class="d-none d-sm-table-cell">
               {{ o.es_militante|yesno:'SI,NO' }}
             </td>
