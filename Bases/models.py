@@ -14,7 +14,7 @@ class Perfiles(models.Model):
     nombres             = models.CharField(max_length=250, null=True, blank=True)    
     fecha_nacimiento    = models.DateField(null=True, blank=True)    
     tipo_doc            = models.CharField(max_length=10, choices=CHOICE_TIPO_DOC, default='DNI', null=True, blank=True)      
-    documento           = models.PositiveBigIntegerField(validators=[MinValueValidator(3000000), MaxValueValidator(99999999)], unique=True)      
+    documento           = models.PositiveBigIntegerField(validators=[MinValueValidator(1000000), MaxValueValidator(99999999)], unique=True)      
     sexo                = models.CharField(max_length=10, choices=CHOICE_SEXO)      
     nacionalidad        = models.CharField(max_length=15, choices=CHOICE_NACIONALIDAD, default='Argentina', null=True, blank=True)    
     calle               = models.CharField(max_length=100, null=True, blank=True)
