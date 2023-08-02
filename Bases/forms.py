@@ -25,9 +25,8 @@ class PerfilesForm(forms.ModelForm):
         }
 
     def clean_telefono(self):
-        instance = self.instance  # Obtener la instancia del objeto actual
         telefono = self.cleaned_data['telefono']
-        if telefono and telefono != instance.telefono and Perfiles.objects.filter(telefono=telefono).exists():
+        if telefono and Perfiles.objects.filter(telefono=telefono).exists():
             raise forms.ValidationError("Ya existe un perfil con este número de teléfono en la base de datos.")
         return telefono
 

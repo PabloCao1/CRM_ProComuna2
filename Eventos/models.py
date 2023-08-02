@@ -6,7 +6,13 @@ from Bases.choices import *
 from Bases.models import *
 
 
+class Bases(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre
 #---------TABLA EVENTOS------------------
+
 class Eventos(models.Model):
     nombre = models.CharField(max_length=250, null=False, blank=False)
     fecha = models.DateField(null=False, blank=False)
@@ -21,8 +27,8 @@ class Eventos(models.Model):
     observaciones = models.CharField (max_length= 500, null=True, blank=True)
     foto = models.ImageField(upload_to="img_eventos", default='default.png')
     activo = models.BooleanField(default=True)
-    invitados_individuales = models.ManyToManyField(Perfiles, blank=True)
-    # grupos_invitados = models.ManyToManyField(Bases, blank=True)
+    invitados_individuales = models.ManyToManyField(Perfiles, null=True, blank=True)
+    grupos_invitados = models.ManyToManyField(Bases, null=True, blank=True)
     creado     = models.DateField(auto_now_add=True)
     modificado = models.DateField(auto_now=True)
 
@@ -38,7 +44,7 @@ class Eventos(models.Model):
     def restore(self):
         self.activo = True
         self.save()
-    
+
     class Meta:
         ordering = ['fecha']
         verbose_name = 'Evento'

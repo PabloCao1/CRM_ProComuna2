@@ -8,5 +8,7 @@ urlpatterns = [
     path('eventos/crear', login_required(EventosCreateView.as_view()),name='eventos_crear'),
     path('eventos/ver/<pk>', login_required(EventosDetailView.as_view()),name='eventos_ver'), 
     path('eventos/editar/<pk>', login_required(EventosUpdateView.as_view()),name='eventos_editar'), 
-    path('eventos/eliminar/<pk>', login_required(EventosDeleteView.as_view()),name='eventos_eliminar'), 
+    path('eventos/eliminar/<pk>', login_required(EventosDeleteView.as_view()),name='eventos_eliminar'),
+    path('eventos/enviarcorreo/<pk>', login_required(EnviarCorreo),name='enviar_correo'),
+    path('eventos/individuos/buscar/', login_required(buscar_individuos), name='individuos_buscar'),
 ]

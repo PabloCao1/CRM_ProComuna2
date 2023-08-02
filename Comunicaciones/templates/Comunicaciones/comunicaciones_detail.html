@@ -106,6 +106,8 @@
                                             {%empty%}
                                             <li><span class="font-weight-bold">Sin grupos invitados</span></li>
                                             {%endfor%}
+                                        </ul>
+                                        <ul class="list-unstyled m-0">
                                             {%for b in object.invitados_individuales.all %}
                                             <li class="badge bg-secondary h6">{{b}}</li>
                                             {%empty%}

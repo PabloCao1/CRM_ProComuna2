@@ -37,3 +37,9 @@ CHOICE_HORA = [
     ('22', '22'),
     ('23', '23')
 ]
+
+CHOICE_BASES = [
+    ('GENERAL', 'GENERAL'),
+    ('FISCALES', 'FISCALES'),
+    ('VOLUNTARIOS', 'VOLUNTARIOS'),
+]
