@@ -23,7 +23,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- /.col -->
-            <div class="col-md-9">
+            <div class="col">
                 <div class="card card-gray-dark">
                     <div class="card-body p-0">
                         <!-- THE CALENDAR -->
@@ -35,7 +35,7 @@
                 </div>
                 <!-- /.col -->
             </div>
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
                 <div class="sticky-top mb-3">
                     <div class="card">
                         <div class="card-header">
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -91,11 +91,11 @@
             locale: 'es',
             nowIndicator: 'True',
             eventClick: function (info) {
-            // Redireccionar a la URL de la vista detalle del evento
-            if (info.event.url) {
-                window.location.href = info.event.url;
-            }
-        },
+                // Redireccionar a la URL de la vista detalle del evento
+                if (info.event.url) {
+                    window.location.href = info.event.url;
+                }
+            },
 
             eventDidMount: function (arg) {
                 var cs = document.querySelectorAll(".cs");
@@ -127,7 +127,8 @@
                         var eventos = data.map(evento => ({
                             title: evento.nombre,
                             start: evento.fecha,
-                            url: '/eventos/ver/' + evento.id ,  // URL de la vista detalle del evento
+                            url: '/eventos/ver/' + evento.id,  // URL de la vista detalle del evento
+                            color: getRandomColor(), // Asignar un color aleatorio
                         }));
                         successCallback(eventos);
                     })
@@ -146,5 +147,16 @@
             })
         });
     });
+
+
+    // Función para generar un color hexadecimal aleatorio
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 </script>
 {% endblock customJS %}

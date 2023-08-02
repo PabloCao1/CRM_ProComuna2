@@ -46,7 +46,7 @@
             <th>Nombre</th>
             <th class="d-none d-sm-table-cell">Email</th>
             <th class="d-none d-sm-table-cell">Último Ingreso</th>
-            <th class="d-none d-sm-table-cell">Permisos</th>
+            <th class="d-none d-sm-table-cell">Grupos</th>
           </tr>
         </thead>
         <tbody>
@@ -61,8 +61,8 @@
             <td><span class="d-none d-sm-table-cell">{{o.usuario.email}}</span></td>
             <td class="d-none d-sm-table-cell"> {{o.usuario.last_login |date }}</td>
             <td class="d-none d-sm-table-cell">
-              {%for p in o.usuario.user_permissions.all %}
-              <span class="badge badge-info " title="{{p.name}}">{{p.name}}</span>
+              {%for p in o.usuario.groups.all %}
+              <span class="badge badge-info h6 " title="{{p.name}}">{{p}}</span>
               {%empty%}
               <span class="font-weight-bold">-</span>
               {%endfor%}

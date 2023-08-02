@@ -13,6 +13,8 @@ class PerfilesForm(forms.ModelForm):
             'observaciones' :       forms.Textarea(attrs={'rows':3, 'placeholder': ''}),
             'fecha_nacimiento' :    forms.DateInput(attrs={'type': 'date'}, format="%Y-%m-%d"),
             'fecha_ingreso' :    forms.DateInput(attrs={'type': 'date'}, format="%Y-%m-%d"),
+            'es_empleadoGCBA': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'es_militante': forms.CheckboxInput(attrs={'class': 'form-check-input'}),        
             
         }
         labels = {

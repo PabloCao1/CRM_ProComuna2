@@ -169,7 +169,7 @@ CRISPY_CLASS_CONVERTERS = {
     'textinput': "form-control-border border-width-2",
     'passwordinput': "form-control-border border-width-2",
     'select': "form-control form-control-border border-width-2",
-    'selectmultiple': "form-control form-control-border border-width-2",
+    'selectmultiple': "select2 w-100",
     'numberinput': "form-control form-control-border border-width-2",
     'emailinput': "form-control form-control-border border-width-2",
     'dateinput': "form-control form-control-border border-width-2 datetimepicker-input",

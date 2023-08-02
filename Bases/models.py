@@ -1,3 +1,4 @@
+from django.utils import timezone
 from datetime import date
 from django.db import models
 from django.forms import ValidationError
@@ -35,7 +36,7 @@ class Perfiles(models.Model):
     es_fiscal           = models.BooleanField(default=False,blank=True,null=True)
     activo              = models.BooleanField(default=True)
     motivo_inactivo     = models.CharField(max_length=100,blank=True,null=True)
-    fecha_ingreso       = models.DateField(default=date.today())
+    fecha_ingreso       = models.DateField(default=timezone.now)
     creado              = models.DateField(auto_now_add=True)
     modificado          = models.DateField(auto_now=True)
 

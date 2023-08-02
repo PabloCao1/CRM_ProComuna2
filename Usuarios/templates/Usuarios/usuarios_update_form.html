@@ -69,7 +69,7 @@
             </div>
             <div class="form-group col-sm-6"
               title="Grupos a los cuales pertenece este usuario. Un usuario obtiene todos los permisos otorgados a cada uno de los grupos a los cuales pertenece.">
-              {{form.user_permissions| as_crispy_field}}
+              {{form.groups| as_crispy_field}}
             </div>            
             <div class="form-group col-12">
               {{form.is_active}}
