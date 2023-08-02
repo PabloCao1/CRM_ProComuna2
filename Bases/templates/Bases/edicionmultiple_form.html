@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="col-12 col-md-10 m-auto">
-      
+
       <div class="card card-gray-dark mx-3 mb-4">
         <div class="card-header ">
           <div class="card-title">
@@ -111,23 +111,32 @@
             <div class="form-group pt-2 col-md-3">
               {{form.facebook| as_crispy_field}}
             </div>
-            <div class="form-group pt-2 col-sm-4">
-              {{form.fecha_ingreso| as_crispy_field}}
+            <div class="form-group pt-2 col-md-3">
+              {{form.equipo_futbol| as_crispy_field}}
             </div>
-            <div class="form-group pt-2 col-sm-4">
+            <div class="form-group pt-2 col-md-3" id="socio_futbol">
+              {{form.socio_futbol| as_crispy_field}}
+            </div>
+            <div class="form-group pt-2 col-md-3">
+              {{form.profesion| as_crispy_field}}
+            </div>
+            <div class="form-group pt-2 col-md-3" id="matriculado">
+              {{form.matriculado| as_crispy_field}}
+            </div>
+            <div class="form-group pt-2 col-sm-3">
               {{form.es_militante| as_crispy_field}}
             </div>
-            <div class="form-group pt-2 col-sm-4">
+            <div class="form-group pt-2 col-sm-3">
               {{form.es_empleadoGCBA| as_crispy_field}}
             </div>
-            <div class="form-group pt-2 col-12">
+            <div class="form-group mt-4 col-12">
               {{form.observaciones| as_crispy_field}}
             </div>
           </div>
         </div>
       </div>
 
-      {%if perms.Usuarios.base_voluntarios %}
+      {%if perms.Usuarios.base_voluntarios and es_voluntario %}
       <div class="card card-gray-dark mx-3 mb-4">
         <div class="card-header ">
           <div class="card-title">
@@ -141,30 +150,25 @@
         </div>
         <div class="card-body mt-3">
           <div class="form-row mb-3">
-            <div class="form-group pt-2 col-12 d-none">
+            <div class="form-group col-12 d-none">
               {{form_voluntarios.fk_perfil_v| as_crispy_field}}
             </div>
-            <div class="form-group pt-2 col-12">
+            <div class="form-group mt-2 col-md-3">
               {{form_voluntarios.grupo_wsp| as_crispy_field}}
             </div>
-            <div class="form-group  col-12">
+            <div class="form-group mt-2  col-md-3">
               {{form_voluntarios.gen_23| as_crispy_field}}
             </div>
-            <div class="form-group  col-12">
+            <div class="form-group mt-2  col-md-3">
               {{form_voluntarios.eventos| as_crispy_field}}
             </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group pt-2 col-md-6">
-              {{form_voluntarios.equipo_futbol| as_crispy_field}}
-            </div>
-            <div class="form-group pt-2 col-md-6">
+            <div class="form-group mt-2 col-md-3">
               {{form_voluntarios.afinidad| as_crispy_field}}
             </div>
-            <div class="form-group pt-2 col-12 d-none" id="otro">
+            <div class="form-group mt-2 col-md-3 d-none" id="otro">
               {{form_voluntarios.otro_afinidad| as_crispy_field}}
             </div>
-            <div class="form-group pt-2 col-12">
+            <div class="form-group mt-4 col-12">
               {{form_voluntarios.observaciones_v| as_crispy_field}}
             </div>
           </div>
@@ -172,7 +176,7 @@
       </div>
       {% endif %}
 
-      {%if perms.Usuarios.base_fiscales %}
+      {%if perms.Usuarios.base_fiscales and es_fiscal %}
       <div class="card card-gray-dark mx-3 mb-4">
         <div class="card-header ">
           <div class="card-title">
@@ -189,24 +193,22 @@
             <div class="form-group pt-2 col-12 d-none">
               {{form_fiscales.fk_perfil_f| as_crispy_field}}
             </div>
-            <div class="form-group pt-2 col-12">
+            <div class="form-group mt-2 col-md-2">
               {{form_fiscales.fue_fiscal| as_crispy_field}}
             </div>
-          </div>
-          <div class="form-row mb-3">
-            <div class="form-group col-md-3">
+            <div class="form-group mt-2 col-md-3">
               {{form_fiscales.fecha_fiscal| as_crispy_field}}
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group mt-2 col-md-2">
               {{form_fiscales.rol_fiscal| as_crispy_field}}
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group mt-2 col-md-2">
               {{form_fiscales.disp_jornada| as_crispy_field}}
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group mt-2 col-md-3">
               {{form_fiscales.desempeno| as_crispy_field}}
             </div>
-            <div class="form-group col-12">
+            <div class="form-group mt-4 col-12">
               {{form_fiscales.observaciones_f| as_crispy_field}}
             </div>
           </div>
@@ -219,7 +221,7 @@
         {%if request.resolver_match.url_name == "perfiles_editar" %}
         <a href="{% url 'perfiles_ver' object.id %}" class="btn btn-secondary">Volver</a>
         {% else %}
-        <a href="{% url 'perfiles_listar' %}" class="btn btn-secondary">Cancelar</a>        
+        <a href="{% url 'perfiles_listar' %}" class="btn btn-secondary">Cancelar</a>
         {% endif %}
         <button type="submit" class="btn btn-primary">Guardar</button>
       </div>
@@ -254,6 +256,65 @@
         $('#label_activo').removeClass("btn-danger").addClass("btn-success").text('Activo');
         $('#id_activo').prop('checked', true);
       };
+    });
+
+
+    // Obtener el campo de selección
+    const equipoFutbolSelect = $("#id_equipo_futbol");
+
+    // Obtener el campo socio_futbol
+    const campoSocioFutbol = $("#socio_futbol");
+
+     // Verificar el valor del campo de selección al cargar el formulario
+     if (equipoFutbolSelect.val() === "") {
+      // Si no hay una opción seleccionada, ocultar el campo socio_futbol
+      campoSocioFutbol.addClass("d-none");
+      $("#id_socio_futbol").val("False");
+    }
+
+    // Escuchar cambios en el campo de selección
+    equipoFutbolSelect.on("change", function () {
+      // Verificar si se ha seleccionado alguna opción
+      if (equipoFutbolSelect.val() !== "") {
+        // Mostrar el campo socio_futbol si se seleccionó alguna opción
+        if (campoSocioFutbol.hasClass("d-none")) {
+          campoSocioFutbol.removeClass("d-none");
+        }
+        $("#id_socio_futbol").val("False");
+
+      } else {
+        // Ocultar el campo socio_futbol si no se seleccionó ninguna opción
+        $("#id_socio_futbol").val("False");
+        campoSocioFutbol.addClass("d-none");
+      }
+    });
+    
+    // Obtener el campo de selección de profesion
+    const profesionSelect = $("#id_profesion");
+
+    // Obtener el campo matriculado
+    const campoMatriculado = $("#matriculado");
+
+     // Verificar el valor del campo de selección al cargar el formulario
+     if (profesionSelect.val() === "") {
+      // Si no hay una opción seleccionada, ocultar el campo socio_futbol
+      campoMatriculado.addClass("d-none");
+      $("#id_matriculado").val("False");
+    }
+
+    // Escuchar cambios en el campo de selección
+    profesionSelect.on("change", function () {
+      // Verificar si se ha seleccionado alguna opción
+      if (profesionSelect.val() !== "") {
+        // Mostrar el campo matriculado si se seleccionó alguna opción
+        if (campoMatriculado.hasClass("d-none")) { campoMatriculado.removeClass("d-none"); }
+        $("#id_matriculado").val("False");
+
+      } else {
+        // Ocultar el campo matriculado si no se seleccionó ninguna opción
+        $("#id_matriculado").val("False");
+        campoMatriculado.addClass("d-none");
+      }
     });
 
 

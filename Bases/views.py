@@ -17,7 +17,6 @@ from datetime import date
 
 #region ############################################################### Base General (Perfiles)
 
-from django.db.models import Q
 
 class PerfilesListView(LoginRequiredMixin, ListView):
     model = Perfiles
@@ -57,6 +56,12 @@ class PerfilesListView(LoginRequiredMixin, ListView):
             if self.request.GET.get('con_domicilio', None):
                 q &= ~Q(calle__isnull=True)
 
+            if self.request.GET.get('con_instagram', None):
+                q &= ~Q(instagram__isnull=True)
+
+            if self.request.GET.get('con_facebook', None):
+                q &= ~Q(facebook__isnull=True)
+
             # Variables separadas para los campos "sexo" y "fecha_nacimiento"
             sexo_f_q = Q()
             if self.request.GET.get('sexo_f', None):
@@ -69,6 +74,10 @@ class PerfilesListView(LoginRequiredMixin, ListView):
             sexo_x_q = Q()
             if self.request.GET.get('sexo_x', None):
                 sexo_x_q |= Q(sexo="X")
+
+            sexo_null_q = Q()
+            if self.request.GET.get('sexo_desconocido', None):
+                sexo_x_q |= Q(sexo__isnull=True)
 
             # Combinar las variables de sexo en una sola variable
             q &= (sexo_f_q | sexo_m_q | sexo_x_q)
@@ -157,7 +166,10 @@ class EdicionMultipleFormView(LoginRequiredMixin,SuccessMessageMixin,UpdateView)
         context = super(EdicionMultipleFormView, self).get_context_data(**kwargs)
         voluntario = BaseVoluntariosPerfiles.objects.filter(fk_perfil_v=pk).first()
         fiscal = BaseFiscalesPerfiles.objects.filter(fk_perfil_f=pk).first()
+        
                 
+        context['es_voluntario'] = True if voluntario else False
+        context['es_fiscal'] = True if fiscal else False
         context['form_voluntarios'] = self.form_voluntarios(instance=voluntario)
         context['form_fiscales'] = self.form_fiscales(instance=fiscal)
         return context

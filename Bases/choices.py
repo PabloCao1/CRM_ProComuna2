@@ -8,7 +8,15 @@ CHOICE_EQUIPO_FUTBOL = [
     ('San Lorenzo', 'San Lorenzo'),
     ('Otro', 'Otro'),
 ]
-# ---------- CHOICES---------------------
+CHOICE_PROFESION = [
+    (None, ''),
+    ('Administrador', 'Administrador'),
+    ('Abogado', 'Abogado'),
+    ('Escribano', 'Escribano'),
+    ('Contador', 'Contador'),
+    ('Otro', 'Otro'),
+]
+
 CHOICE_AFINIDAD = [
     (None, ''),
     ('Horacio Rodriguez Larreta', 'Horacio Rodriguez Larreta'),

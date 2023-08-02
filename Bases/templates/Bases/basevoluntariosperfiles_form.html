@@ -42,16 +42,17 @@
         </div>
         <div class="card-body mt-3">
           <div class="form-row mb-3">
-            <div class="form-group pb-2 col-12">
+            
+            <div class="form-group pt-2 col-md-3">
               {{form.grupo_wsp| as_crispy_field}}
+            </div>
+            <div class="form-group pt-2 col-md-3">
               {{form.gen_23| as_crispy_field}}
+            </div>
+            <div class="form-group pt-2 col-md-3">
               {{form.eventos| as_crispy_field}}
             </div>
-            
-            <div class="form-group pt-2 col-md-6">
-              {{form.equipo_futbol| as_crispy_field}}
-            </div>
-            <div class="form-group pt-2 col-md-6">
+            <div class="form-group pt-2 col-md-3">
               {{form.afinidad| as_crispy_field}}
             </div>
             <div class="form-group pt-2 col-12 d-none" id="otro">

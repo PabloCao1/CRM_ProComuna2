@@ -7,7 +7,7 @@
     <li class="breadcrumb-item text-muted  ">Bases </li>
     <li class="breadcrumb-item "><a href="{% url 'perfiles_listar' %}"
             class="text-muted text-decoration-none">Perfiles</a></li>
-    <li class="breadcrumb-item "> {{ object.documento}}</li>
+    <li class="breadcrumb-item "> {{ object}}</li>
 </ol>
 {% endblock %};
 {% load crispy_forms_tags %}
@@ -73,7 +73,7 @@
                     <li class="nav-item">
                         <div class="comment-text">
                             Edad
-                            <span class="username">{{object.edad|default:""}} años</span>
+                            <span class="username">{{object.edad|default:"-"}} años</span>
                         </div>
                     </li>
                     <li class="nav-item">
@@ -93,7 +93,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-5 pb-3">
+    <div class="col-sm-4 pb-3">
         <div class="card card-gray-dark card-outline  h-100">
             <div class="card-header">
                 <div class="card-title">
@@ -130,71 +130,84 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-3  text-center">
         {% if object.activo %}
-        <div class="info-box bg-success mb-2">
-            <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
-            <div class="info-box-content font-weight-bold">
+        <div class="card bg-success py-3 mb-1">
+            <h5 class="font-weight-bold my-1">
                 ACTIVO
-            </div>
+            </h5>
         </div>
         {% else %}
-        <div class="info-box bg-danger mb-2">
-            <span class="info-box-icon"><i class="far fa-thumbs-down"></i></span>
-
-            <div class="info-box-content font-weight-bold">
+        <div class="card bg-danger py-3 mb-1">
+            <h5 class="font-weight-bold my-1">
                 INACTIVO
-            </div>
+            </h5>
         </div>
         {% endif %}
         {% if object.es_fiscal or object.es_voluntario %}
         {% if object.es_fiscal %}
-        <div class="info-box bg-secondary mb-2 px-2">
-            <div class="info-box-content text-center px-0 font-weight-bold">
+        <div class="card bg-secondary py-2 mb-1">
+            <h5 class="font-weight-bold my-1">
                  EN BASE FISCALES
-            </div>
+            </h5>
         </div>
         {%endif%}
         {% if object.es_voluntario %}
-        <div class="info-box bg-secondary mb-2 px-2">
-            <div class="info-box-content text-center px-0 font-weight-bold">
+        <div class="card bg-secondary py-2 mb-1">
+            <h5 class="font-weight-bold my-1">
                  EN BASE VOLUNTARIOS
-            </div>
+                </h5>
         </div>
         {%endif%}
         {%else%}
-        <div class="info-box bg-secondary mb-2 px-2">
-            <div class="info-box-content text-center px-0 font-weight-bold">
+        <div class="card bg-secondary py-2 mb-1">
+            <h5 class="font-weight-bold my-1">
                  EN BASE GENERAL
-            </div>
+                </h5>
         </div>
         {%endif%}
 
+        {% if object.socio_futbol %}
+        <div class="card bg-secondary py-2 mb-1">
+            <h5 class="font-weight-bold my-1">
+                ES SOCIO DE {{object.equipo_futbol|upper}}
+            </h5>
+        </div>
+        {% endif %}
+
+        {% if object.matriculado %}
+        <div class="card bg-secondary py-2 mb-1">
+            <h5 class="font-weight-bold my-1">
+                ES {{object.profesion|upper}} MATRICULADO
+            </h5>
+        </div>
+        {% endif %}
+
         {% if object.es_empleadoGCBA %}
-        <div class="info-box bg-secondary mb-2 px-2">
-            <div class="info-box-content text-center px-0 font-weight-bold">
+        <div class="card bg-secondary py-2 mb-1">
+            <h5 class="font-weight-bold my-1">
                 ES EMPLEADO GCBA
-            </div>
+            </h5>
         </div>
         {% else %}
-        <div class="info-box bg-secondary mb-2 px-2">
-            <div class="info-box-content text-center px-0 font-weight-bold">
+        <div class="card bg-secondary py-2 mb-1">
+            <h5 class="font-weight-bold my-1">
                 NO ES EMPLEADO GCBA
-            </div>
+            </h5>
         </div>
         {% endif %}
         
         {% if object.es_militante %}
-        <div class="info-box bg-secondary px-2">
-            <div class="info-box-content text-center px-1 font-weight-bold">
+        <div class="card bg-secondary py-2 mb-1">
+            <h5 class="font-weight-bold my-1">
                 ES MILITANTE
-            </div>
+            </h5>
         </div>
         {% else %}
-        <div class="info-box bg-secondary px-2">
-            <div class="info-box-content text-center px-1 font-weight-bold">
+        <div class="card bg-secondary py-2 mb-1">
+            <h5 class="font-weight-bold my-1">
                 NO ES MILITANTE 
-            </div>
+            </h5>
         </div>
         {% endif %}
 
@@ -242,6 +255,12 @@
                                         {% endif%}
                                 </div>
                             </li>
+                           
+
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="nav nav-pills flex-column">
                             <li class="nav-item">
                                 <div class="comment-text">
                                     Participa en eventos del local?
@@ -253,11 +272,6 @@
                                         {% endif%}
                                 </div>
                             </li>
-
-                        </ul>
-                    </div>
-                    <div class="col-sm-6">
-                        <ul class="nav nav-pills flex-column">
                             <li class="nav-item">
                                 <div class="comment-text">
                                     Afinidad con candidato/a
@@ -272,10 +286,15 @@
                                     </span>
                                 </div>
                             </li>
+                            
+                        </ul>
+                    </div>
+                    <div class="col-12">
+                        <ul class="nav nav-pills flex-column">
+                            
                             <li class="nav-item">
                                 <div class="comment-text">
-                                    Afinidad con equipo de fútbol
-                                    <span class="username mb-2">{{voluntario.equipo_futbol|default:"-"}}</span>
+                                   
                                 </div>
                             </li>
                             <li class="nav-item">
