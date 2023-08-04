@@ -24,21 +24,30 @@
 
 </head>
 
-<body class="hold-transition login-page">
+<body class="hold-transition login-page  dark-mode">
   <div class="login-box">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span> </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
     <div class="login-logo">
       <img class="img-fluid rounded-circle w-25" src="{% static 'images/procomuna2.png' %}" alt="logo" />
     </div>
     <!-- /.login-logo -->
-    <div class="card">
-      <div class="card-header bg-light justify-content-center">
+    <div class="card card-outline card-secondary">
+      <div class="card-header justify-content-center">
 
         <!-- <h3 class="font-weight-bold text-center card-title">CRM</h3> -->
         <h3 class="text-center my-0 ">CRM</h3>
       </div>
       <div class="card-body login-card-body mt-3">
 
-        <form action="" method="post">
+        <form action="" method="post"  autocomplete="off">
           {% csrf_token %}
           <div class="input-group mb-3">
             <input type="text" class="form-control" name="username" id="id_username" placeholder="Usuario">
@@ -47,7 +56,7 @@
             <input type="password" class="form-control" placeholder="Contraseña" name="password" id="id_password">
           </div>
           <div class="row mb-3 mt-5 justify-content-center">
-            <button type="submit" class="btn btn-primary px-5">Entrar </button>
+            <button type="submit" class="btn btn-secondary px-5">Entrar </button>
           </div>
         </form>
         <div class="row">

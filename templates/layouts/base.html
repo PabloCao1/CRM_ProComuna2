@@ -31,7 +31,8 @@
   {% block custom_head%}{% endblock custom_head%}
 </head>
 
-<body class="hold-transition sidebar-mini layout-navbar-fixed layout-fixed {% if request.user.usuarios.darkmode %} dark-mode {% endif %}" >
+<body
+  class="hold-transition sidebar-mini layout-navbar-fixed layout-fixed {% if request.user.usuarios.darkmode %} dark-mode {% endif %}">
   <!-- Site wrapper -->
   <div class="wrapper">
     <!-- INICIO NAVBAR----------------->
@@ -75,6 +76,28 @@
     </div>
     <!-- /.content-wrapper -->
     <!-- FIN PARTE PRINCIPAL ----------------->
+
+    <!-- Modal logout -->
+    <div class="modal fade" id="modal-logout">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-grey-dark">
+          <div class="modal-header">
+            <h4 class="modal-title">Cierre de sesión</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+          </div>
+          <div class="modal-footer justify-content-end">
+            <a class="btn btn-danger" href="{% url 'logout' %}">Cerrar sesión</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /modal logout -->
 
     <footer class="main-footer text-sm">
       <div class="float-right d-none d-sm-block">
@@ -140,13 +163,6 @@
     }, function () {
       $(this).addClass("text-success");
       $(this).removeClass("text-danger");
-    });
-
-    $('#logout-link').click(function (event) {
-      event.preventDefault();
-      if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-        window.location.href = $(this).attr('href');
-      }
     });
 
     //control Darkmode como opcion de usuario
