@@ -3,21 +3,24 @@ from .models import *
 from Bases.validators import MaxSizeFileValidator
 
 class ComunicacionesForm(forms.ModelForm):
-    
-    foto = forms.ImageField(required=False, label="Archivo", validators=[MaxSizeFileValidator(max_file_size=2)])
+    archivos = forms.FileField(
+        required=False, 
+        label="Adjuntos", 
+        validators=[MaxSizeFileValidator(max_file_size=2)],
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        destinatarios=Perfiles.objects.filter(email__isnull=False)
+        self.fields['destinatarios'].queryset = destinatarios #solo envio los perfiles que tienen mail
 
     class Meta:
         model = Comunicaciones
-        exclude = ('creado','modificado',)
+        exclude = ('creado',)
         widgets = {
-            'activo' :              forms.CheckboxInput(attrs={'class': 'btn-check btn-lg"', 'autocomplete':"off"}),
-            'texto' :       forms.Textarea(attrs={'rows':3, 'placeholder': ''}),
-            'grupos_invitados' :           forms.CheckboxSelectMultiple(attrs={"class": "custom-control-input"},),
-            'invitados_individuales' :           forms.CheckboxSelectMultiple(attrs={"class": "custom-control-input"},),
-            'fecha' :    forms.DateInput(attrs={'type': 'date'}, format="%Y-%m-%d"),
+            'mensaje' :   forms.Textarea(attrs={'rows':5, 'placeholder': ''}),
         }
         labels = {
-            'texto': 'Mensaje',
-            'grupos_invitados': '',
-            'invitados_individuales': '',
+            'titulo': 'Título del mensaje',
+            'asunto': 'Asunto del email',
         }

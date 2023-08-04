@@ -13,183 +13,112 @@
 {% endblock %};
 
 {% block content %}
-<div class="card card-gray-dark card-outline">
-  <div class="card-header">
-    <div class="row d-flex justify-content-between px-2">
-      <div class="col-sm-2">
-        <a href="{% url 'comunicaciones_crear'%}" class="btn btn-primary col">Agregar</a>
-      </div>
-      <div class="col-sm-4">
-        <form method='GET'>
-          <div class="form-row justify-content-sm-end">
-            <div class="form-group col-sm-8 mb-0 mb-0 pb-0">
-              <input type="text" class="form-control form-control-border border-width-2" ptype='text' name='busqueda'
-                value='{{ request.GET.busqueda }}' placeholder="Búsqueda..." aria-label="Search">
+<form method='GET'>
+  <div class="card card-gray-dark card-outline mb-5">
+    <div class="card-header">
+      <div class="row d-flex justify-content-between px-2">
+        <div class="col-12 col-sm-2 mb-0 p-0">
+          <a href="{% url 'comunicaciones_crear'%}" class="btn btn-primary d-block font-weight-bold">Agregar</a>
+        </div>
+        <div class="col-12 col-sm-3 mb-0 p-0">
+          <div class="form-row">
+            <div class="form-group col-sm-10 mb-0 mt-2 mt-sm-0 pb-0">
+              <input type="text" class="form-control form-control-border border-width-2" type='text' name='busqueda'
+                value='{{ request.GET.busqueda }}' placeholder="Búsqueda ..." aria-label="Search">
             </div>
-            <div class="form-group col-sm-4 mb-0 pb-0">
+            <div class="form-group col-sm-2 mb-0 pb-0">
               <button type="submit" class="btn btn-primary btn-block"><i class='fas fa-search'></i></button>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="card">
+</form>
+<div class="card card-primary card-outline">
+  <div class="card-header mt-2">
+    <h3 class="card-title">Bandeja de comunicaciones</h3>
+    <div class="card-tools">
+    <span class="badge badge-secondary h6">total: {{ object_list.paginator.count}}</span> 
+    </div>
+  </div>
+
   <div class="card-body p-0">
-    <div class="table-responsive text-nowrap  p-3">
-      <table class="table table-sm table-hover" >
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Fecha creado</th>
-            <th class="d-none d-sm-table-cell text-center">Estado</th>
-          </tr>
-        </thead>
+
+    <div class="table-responsive mailbox-messages">
+      <table class="table table-hover table-striped" id="tabla-derivaciones">
         <tbody>
           {% for o in object_list %}
-          <tr class="clickable-row " role="button" data-href="{% url 'comunicaciones_ver' o.id %}" title="ver detalle">
-            <td><span class="font-weight-bold small
-              {% if o.activo %} text-success {% else %}text-danger{% endif %}">
-                {{o.nombre|upper}}</span></td>
-            <td class="d-none d-sm-table-cell">{{o.creado}}</td>
-            <td class="d-none d-sm-table-cell text-center">
-              <span class="d-none">{{o.activo}}</span>
-              {% if o.activo %} <i class="fas fa-circle text-success"></i>
-              {% else %} <i class="fas fa-circle text-danger"></i>
+          <tr class="clickable-row " data-href="{% url 'comunicaciones_ver' o.id %}" title="Ver detalle" role="button">
+            <td class="mailbox-date">{{o.creado|date:'d/m/y'}}</td>
+            <td class="d-none d-sm-table-cell">{{o.asunto}}</td>
+            <td> <span class="badge badge-secondary">{{o.destinatarios.count}}</span> destinatarios</td>
+            <td>
+              {% if o.fallo %}
+              <span class="badge badge-warning h6 font-weight-bold">Con fallos</span>
+
+              {% else %}
+              <span class="badge badge-success h6 font-weight-bold">Correcta</span>
               {% endif %}
             </td>
+          </tr>
+          {% empty %}
+          <tr class="text-center">
+            <td colspan="2">Sin comunicaciones enviadas</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+
+    <!-- paginación  -->
+    <div class="pagination justify-content-center mt-4 mb-2">
+      <span class="step-links">
+        {% if object_list.has_previous %}
+        <a href="?page=1" class="btn btn-sm btn-secondary">&laquo; Primera</a>
+        <a href="?page={{ object_list.previous_page_number }}" class="btn btn-sm btn-secondary">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+          Página {{ object_list.number }} de {{ object_list.paginator.num_pages }}
+        </span>
+
+        {% if object_list.has_next %}
+        <a href="?page={{ object_list.next_page_number }}" class="btn btn-sm btn-secondary">Siguiente</a>
+        <a href="?page={{ object_list.paginator.num_pages }}" class="btn btn-sm btn-secondary">Última &raquo;</a>
+        {% endif %}
+      </span>
+    </div>
+
   </div>
 </div>
 {% endblock %}
+
 {% block customJS %}
 <script>
   $(document).ready(function () {
 
+    // Agregar un evento de clic a cada elemento del menú
+    $('.filtro').on('click', function () {
+      // Obtener el valor del filtro almacenado en el atributo 'data-filtro'
+      const filtro = $(this).data('filtro');
 
-    var pageTittle = document.title;
-    $logo = "https://www.msm.gov.ar/wp-content/uploads/2015/11/Municipalidad-de-San-Miguel-PNG.png"
-    var fechaHora = new Date().toLocaleString().replace(",", "").replace(/:.. /, " ");
+      // Mostrar todas las filas de la tabla
+      $('#tabla-derivaciones tbody tr').show();
 
-    $("#tabla").DataTable({
-      fixedHeader: {
-        header: true
-      },
-      dom: 'Blfrtip',
-      buttons: [{
-        //Botón para Excel-------------------------------------------------------------------------------------
-        extend: 'excel',
-        exportOptions: { columns: ':not(.notexport)', },
-        titleAttr: 'Exportar como Excel',
-        if(pageTittle) {
-          filename = pageTittle.replace(/[\[\]\*\/\\\?\:]/g, '');
-        }, else: { filename: 'reporte' },
-        footer: true,
-        text: '<button class="btn btn-sm btn-outline-success"><i class="fas fa-file-excel"></i></button>',
-        header: false,
-        customize: function (xlsx) {
-          var sheet = xlsx.xl.worksheets['sheet1.xml'];
-          $('row[r=3] c', sheet).attr('s', '2'); //bold fila 3
-        },
-        customizeData: function (data) {
-          //agrego una fila vacia para separar el header
-          var desc = [[''],];
-          data.body.unshift(data.header);
-          for (var i = 0; i < desc.length; i++) {
-            data.body.unshift(desc[i]);
-          };
-        }
-      },
-      //Botón para PDF-------------------------------------------------------------------------------------
-      {
-        extend: 'pdfHtml5',
-        exportOptions: {
-          columns: ':not(.notexport)',
-          modifier: {
-            fillColor: '#14afe4'
+      // Filtrar la tabla ocultando las filas que no coincidan con el filtro
+      if (filtro !== 'todos') {
+        $('#tabla-derivaciones tbody tr').each(function () {
+          const fila = $(this);
+          const columna = fila.find('td:nth-child(3)'); // Obtener la columna 3 (índice 2)
+
+          // Comparar el valor de la columna con el filtro y ocultar la fila si no coincide
+          if (columna.text().trim() !== filtro) {
+            fila.hide();
           }
-        },
-        footer: true,
-        title: pageTittle,
-        titleAttr: 'Exportar como PDF',
-        //toma el titulo la página como nombre del archivo
-        if(pageTittle) {
-          filename = pageTittle.replace(/[\[\]\*\/\\\?\:]/g, '');
-        }, else: { filename: 'reporte' },
-        text: '<button class="btn btn-sm btn-outline-danger"><i class="fas fa-file-pdf"></i></button>',
-        customize: function (doc) {
-          doc.styles.tableHeader.fillColor = '#14afe4';
-          doc.styles.tableHeader.margin = 5;
-          doc.styles.tableHeader.fontSize = 12;
-          doc['footer'] = (function (page, pages) {
-            return {
-              columns: [
-                'Municipalidad de San Miguel',
-                { alignment: 'center', text: fechaHora },
-                {
-                  alignment: 'right',
-                  text: ['Página ', { text: page.toString() }, ' de ', { text: pages.toString() }]
-                },
-              ],
-              margin: [10, 0]
-            }
-          });
-        },
-      },
-      //Botón para Imprimir-------------------------------------------------------------------------------------
-      {
-        extend: 'print',
-        exportOptions: { columns: ':not(.notexport)' },
-        footer: true,
-        title: pageTittle,
-        titleAttr: 'Imprimir',
-        text: '<button class="btn btn-sm btn-outline-dark"><i class="fas fa-print"></i></button>',
-        customize: function (win) {
-          $(win.document.body)
-            .css('font-size', '10pt')
-          $(win.document.body).find('table')
-            .addClass('compact')
-            .css('font-size', 'inherit')
-        }
-      }],
-      language: {
-        "decimal": "",
-        "emptyTable": "Sin resultados",
-        "info": "Mostrando _START_ a _END_ de <strong> _TOTAL_ Entradas </strong>",
-        "infoEmpty": "Mostrando 0 de 0 Entradas",
-        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-        "infoPostFix": "",
-        "thousands": ",",
-        "lengthMenu": "Mostrar _MENU_ Entradas",
-        "loadingRecords": "Cargando...",
-        "processing": "Procesando...",
-        "search": "",
-        "searchPlaceholder": "Filtrar resultados...",
-        "zeroRecords": "<span class='text-muted'>Sin resultados encontrados</span>",
-        "paginate": {
-          "first": "Primero",
-          "last": "Ultimo",
-          "next": "Siguiente",
-          "previous": "Anterior"
-        }
-      },
+        });
+      }
     });
-
-    $('.dt-buttons').addClass("mb-3 d-sm-inline float-sm-right  {%if not perms.usuarios.rol_imprimir %} d-none {%endif%}");
-    $('.dataTables_filter').addClass("px-3");
-    // $('.dataTables_length').addClass("px-3 mb-3 d-sm-inline float-sm-left");
-    $('.buttons-html5').removeClass("btn-secondary");
-    $('.buttons-print').removeClass("btn-secondary");
-    // // $('#tabla_wrapper').addClass("");
-    // // $('.dataTables_info').addClass("float-md-left mt-3");
-    // // $('.dataTables_paginate ').addClass("mt-3");
-    // $('.buttons-html5').addClass("p-1");
-    // $('.buttons-print').addClass("p-1");
 
   });
 </script>

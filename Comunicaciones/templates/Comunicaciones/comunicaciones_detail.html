@@ -4,153 +4,170 @@
 {% block titulo-pagina %}Comunicaciones{% endblock %};
 {% block breadcrumb %}
 <ol class="breadcrumb float-sm-right px-3">
-    <li class="breadcrumb-item "><a href="{% url 'comunicaciones_listar' %}"
-            class="text-muted text-decoration-none">Comunicaciones</a></li>
-    <li class="breadcrumb-item "> {{ object.nombre}}</li>
+    <li class="breadcrumb-item"><a href="{% url 'comunicaciones_listar' %}" class="text-muted">Comunicaciones</a></li>
+    <li class="breadcrumb-item active"> Detalle</li>
+    <li class="breadcrumb-item "> {{ object|truncatechars:9 }}</li>
 </ol>
 {% endblock %};
 {% load crispy_forms_tags %}
 
 {% block content %}
-
-<div class="row">
-    <div class="col-3">
-        <div class="card card-primary card-outline">
-            <div class="card-header mr-2 ml-2 mt-2 p-0">
-                {% if object.foto != "default.png"%}
-                <img class="card-img-top" src="{{object.foto.url}}" alt="Foto" />
-                {% else %}
-                <img class="card-img-top" src="{% static 'images/perfil.png'%}" alt="Foto" />
-                {% endif %}
+<div class="row ">
+    <div class="col-sm-9  pb-3">
+        <div class="card card-primary card-outline  h-100">
+            <div class="card-header">
+                <div class="card-title">
+                    Datos de la comunicación
+                </div>
             </div>
             <div class="card-footer card-comments p-2">
                 <ul class="nav nav-pills flex-column">
-                    <li class="nav-item"></li>
+
                     <li class="nav-item">
-                        <div class="comment-text">
-                            Estado
+                        <div class="comment-text ml-2 pt-2">
+                            Fecha de envio
+                            <span class="username">{{object.creado|default:"-"}}</span>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="comment-text ml-2 pt-2">
+                            Destinatarios
                             <span class="username">
-                                {% if object.activo %}
-                                <span class="text-success">Activo</span>
-                                {% else %}
-                                <span class="text-danger">Desactivado</span>
-                                {% endif %}
+                                <ul class="list-unstyled m-0">
+                                    {%for b in object.destinatarios.all %}
+
+                                    <li class="badge bg-secondary h6"><a
+                                            href="{% url 'perfiles_ver' b.id %}">{{b.email}}</a></li>
+                                    {%endfor%}
+                                </ul>
                             </span>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="comment-text ml-2 pt-2">
+                            Asunto
+                            <span class="username">{{object.asunto|default:"-"}}</span>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="comment-text ml-2 pt-2">
+                            Título del mensaje
+                            <span class="username">{{object.titulo|default:"-"}}</span>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <div class="comment-text pb-4 ml-2 pt-2">
+                            Mensaje
+                            <span class="username">{{object.mensaje|default:"-"}}</span>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="col-5">
-        <div class="row">
-            <div class="col">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <div class="card-title">
-                            Datos de la comunicación
-                        </div>
-                    </div>
-                    <div class="card-footer card-comments p-2">
-                        <ul class="nav nav-pills flex-column">
-
-                            <li class="nav-item">
-                                <div class="comment-text">
-                                    Nombre
-                                    <span class="username">{{object.nombre|default_if_none:"-"|default:"-"}}</span>
-                                </div>
-                            </li>
-
-                            <li class="nav-item">
-                                <div class="comment-text">
-                                    Mensaje
-                                    <span class="username">{{object.texto|default_if_none:"-"|default:"-"}}</span>
-                                </div>
-                            </li>
-
-                            <li class="nav-item">
-                                <div class="comment-text">
-                                    Fecha de envio
-                                    <span class="username">{{object.enviado|default_if_none:"-"|default:"-"}}</span>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <div class="comment-text">
-                                    Fecha de creacion
-                                    <span class="username">{{object.creado|default_if_none:"-"|default:"-"}}</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+    <div class="col-sm-3">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <div class="card-title">
+                    Envío
                 </div>
+            </div>
+            <div class="card-footer">
+                {% if object.fallo %}
+                <div class="card bg-warning py-3 mb-1 text-center">
+                    <h5 class="font-weight-bold my-1">
+                        CON FALLOS
+                    </h5>
+
+                </div>
+                <div class="row mt-3 px-3">
+                    <span class="text-sm text-muted">
+                        No fue posible enviar el correo a los siguientes destinatarios:
+                    </span>
+                    <span class="h6">
+                        {{object.fallo}}
+                    </span>
+                </div>
+
+                {% else %}
+                <div class="card bg-success py-3 mb-1  text-center">
+                    <h5 class="font-weight-bold my-1">
+                        CORRECTO
+                    </h5>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card card-primary card-outline ">
+            <div class="card-header">
+                <h3 class="card-title"> Archivos adjuntos</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool d-md-none" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+
+                {% if archivos %}
+                {% if files_img %}
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+                    <ol class="carousel-indicators">
+                        {% for f in files_img %}
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{forloop.counter}}"
+                            class="{% if forloop.counter == 1 %}active{% endif %}">
+                        </li>
+                        {% endfor %}
+                    </ol>
+                    <div class="carousel-inner rounded">
+                        {% for f in files_img %}
+                        <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+                            <a href="{{ MEDIA_URL }}{{ f.archivo.url }}" target="_blank"
+                                title="{{f.archivo|cut:'legajos/archivos/'}}">
+                                <img class="d-block w-100 carousel-image" src="{{ MEDIA_URL }}{{ f.archivo.url }}">
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-custom-icon" aria-hidten="true">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-custom-icon" aria-hidten="true">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+                {% endif %}
+
+                <ul class="list-unstyled mt-3 pl-2">
+                    {% for f in files_docs %}
+                    <li class="py-1">
+                        <a href="{{ MEDIA_URL }}{{f.archivo.url}}" class="text-sm" target="_blank"
+                            title="{{f.archivo|cut:'legajos/archivos/'}}"><i class="fas fa-file pr-1"></i>
+                            {{f.archivo|cut:"legajos/archivos/"|truncatechars:35 }}
+                        </a>
+                    </li>
+                    {% empty %}
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="text-center text-muted my-3">
+                    - Sin archivos adjuntos -
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
-    <div class="col-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <div class="card-title">
-                            Mensaje para
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <ul class="nav nav-pills flex-column">
-                            <li class="nav-item">
-                                <div class="comment-text">
-                                    <span class="username">
-                                        <ul class="list-unstyled m-0">
-                                            {%for b in object.grupos_invitados.all %}
-                                            <li class="badge bg-secondary h6">{{b}}</li>
-                                            {%empty%}
-                                            <li><span class="font-weight-bold">Sin grupos invitados</span></li>
-                                            {%endfor%}
-                                        </ul>
-                                        <ul class="list-unstyled m-0">
-                                            {%for b in object.invitados_individuales.all %}
-                                            <li class="badge bg-secondary h6">{{b}}</li>
-                                            {%empty%}
-                                            <li><span class="font-weight-bold">Sin individuos invitados</span></li>
-                                            {%endfor%}
-                                        </ul>
-                                    </span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <div class="card-title">
-                            Estado del mensaje
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <span class="font-weight-bold">Estado: Sin enviar</span>
-                            </li>
-                            <li class="nav-item"><button class="btn btn-primary btn-block">Enviar</button></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row mt-3">
-    <div class="col-sm-12 text-center">
-        <a href="{% url 'comunicaciones_eliminar' object.id %}" class="btn btn-secondary">Eliminar</a>
-        <a href="{% url 'comunicaciones_editar' object.id %}">
-            <button type="submit" class="btn btn-primary">Editar</button>
-        </a>
+    <div class="col-12 text-center">
+        <a href="{% url 'comunicaciones_eliminar' object.id %}" class="btn btn-danger">Eliminar</a>
 
-
+        <button id="boton-volver" class="btn btn-secondary">Volver</button>
     </div>
 </div>
 
@@ -167,6 +184,12 @@
             $(".alert").alert('close');
         }, 3000);
 
+
+        // Agrega un evento click al botón "Volver" utilizando jQuery
+        $("#boton-volver").on("click", function () {
+            // Utiliza history.back() para navegar hacia atrás en la historia del navegador
+            history.back();
+        });
 
     });
 

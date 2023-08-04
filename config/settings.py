@@ -158,15 +158,23 @@ ACCOUNT_FORMS = {'login': 'user.forms.UserLoginForm'}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'novedades.procomuna2@gmail.com'
-SERVER_EMAIL = 'novedades.procomuna2@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'novedades.procomuna2@gmail.com'
 EMAIL_HOST_PASSWORD = 'stnrunkeallsrvpg'
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# DEFAULT_FROM_EMAIL = 'novedades.procomuna2@gmail.com'
+# SERVER_EMAIL = 'novedades.procomuna2@gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'novedades.procomuna2@gmail.com'
+# EMAIL_HOST_PASSWORD = 'stnrunkeallsrvpg'
 
 CRISPY_CLASS_CONVERTERS = {
     'textinput': "form-control-border border-width-2",

@@ -7,9 +7,9 @@
 
 {% block breadcrumb %}
 <ol class="breadcrumb float-sm-right ">
-    <li class="breadcrumb-item "> Administración</li>
-    <li class="breadcrumb-item"><a href="{% url 'usuarios_listar' %}">Usuarios</a></li>
-    <li class="breadcrumb-item active"> {{ object.usuario}}</li>
+    <li class="breadcrumb-item"><a href="{% url 'usuarios_listar' %}" class="text-muted">Usuarios</a></li>
+    <li class="breadcrumb-item active"> Detalle</li>
+    <li class="breadcrumb-item "> {{ object.usuario}}</li>
 </ol>
 {% endblock %};
 
@@ -31,8 +31,8 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-3">
-        <div class="card card-gray-dark card-outline">
+    <div class="col-sm-3 pb-3">
+        <div class="card card-gray-dark card-outline h-100">
             <div class="card-header mr-2 ml-2 mt-2 p-0">
                 {% if object.imagen != "default.png"%}
                 <img class="card-img-top" src="{{object.imagen.url}}" alt="User profile picture" />
@@ -44,7 +44,7 @@
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item"></li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Estado
                             <span class="username">
                                 {% if object.usuario.is_active %}
@@ -71,38 +71,38 @@
                     <div class="card-footer card-comments p-2">
                         <ul class="nav nav-pills flex-column">
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Usuario
                                     <span class="username">{{object.usuario}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Nombre
                                     <span class="username">{{object.usuario.first_name|default_if_none:"-"|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Apellido
                                     <span class="username">{{object.usuario.last_name|default_if_none:"-"|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     DNI
                                     <span
                                         class="username">{{object.dni|default_if_none:"-"|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     EMAIL
                                     <span class="username">{{object.usuario.email|default_if_none:"-"|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Telefono
                                     <span
                                         class="username">{{object.telefono|default_if_none:"-"|default:"-"}}</span>
@@ -124,7 +124,7 @@
             <div class="card-footer card-comments p-2">
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             
                             <span class="username">
                                 <ul class="list-unstyled m-0">

@@ -25,11 +25,13 @@
         <a href="" class="btn btn-secondary mr-1 print">Imprimir</a>
         <a href="{% url 'perfiles_eliminar' object.id %}" class="btn btn-danger mr-1">Eliminar</a>
         {%if perms.Usuarios.base_fiscales and not fiscal %}
-        <a href="{% url 'fiscales_crear' object.id %}" class="btn btn-outline-info mr-1 float-sm-right mt-2 mt-sm-0">Agregar como
+        <a href="{% url 'fiscales_crear' object.id %}"
+            class="btn btn-outline-info mr-1 float-sm-right mt-2 mt-sm-0">Agregar como
             fiscal</a>
         {% endif %}
         {%if perms.Usuarios.base_voluntarios and not voluntario %}
-        <a href="{% url 'voluntarios_crear' object.id %}" class="btn btn-outline-info mr-1 float-sm-right mt-2 mt-sm-0">Agregar como
+        <a href="{% url 'voluntarios_crear' object.id %}"
+            class="btn btn-outline-info mr-1 float-sm-right mt-2 mt-sm-0">Agregar como
             voluntario</a>
         {% endif %}
     </div>
@@ -47,43 +49,43 @@
             <div class="card-footer card-comments p-2">
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Nombres
                             <span class="username">{{object.nombres|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Apellidos
                             <span class="username">{{object.apellidos|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Sexo
                             <span class="username">{{object.sexo|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Fecha de Nacimiento
                             <span class="username">{{object.fecha_nacimiento|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Edad
                             <span class="username">{{object.edad|default:"-"}} años</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Nacionalidad
                             <span class="username">{{object.nacionalidad|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             DNI
                             <span class="username">{{object.documento|default:"-"}}</span>
                         </div>
@@ -103,32 +105,32 @@
             <div class="card-footer card-comments p-2">
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Email
                             <span class="username">{{object.email|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Telefono
                             <span class="username">{{object.telefono|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Instagram
                             <span class="username">{{object.instagram|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Facebook
                             <span class="username">{{object.facebook|default:"-"}}</span>
                         </div>
                     </li>
 
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Domicilio
                             <span class="username">{{object.direccion_completa|default:"-"}}</span>
                         </div>
@@ -147,38 +149,38 @@
             <div class="card-footer card-comments p-2">
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Afinidad equipo fútbol
                             <span class="username">{{object.equipo_futbol|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Es socio del club
                             <span class="username">{{object.equipo_futbol|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Profesión/Actividad
                             <span class="username">{{object.profesion|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Está matriculado
                             <span class="username">{{object.matriculado|yesno:'SI,NO'}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Es empleado del GCBA
                             <span class="username">{{object.es_empleadoGCBA|yesno:'SI,NO'}}</span>
                         </div>
                     </li>
 
                     <li class="nav-item">
-                        <div class="comment-text">
+                        <div class="comment-text ml-2 pt-2">
                             Es militante
                             <span class="username">{{object.es_militante|yesno:'SI,NO'}}</span>
                         </div>
@@ -205,22 +207,22 @@
         {% if object.es_fiscal %}
         <div class="card bg-secondary py-2 mb-1">
             <h5 class="font-weight-bold my-1">
-                 BASE FISCALES
+                BASE FISCALES
             </h5>
         </div>
         {%endif%}
         {% if object.es_voluntario %}
         <div class="card bg-secondary py-2 mb-1">
             <h5 class="font-weight-bold my-1">
-                 BASE VOLUNTARIOS
-                </h5>
+                BASE VOLUNTARIOS
+            </h5>
         </div>
         {%endif%}
         {%else%}
         <div class="card bg-secondary py-2 mb-1">
             <h5 class="font-weight-bold my-1">
-                 BASE GENERAL
-                </h5>
+                BASE GENERAL
+            </h5>
         </div>
         {%endif%}
 
@@ -247,7 +249,7 @@
             </h5>
         </div>
         {% endif %}
-        
+
         {% if object.es_militante %}
         <div class="card bg-secondary py-2 mb-1">
             <h5 class="font-weight-bold my-1">
@@ -279,7 +281,7 @@
                         <ul class="nav nav-pills flex-column">
 
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Está en grupo de Wsp JXC?
                                     <span class="username mb-2">
                                         {% if voluntario.grupo_wsp %}
@@ -290,7 +292,7 @@
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Está en gen 23?
                                     <span class="username mb-2">
                                         {% if voluntario.gen_23 %}
@@ -300,14 +302,14 @@
                                         {% endif%}
                                 </div>
                             </li>
-                           
+
 
                         </ul>
                     </div>
                     <div class="col-sm-6">
                         <ul class="nav nav-pills flex-column">
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Participa en eventos del local?
                                     <span class="username mb-2">
                                         {% if voluntario.eventos %}
@@ -318,7 +320,7 @@
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Afinidad con candidato/a
                                     <span class="username mb-2">
                                         {%if voluntario.afinidad%}
@@ -331,19 +333,19 @@
                                     </span>
                                 </div>
                             </li>
-                            
+
                         </ul>
                     </div>
                     <div class="col-12">
                         <ul class="nav nav-pills flex-column">
-                            
+
                             <li class="nav-item">
-                                <div class="comment-text">
-                                   
+                                <div class="comment-text ml-2 pt-2">
+
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Observaciones
                                     <span class="username mb-2">{{voluntario.observaciones|default:"-"}}</span>
                                 </div>
@@ -376,7 +378,7 @@
                         <ul class="nav nav-pills flex-column">
 
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Fué fiscal antes?
                                     <span class="username mb-2">
                                         {% if fiscal.fue_fiscal%}
@@ -389,13 +391,13 @@
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Última fecha en que fue fiscal
                                     <span class="username mb-2">{{fiscal.fecha_fiscal|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Rol ejercido
                                     <span class="username mb-2">{{fiscal.eventos|default:"-"}}</span>
                                 </div>
@@ -406,20 +408,20 @@
                     <div class="col-sm-6">
                         <ul class="nav nav-pills flex-column">
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Disponibilidad
                                     <span class="username mb-2">{{fiscal.disp_jornada|default:"-"}}</span>
 
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Desempeño
                                     <span class="username mb-2">{{voluntario.desempeno|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <div class="comment-text">
+                                <div class="comment-text ml-2 pt-2">
                                     Observaciones
                                     <span class="username mb-2">{{voluntario.observaciones|default:"-"}}</span>
                                 </div>
@@ -437,7 +439,7 @@
 
 <div class="row mt-4 d-print-none">
     <div class="col-12 mx-2">
-        <a href="{% url 'perfiles_listar' %}" class="btn btn-secondary">Volver</a>
+        <button id="boton-volver" class="btn btn-secondary">Volver</button>
     </div>
 </div>
 
@@ -446,4 +448,11 @@
 
 
 {% block customJS %}
+<script>
+    // Agrega un evento click al botón "Volver" utilizando jQuery
+    $("#boton-volver").on("click", function () {
+        // Utiliza history.back() para navegar hacia atrás en la historia del navegador
+        history.back();
+    });
+</script>
 {% endblock %}
