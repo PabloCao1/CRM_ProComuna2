@@ -26,13 +26,13 @@
                     <li class="nav-item">
                         <div class="comment-text ml-2 pt-2">
                             Fecha de envio
-                            <span class="username">{{object.creado|default:"-"}}</span>
+                            <span class="username  ml-3 mr-3">{{object.creado|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
                         <div class="comment-text ml-2 pt-2">
                             Destinatarios
-                            <span class="username">
+                            <span class="username  ml-2 mr-3">
                                 <ul class="list-unstyled m-0">
                                     {%for b in object.destinatarios.all %}
 
@@ -46,20 +46,20 @@
                     <li class="nav-item">
                         <div class="comment-text ml-2 pt-2">
                             Asunto
-                            <span class="username">{{object.asunto|default:"-"}}</span>
+                            <span class="username ml-2 mr-2">{{object.asunto|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
                         <div class="comment-text ml-2 pt-2">
                             Título del mensaje
-                            <span class="username">{{object.titulo|default:"-"}}</span>
+                            <span class="username ml-2 mr-2">{{object.titulo|default:"-"}}</span>
                         </div>
                     </li>
 
                     <li class="nav-item">
                         <div class="comment-text pb-4 ml-2 pt-2">
                             Mensaje
-                            <span class="username">{{object.mensaje|default:"-"}}</span>
+                            <span class="username ml-2 mr-2">{{object.mensaje|default:"-"}}</span>
                         </div>
                     </li>
                 </ul>

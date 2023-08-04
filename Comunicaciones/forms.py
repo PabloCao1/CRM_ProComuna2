@@ -11,7 +11,7 @@ class ComunicacionesForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        destinatarios=Perfiles.objects.filter(email__isnull=False)
+        destinatarios=Perfiles.objects.filter(email__isnull=False, activo=True)
         self.fields['destinatarios'].queryset = destinatarios #solo envio los perfiles que tienen mail
 
     class Meta:
