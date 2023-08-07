@@ -43,30 +43,29 @@
         </div>
         <div class="card-body mt-3">
           <div class="form-row mb-3">
-            <div class="form-group pb-2  col-12">
-              {{form.fue_fiscal| as_crispy_field}}
-            </div>
-          </div>
-          <div class="form-row mb-3">
-            <div class="form-group col-md-3 pt-2">
-              {{form.fecha_fiscal| as_crispy_field}}
-            </div>
-            <div class="form-group col-md-3 pt-2">
-              {{form.rol_fiscal| as_crispy_field}}
-            </div>
-            <div class="form-group col-md-3 pt-2">
-              {{form.disp_jornada| as_crispy_field}}
-            </div>
-            <div class="form-group col-md-3 pt-2">
-              {{form.desempeno| as_crispy_field}}
-            </div>
-            <div class="form-group col-12 pt-2">
-              {{form.observaciones_f| as_crispy_field}}
-            </div>
-            <div class="form-group col-12 d-none">
+            <div class="form-group pt-2 col-12 d-none">
               {{form.fk_perfil_f| as_crispy_field}}
             </div>
+            <div class="form-group mt-2 col-md-2">
+              {{form.fue_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-3">
+              {{form.fecha_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-2">
+              {{form.rol_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-2">
+              {{form.disp_jornada| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-3">
+              {{form.desempeno| as_crispy_field}}
+            </div>
+            <div class="form-group mt-4 col-12">
+              {{form.observaciones_f| as_crispy_field}}
+            </div>
           </div>
+          
         </div>
       </div>
       

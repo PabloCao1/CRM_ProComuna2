@@ -7,14 +7,17 @@ from Usuarios.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import *
 from .forms import *
+from .choices import *
 from django.db.models import Q
 from django.core.paginator import Paginator,EmptyPage
 from django.urls import reverse_lazy
+from datetime import date
 
 
 
 
 #region ############################################################### Base General (Perfiles)
+
 
 class PerfilesListView(LoginRequiredMixin, ListView):
     model = Perfiles
@@ -22,73 +25,101 @@ class PerfilesListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         today = date.today()
         palabra = self.request.GET.get('busqueda')
-        if self.request.GET:
-            base_general = self.request.GET.get('base_general', None)
-            base_voluntarios = self.request.GET.get('base_voluntarios', None)
-            base_fiscal = self.request.GET.get('base_fiscal', None)
-            con_email = self.request.GET.get('con_email', None)
-            con_celular = self.request.GET.get('con_celular', None)
-            con_domicilio = self.request.GET.get('con_domicilio', None)
-            hasta_30_anios = self.request.GET.get('hasta_30_anios', None)
-            de_31_a_45_anios = self.request.GET.get('de_31_a_45_anios', None)
-            mas_de_46_anios = self.request.GET.get('mas_de_46_anios', None)
-            sexo_f = self.request.GET.get('sexo_f', None)
-            sexo_m = self.request.GET.get('sexo_m', None)
-            sexo_x = self.request.GET.get('sexo_x', None)
-            activo = self.request.GET.get('activo', None)
-            inactivo = self.request.GET.get('inactivo', None)
-        else:
-            base_general = None
-            base_voluntarios = None
-            base_fiscal = None
-            con_email = None
-            con_celular = None
-            con_domicilio = None
-            hasta_30_anios = None
-            de_31_a_45_anios = None
-            mas_de_46_anios = None
-            sexo_f = None
-            sexo_m = None
-            sexo_x = None
-            activo = None
-            inactivo = None
-           
-        if palabra:
-            object_list = self.model.objects.filter(
-            Q(nombres__icontains=palabra) |
-            Q(apellidos__icontains=palabra) |   
-            Q(documento__icontains=palabra) |
-            Q(telefono__iexact=palabra) |
-            Q(observaciones__icontains=palabra)
-    )
-        else: object_list = self.model.objects.all()
+        object_list = self.model.objects.all()
 
-        if base_general:  object_list = object_list.filter(es_voluntario=False).filter(es_fiscal=False)
-        if base_voluntarios:  object_list = object_list.filter(es_voluntario=True)
-        if base_fiscal:  object_list = object_list.filter(es_fiscal=True)
-        if con_email:  object_list = object_list.filter(email__isnull=False)
-        if con_celular:  object_list = object_list.filter(telefono__isnull=False)
-        if con_domicilio:  object_list = object_list.filter(calle__isnull=False)
-        if sexo_f:  object_list = object_list.filter(sexo="Femenino")
-        if sexo_m:  object_list = object_list.filter(sexo="Masculino")
-        if sexo_x:  object_list = object_list.filter(sexo="X")
-        if hasta_30_anios:  
-            age_threshold = today.year - 30
-            object_list = object_list.filter(fecha_nacimiento__gte=date(age_threshold, today.month, today.day))
-        if de_31_a_45_anios:
-            today = date.today()
-            age_threshold_1 = today.year - 31
-            age_threshold_2 = today.year - 45
+        if palabra:
             object_list = object_list.filter(
-                fecha_nacimiento__lte=date(age_threshold_1, today.month, today.day),
-                fecha_nacimiento__gte=date(age_threshold_2, today.month, today.day)
+                Q(nombres__icontains=palabra) |
+                Q(apellidos__icontains=palabra) |
+                Q(documento__icontains=palabra) |
+                Q(telefono__iexact=palabra) |
+                Q(observaciones__icontains=palabra)
             )
-        if mas_de_46_anios:
-            today = date.today()
-            age_threshold = today.year - 46
-            object_list = object_list.filter(fecha_nacimiento__lte=date(age_threshold, today.month, today.day))        
-        if activo:  object_list = object_list.filter(activo=True)
-        if inactivo:  object_list = object_list.filter(activo=False)
+
+        if self.request.GET:
+            q = Q()
+
+            if self.request.GET.get('base_general', None):
+                q &= ~Q(es_voluntario=True) & ~Q(es_fiscal=True)
+
+            if self.request.GET.get('base_voluntarios', None):
+                q |= Q(es_voluntario=True)
+
+            if self.request.GET.get('base_fiscal', None):
+                q |= Q(es_fiscal=True)
+
+            if self.request.GET.get('con_email', None):
+                q &= ~Q(email__isnull=True)
+
+            if self.request.GET.get('con_celular', None):
+                q &= ~Q(telefono__isnull=True)
+
+            if self.request.GET.get('con_domicilio', None):
+                q &= ~Q(calle__isnull=True)
+
+            if self.request.GET.get('con_instagram', None):
+                q &= ~Q(instagram__isnull=True)
+
+            if self.request.GET.get('con_facebook', None):
+                q &= ~Q(facebook__isnull=True)
+
+            # Variables separadas para los campos "sexo" y "fecha_nacimiento"
+            sexo_f_q = Q()
+            if self.request.GET.get('sexo_f', None):
+                sexo_f_q |= Q(sexo="Femenino")
+
+            sexo_m_q = Q()
+            if self.request.GET.get('sexo_m', None):
+                sexo_m_q |= Q(sexo="Masculino")
+
+            sexo_x_q = Q()
+            if self.request.GET.get('sexo_x', None):
+                sexo_x_q |= Q(sexo="X")
+
+            sexo_null_q = Q()
+            if self.request.GET.get('sexo_desconocido', None):
+                sexo_x_q |= Q(sexo__isnull=True)
+
+            # Combinar las variables de sexo en una sola variable
+            q &= (sexo_f_q | sexo_m_q | sexo_x_q)
+
+            edad_h30_q = Q()
+            if self.request.GET.get('hasta_30_anios', None):
+                age_threshold = today.year - 30
+                edad_h30_q |= Q(fecha_nacimiento__gte=date(age_threshold, today.month, today.day))
+
+            edad_h45_q = Q()
+            if self.request.GET.get('de_31_a_45_anios', None):
+                age_threshold_1 = today.year - 31
+                age_threshold_2 = today.year - 45
+                edad_h45_q |= Q(fecha_nacimiento__lte=date(age_threshold_1, today.month, today.day)) & \
+                          Q(fecha_nacimiento__gte=date(age_threshold_2, today.month, today.day))
+
+            edad_m46_q = Q()
+            if self.request.GET.get('mas_de_46_anios', None):
+                age_threshold = today.year - 46
+                edad_m46_q |= Q(fecha_nacimiento__lte=date(age_threshold, today.month, today.day))
+
+            edad_null = Q()
+            if self.request.GET.get('edad_desconocida', None):
+                edad_null |= Q(fecha_nacimiento__isnull=True)
+
+            # Combinar las variables para tener en cuenta las opciones excluyentes
+            q &= (edad_h30_q | edad_h45_q | edad_m46_q | edad_null)
+
+            # Variables separadas para activo e inactivo
+            activo_q = Q()
+            if self.request.GET.get('estado_activo', None):
+                activo_q |= Q(activo=True)
+
+            inactivo_q = Q()
+            if self.request.GET.get('estado_inactivo', None):
+                inactivo_q |= Q(activo=False)
+
+            # Combinar las variables para tener en cuenta ambas condiciones
+            q &= (activo_q | inactivo_q)
+
+            object_list = object_list.filter(q)
 
         object_list = object_list.distinct()
 
@@ -116,12 +147,22 @@ class PerfilesCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
     form_class = PerfilesForm
     success_message = "Registrado correctamente"  
 
+    
+    def get_context_data(self, **kwargs):
+        context = super(PerfilesCreateView, self).get_context_data(**kwargs)
+        context['barrios_comunas_map'] = BARRIOS_COMUNAS_MAP
+        return context
+
 
 class PerfilesUpdateView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
     model = Perfiles
     form_class = PerfilesForm    
     success_message = "Editado correctamente"   
 
+    def get_context_data(self, **kwargs):
+        context = super(PerfilesUpdateView, self).get_context_data(**kwargs)
+        context['barrios_comunas_map'] = BARRIOS_COMUNAS_MAP
+        return context
 
 class EdicionMultipleFormView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
     model= Perfiles
@@ -136,7 +177,10 @@ class EdicionMultipleFormView(LoginRequiredMixin,SuccessMessageMixin,UpdateView)
         context = super(EdicionMultipleFormView, self).get_context_data(**kwargs)
         voluntario = BaseVoluntariosPerfiles.objects.filter(fk_perfil_v=pk).first()
         fiscal = BaseFiscalesPerfiles.objects.filter(fk_perfil_f=pk).first()
-                
+        
+        context['barrios_comunas_map'] = BARRIOS_COMUNAS_MAP
+        context['es_voluntario'] = True if voluntario else False
+        context['es_fiscal'] = True if fiscal else False
         context['form_voluntarios'] = self.form_voluntarios(instance=voluntario)
         context['form_fiscales'] = self.form_fiscales(instance=fiscal)
         return context

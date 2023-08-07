@@ -27,23 +27,18 @@ class Usuarios(models.Model):
     class Meta:
         verbose_name = 'Usuario'
         verbose_name_plural = "Usuarios"
-        permissions = [
-            ("base_voluntarios", "Voluntarios"),
-            ("base_fiscales", "Fiscales"),
-            ("base_admin", "Administrador"),
-        ]
 
-    def users_con_perm(perm_name):
-            return User.objects.filter(
-                Q(user_permissions__codename=perm_name) |
-                Q(groups__permissions__codename=perm_name)).distinct()
+    # def users_con_perm(perm_name):
+    #         return User.objects.filter(
+    #             Q(user_permissions__codename=perm_name) |
+    #             Q(groups__permissions__codename=perm_name)).distinct()
     
     def get_absolute_url(self):
         return reverse('usuarios_ver', kwargs={'pk': self.pk})
         
-def users_con_permiso(perm_name):
-    return User.objects.filter(
-        Q(user_permissions__codename=perm_name) |
-        Q(groups__permissions__codename=perm_name)).distinct()
+# def users_con_permiso(perm_name):
+#     return User.objects.filter(
+#         Q(user_permissions__codename=perm_name) |
+#         Q(groups__permissions__codename=perm_name)).distinct()
 
 #endregion ------------------FIN EXTENSION USER MODEL--------------+---------------------------------------------

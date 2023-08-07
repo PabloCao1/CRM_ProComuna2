@@ -7,30 +7,17 @@ from Bases.models import *
 from Eventos.models import Bases
 
 
-#---------TABLA EVENTOS------------------
+#---------TABLA COMUNICACIONES------------------
 class Comunicaciones(models.Model):
-    nombre = models.CharField(max_length=250, null=False, blank=False)
-    texto = models.CharField (max_length= 500, null=True, blank=True)
-    foto = models.ImageField(upload_to="img_comunicaciones", default='default.png')
-    activo = models.BooleanField(default=True)
-    invitados_individuales = models.ManyToManyField(Perfiles, blank=True)
-    grupos_invitados = models.ManyToManyField(Bases, blank=True)
-    creado     = models.DateField(auto_now_add=True)
-    enviado = models.DateField(null=True, blank=True)
-    modificado = models.DateField(auto_now=True)
+    asunto                  = models.CharField(max_length=250)
+    titulo                  = models.CharField(max_length=250)
+    mensaje                 = models.CharField (max_length= 500)
+    fallo                   = models.CharField (max_length= 500, null=True, blank=True)
+    destinatarios           = models.ManyToManyField(Perfiles)
+    creado                  = models.DateField(auto_now_add=True)
 
-    def delete(self):
-        if not (self.foto.name.endswith('default.png')):
-            self.foto.delete() # borra la imagen fisica
-        return super().delete()
-
-    def soft_delete(self):
-        self.activo = False
-        self.save()
-
-    def restore(self):
-        self.activo = True
-        self.save()
+    def __str__(self):
+        return self.asunto
     
     class Meta:
         ordering = ['creado']
@@ -39,3 +26,12 @@ class Comunicaciones(models.Model):
 
     def get_absolute_url(self):
         return reverse('comunicaciones_ver', kwargs={'pk': self.pk})
+
+class ComunicacionesArchivos(models.Model):
+    fk_comunicacion = models.ForeignKey(Comunicaciones, on_delete=models.CASCADE)
+    archivo = models.FileField(upload_to='comunicaciones/archivos/')
+    tipo = models.CharField(max_length=12)
+    fecha = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Archivo {self.id} de la comunicación {self.fk_comunicacion}"

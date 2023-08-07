@@ -130,7 +130,7 @@
                                     {%empty%}
                                     <li><span class="font-weight-bold">Sin grupos invitados</span></li>
                                 </ul>
-                                    {%endfor%}
+                                {%endfor%}
                                 <ul class="list-unstyled m-0">
                                     {%for b in object.invitados_individuales.all %}
                                     <li class="badge bg-secondary h6">{{b}}</li>
@@ -149,7 +149,8 @@
 </div>
 <div class="row mt-3">
     <div class="col-sm-12 text-center">
-        <a href="{% url 'eventos_eliminar' object.id %}" class="btn btn-secondary">Eliminar</a>
+        <a href="{% url 'eventos_eliminar' object.id %}" class="btn btn-danger">Eliminar</a>
+        <button id="boton-volver" class="btn btn-secondary">Volver</button>
         <a href="{% url 'eventos_editar' object.id %}">
             <button type="submit" class="btn btn-primary">Editar</button>
         </a>
@@ -170,6 +171,12 @@
         setTimeout(function () {
             $(".alert").alert('close');
         }, 3000);
+
+        // Agrega un evento click al botón "Volver" utilizando jQuery
+        $("#boton-volver").on("click", function () {
+            // Utiliza history.back() para navegar hacia atrás en la historia del navegador
+            history.back();
+        });
 
 
     });

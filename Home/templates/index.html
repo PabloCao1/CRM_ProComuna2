@@ -6,13 +6,13 @@
     <div class="col-sm-3">
       <div class="small-box bg-gradient-success">
         <div class="inner">
-          <h2>Usuarios</h2>
-          <p>8300 Registrados</p>
+          <h2>Base General</h2>
+          <p>{{general}} Personas</p>
         </div>
         <div class="icon">
           <i class="fas fa-user"></i>
         </div>
-        <a href="#" class="small-box-footer">
+        <a href="{% url 'perfiles_listar' %}" class="small-box-footer">
           Más <i class="fas fa-arrow-circle-right"></i>
         </a>
       </div>
@@ -21,13 +21,13 @@
     <div class="col-sm-3">
       <div class="small-box bg-gradient-warning">
         <div class="inner">
-          <h2>Bases</h2>
-          <p>8300 Personas</p>
+          <h2>Voluntarios</h2>
+          <p>{{voluntarios}} Personas</p>
         </div>
         <div class="icon">
-          <i class="fas fa-portrait"></i>
+          <i class="fas fa-hands-helping"></i>
         </div>
-        <a href="#" class="small-box-footer">
+        <a href="{% url 'perfiles_listar' %}" class="small-box-footer">
           Más <i class="fas fa-arrow-circle-right"></i>
         </a>
       </div>
@@ -36,13 +36,13 @@
     <div class="col-sm-3">
       <div class="small-box bg-maroon">
         <div class="inner">
-          <h2>Eventos</h2>
-          <p>45 Eventos</p>
+          <h2>Fiscales</h2>
+          <p>{{fiscales}} Personas</p>
         </div>
         <div class="icon">
-          <i class="fas fa-smile"></i>
+          <i class="fas fa-vote-yea"></i>
         </div>
-        <a href="#" class="small-box-footer">
+        <a href="{% url 'perfiles_listar' %}" class="small-box-footer">
           Más <i class="fas fa-arrow-circle-right"></i>
         </a>
       </div>
@@ -57,7 +57,7 @@
         <div class="icon">
           <i class="fas fa-calendar-alt"></i>
         </div>
-        <a href="#" class="small-box-footer">
+        <a href="{% url 'calendario' %}" class="small-box-footer">
           Más <i class="fas fa-arrow-circle-right"></i>
         </a>
       </div>

@@ -4,23 +4,23 @@ $(function () {
 
 	//Initialize Select2 Elements
 	$('.select2bs4').select2({
-	  theme: 'bootstrap4'
+		theme: 'bootstrap4'
 	})
-  });
+});
 
-$(".clickable-row").click(function() {
+$(".clickable-row").click(function () {
 	// se agrrega la clase en filas <tr> de un table para que sean links a la vista de detalle del elemento
-    window.location = $(this).data("href");
-    });
+	window.location = $(this).data("href");
+});
 
 setTimeout(function () {
 	// desaparecer los Success messages
-$(".alert").alert('close');
+	$(".alert").alert('close');
 }, 3000);
 
 $(".print").click(function () {
-    //imprime los div excepto los elementos que tengan la clase 'd-print-none'
-    window.print();
+	//imprime los div excepto los elementos que tengan la clase 'd-print-none'
+	window.print();
 });
 
 (function () {
@@ -49,3 +49,6 @@ $(".print").click(function () {
 		false
 	);
 })();
+
+
+

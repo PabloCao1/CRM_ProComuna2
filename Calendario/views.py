@@ -1,17 +1,20 @@
-from .models import *
-from django.shortcuts import render, redirect, get_object_or_404
-from django .contrib import messages
-from datetime import datetime
+from django.views.generic import TemplateView,View
+from django.views import View
+from django.http import JsonResponse
+from Eventos.models import Eventos
 
-#----------- VIEW CALENDARIO --------------------------
+class CalendarioView(TemplateView):
+    template_name = 'calendario/calendario.html'
 
-def Calendario(request):
-   anio = datetime.now().date()
-   year = anio.year
-   
-   data = {
-      }   
-   
-   return render(request,'calendario/calendario.html', data)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        eventos = Eventos.objects.filter(activo=True).values('id','nombre', 'fecha', 'hora', 'minutos', 'lugar', 'calle', 'altura', 'telefono', 'WEB', 'modo', 'observaciones', 'foto')
+        context['eventos'] = list(eventos)
+        return context
+
+class EventosJsonView(View):
+    def get(self, request, *args, **kwargs):
+        eventos = Eventos.objects.filter(activo=True).values('id','nombre', 'fecha', 'hora', 'minutos', 'lugar', 'calle', 'altura', 'telefono', 'WEB', 'modo', 'observaciones', 'foto')
+        return JsonResponse(list(eventos), safe=False)
 
 

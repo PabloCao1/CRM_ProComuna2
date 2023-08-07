@@ -4,8 +4,8 @@
 {% block titulo-pagina %} Usuarios{% endblock %};
 {% block breadcrumb %}
 <ol class="breadcrumb float-sm-right px-3">
-  <li class="breadcrumb-item"><a href="{% url 'usuarios_listar' %}" class="text-muted text-decoration-none">Usuarios</a>
-  </li>
+  <li class="breadcrumb-item"><a href="{% url 'usuarios_listar' %}" class="text-muted">Usuarios</a></li>
+  <li class="breadcrumb-item active"> {{object}}</li>
   <li class="breadcrumb-item active"> {%if request.resolver_match.url_name == "usuarios_editar"%} Editar {%else%}
     Crear {% endif %}</li>
 </ol>
@@ -69,7 +69,7 @@
             </div>
             <div class="form-group col-sm-6"
               title="Grupos a los cuales pertenece este usuario. Un usuario obtiene todos los permisos otorgados a cada uno de los grupos a los cuales pertenece.">
-              {{form.user_permissions| as_crispy_field}}
+              {{form.groups| as_crispy_field}}
             </div>            
             <div class="form-group col-12">
               {{form.is_active}}
@@ -81,7 +81,7 @@
       </div>
       <div class="mt-4 mx-2">
 				<button type="submit" class="btn btn-primary mr-1">Confirmar</button>
-				<a href="{% url 'usuarios_ver' object.id%}" class="btn btn-secondary">Cancelar</a>
+				<a href="{% url 'usuarios_ver' object.usuarios.id %}" class="btn btn-secondary">Cancelar</a>
 			</div>
     </form>
   </div>

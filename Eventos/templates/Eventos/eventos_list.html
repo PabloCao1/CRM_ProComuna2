@@ -13,32 +13,32 @@
 {% endblock %};
 
 {% block content %}
-<div class="card card-gray-dark card-outline">
-  <div class="card-header">
-    <div class="row d-flex justify-content-between px-2">
-      <div class="col-sm-2">
-        <a href="{% url 'eventos_crear'%}" class="btn btn-primary col">Agregar</a>
-      </div>
-      <div class="col-sm-4">
-        <form method='GET'>
-          <div class="form-row justify-content-sm-end">
-            <div class="form-group col-sm-8 mb-0 mb-0 pb-0">
-              <input type="text" class="form-control form-control-border border-width-2" ptype='text' name='busqueda'
-                value='{{ request.GET.busqueda }}' placeholder="Búsqueda..." aria-label="Search">
+<form method='GET'>
+  <div class="card card-gray-dark card-outline mb-5">
+    <div class="card-header">
+      <div class="row d-flex justify-content-between px-2">
+        <div class="col-12 col-sm-2 mb-0 p-0">
+          <a href="{% url 'eventos_crear'%}" class="btn btn-primary d-block font-weight-bold">Agregar</a>
+        </div>
+        <div class="col-12 col-sm-3 mb-0 p-0">
+          <div class="form-row">
+            <div class="form-group col-sm-10 mb-0 mt-2 mt-sm-0 pb-0">
+              <input type="text" class="form-control form-control-border border-width-2" type='text' name='busqueda'
+                value='{{ request.GET.busqueda }}' placeholder="Búsqueda ..." aria-label="Search">
             </div>
-            <div class="form-group col-sm-4 mb-0 pb-0">
+            <div class="form-group col-sm-2 mb-0 pb-0">
               <button type="submit" class="btn btn-primary btn-block"><i class='fas fa-search'></i></button>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</form>
 <div class="card">
   <div class="card-body p-0">
     <div class="table-responsive text-nowrap  p-3">
-      <table class="table table-sm table-hover" >
+      <table class="table table-sm table-hover">
         <thead>
           <tr>
             <th>Nombre</th>

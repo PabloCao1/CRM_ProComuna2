@@ -21,15 +21,15 @@
     <div class="card-header">
       <div class="row d-flex justify-content-between px-2">
         <div class="col-12 col-sm-2 mb-0 p-0">
-          <a href="{% url 'perfiles_crear'%}" class="btn btn-primary d-block">Agregar</a>
+          <a href="{% url 'perfiles_crear'%}" class="btn btn-primary d-block  font-weight-bold">Agregar</a>
         </div>
         <div class="col-12 col-sm-3 mb-0 p-0">
           <div class="form-row">
-            <div class="form-group col-sm-8 mb-0 mb-0 pb-0">
+            <div class="form-group col-sm-10 mb-0  mt-2 mt-sm-0 pb-0">
               <input type="text" class="form-control form-control-border border-width-2" type='text' name='busqueda'
                 value='{{ request.GET.busqueda }}' placeholder="Búsqueda ..." aria-label="Search">
             </div>
-            <div class="form-group col-sm-4 mb-0 pb-0">
+            <div class="form-group col-sm-2 mb-0 pb-0">
               <button type="submit" class="btn btn-primary btn-block"><i class='fas fa-search'></i></button>
             </div>
           </div>
@@ -56,14 +56,15 @@
                       <h6 class="font-weight-bold">Bases </h6>
                     </div>
                     <div class="card-body">
-                      <!-- <div class="form-group clearfix ">
+
+                      <div class="form-group clearfix ">
                         <div class="icheck-primary d-inline">
-                          <input type="checkbox" id="base_general" name="base_general" checked="">
+                          <input type="checkbox" id="base_general" name="base_general" >
                           <label for="base_general">
                             General
                           </label>
                         </div>
-                      </div> -->
+                      </div>
 
                       <div class="form-group clearfix ">
                         <div class="icheck-primary d-inline">
@@ -114,10 +115,29 @@
                         <div class="icheck-primary d-inline">
                           <input type="checkbox" id="con_domicilio" name="con_domicilio">
                           <label for="con_domicilio">
-                            Con Domicilio
+                            Con domicilio
+                          </label>
+                        </div>
+                      </div>                      
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="con_instagram" name="con_instagram">
+                          <label for="con_instagram">
+                            Con Instagram
                           </label>
                         </div>
                       </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="con_facebook" name="con_facebook">
+                          <label for="con_facebook">
+                            Con Facebook
+                          </label>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -151,6 +171,14 @@
                           <input type="checkbox" id="mas_de_46_anios" name="mas_de_46_anios">
                           <label for="mas_de_46_anios">
                             Más de 46 años
+                          </label>
+                        </div>
+                      </div>
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="edad_desconocida" name="edad_desconocida">
+                          <label for="edad_desconocida">
+                            Desconocido
                           </label>
                         </div>
                       </div>
@@ -189,6 +217,16 @@
                           </label>
                         </div>
                       </div>
+
+                      <div class="form-group clearfix ">
+                        <div class="icheck-primary d-inline">
+                          <input type="checkbox" id="sexo_desconocido" name="sexo_desconocido">
+                          <label for="sexo_desconocido">
+                            Desconocido
+                          </label>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -252,19 +290,18 @@
         <tbody>
           {% for o in object_list %}
           <tr class="clickable-row " role="button" data-href="{% url 'perfiles_ver' o.id %}" title="ver detalle">
-            <td>{{o.fecha_ingreso|date:"d/m/y"}}</td>
+            <td>{{o.creado|date:"d/m/y"}}</td>
             <td><span class="font-weight-bold small h6
               {% if o.activo %} text-success {% else %}text-danger{% endif %}">
-                {{o.apellidos|default:""}}
-                {{o.nombres|default:"-"}}</span></td>
+                {{o.nombres |default:"-"}} {{o.apellidos |default:""}}</span></td>
             <td>{{o.documento}}</td>
-            <td>{{o.edad|default:"-"}}</td>
-            <td class="d-none d-sm-table-cell">{{o.sexo}}</td>
+            <td> {% if o.edad%}{{o.edad}} años {%else%} - {%endif%}</td>
+            <td class="d-none d-sm-table-cell">{{o.sexo|default:"-"}}</td>
             <td class="d-none d-sm-table-cell">
-              {{ o.es_militante|yesno:'SÍ,NO' }}
+              {{ o.es_militante|yesno:'SI,NO' }}
             </td>
             <td class="d-none d-sm-table-cell">
-              {{ o.es_empleadoGCBA|yesno:'SÍ,NO' }}
+              {{ o.es_empleadoGCBA|yesno:'SI,NO' }}
             </td>
             <td class="d-none d-sm-table-cell">
               {% if o.es_fiscal or o.es_voluntario %}
@@ -280,8 +317,8 @@
             </td>
             <td class="d-none d-sm-table-cell text-center">
               <span class="d-none">{{o.activo}}</span>
-              {% if o.activo %} <i class="fas fa-circle text-success"></i>
-              {% else %} <i class="fas fa-circle text-danger"></i>
+              {% if o.activo %} <span class="text-success font-weight-bold">Activo</span>
+              {% else %} <span class="text-danger font-weight-bold">Desactivado</span>
               {% endif %}
             </td>
 
@@ -336,7 +373,7 @@
     language: {
       lengthMenu: "Mostrar _MENU_ filas por página.",
       zeroRecords: "No se encontraron registros.",
-      info: "<p class='ml-3 text-muted pt-3'>Página _PAGE_ de _PAGES_</p>",
+      info: "<p class='ml-3 pt-3 font-weight-bold'> TOTAL: _TOTAL_ resultados <span class='font-weight-normal text-sm'>(Mostrando _START_ a _END_)</span>  </p> ",
       infoEmpty: "No hay registros disponibles",
       infoFiltered: "(filtrado por _MAX_ registros.)",
       search: "",
@@ -352,6 +389,8 @@
   $('.pagination').addClass('float-right')
   $('.buttons-html5').removeClass('btn-secondary').addClass('px-1')
   $('.buttons-print').removeClass('btn-secondary').addClass('px-1')
+
+
 </script>
 
 
