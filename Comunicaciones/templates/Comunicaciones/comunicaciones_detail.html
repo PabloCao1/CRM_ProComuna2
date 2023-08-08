@@ -12,6 +12,14 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+<div class="row">
+    <!-- botones -->
+    <div class="col-12 my-3 mx-2 d-print-none">
+        
+        <a href="{% url 'comunicaciones_eliminar' object.id %}" class="btn btn-danger">Eliminar</a>
+    </div>
+    <!-- ./botones -->
+</div>
 <div class="row ">
     <div class="col-sm-9  pb-3">
         <div class="card card-primary card-outline  h-100">
@@ -164,9 +172,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12 text-center">
-        <a href="{% url 'comunicaciones_eliminar' object.id %}" class="btn btn-danger">Eliminar</a>
-
+    <div class="col-12">
         <button id="boton-volver" class="btn btn-secondary">Volver</button>
     </div>
 </div>
