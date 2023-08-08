@@ -13,7 +13,7 @@ class Comunicaciones(models.Model):
     titulo                  = models.CharField(max_length=250)
     mensaje                 = models.CharField (max_length= 500)
     fallo                   = models.CharField (max_length= 500, null=True, blank=True)
-    destinatarios           = models.ManyToManyField(Perfiles)
+    destinatarios           = models.ManyToManyField(Perfiles,blank=True)
     creado                  = models.DateField(auto_now_add=True)
 
     def __str__(self):
