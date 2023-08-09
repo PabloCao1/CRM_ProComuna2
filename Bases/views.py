@@ -1,10 +1,9 @@
 from typing import Any
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect,render
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,FormView,View
-from Usuarios.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from .models import *
 from .forms import *
 from .choices import *
@@ -15,11 +14,11 @@ from datetime import date
 
 
 
-
 #region ############################################################### Base General (Perfiles)
 
 
-class PerfilesListView(LoginRequiredMixin, ListView):
+class PerfilesListView(PermissionRequiredMixin, ListView):
+    permission_required = ('Bases.view_perfiles') 
     model = Perfiles
 
     def get_queryset(self):
@@ -126,7 +125,8 @@ class PerfilesListView(LoginRequiredMixin, ListView):
         return object_list
 
 
-class PerfilesDetailView(LoginRequiredMixin,DetailView):  
+class PerfilesDetailView(PermissionRequiredMixin,DetailView): 
+    permission_required = ('Bases.view_perfiles')  
     model = Perfiles
 
     def get_context_data(self, **kwargs):
@@ -136,13 +136,15 @@ class PerfilesDetailView(LoginRequiredMixin,DetailView):
         return context
     
 
-class PerfilesDeleteView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):  
+class PerfilesDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView):  
+    permission_required = ('Bases.delete_perfiles') 
     model = Perfiles
     success_url= reverse_lazy("perfiles_listar")
     success_message = "El registro fue eliminado correctamente"  
 
 
-class PerfilesCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):    
+class PerfilesCreateView(PermissionRequiredMixin,SuccessMessageMixin,CreateView):   
+    permission_required = ('Bases.create_perfiles')  
     model = Perfiles
     form_class = PerfilesForm
     success_message = "Registrado correctamente"  
@@ -154,7 +156,8 @@ class PerfilesCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
         return context
 
 
-class PerfilesUpdateView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
+class PerfilesUpdateView(PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+    permission_required = ('Bases.change_perfiles') 
     model = Perfiles
     form_class = PerfilesForm    
     success_message = "Editado correctamente"   
@@ -164,7 +167,9 @@ class PerfilesUpdateView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
         context['barrios_comunas_map'] = BARRIOS_COMUNAS_MAP
         return context
 
-class EdicionMultipleFormView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
+
+class EdicionMultipleFormView(PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+    permission_required = ('Bases.change_perfiles') 
     model= Perfiles
     template_name = 'Bases/edicionmultiple_form.html'
     form_class = PerfilesForm
@@ -249,13 +254,12 @@ class EdicionMultipleFormView(LoginRequiredMixin,SuccessMessageMixin,UpdateView)
     #         messages.error('no')
     #         return self.form_invalid(form_perfil)
 
-
-
 #endregion
 
 
 #region ############################################################### Base Voluntarios
-class VoluntariosCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):    
+class VoluntariosCreateView(PermissionRequiredMixin,SuccessMessageMixin,CreateView): 
+    permission_required = ('Bases.add_basevoluntariosperfiles')    
     model = BaseVoluntariosPerfiles
     form_class = BaseVoluntariosPerfilesForm
     success_message = "Registrado correctamente"  
@@ -279,7 +283,8 @@ class VoluntariosCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
 
 
 #region ############################################################### Base Fiscales 
-class FiscalesCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):    
+class FiscalesCreateView(PermissionRequiredMixin,SuccessMessageMixin,CreateView):  
+    permission_required = ('Bases.add_basefiscalesperfiles')   
     model = BaseFiscalesPerfiles
     form_class = BaseFiscalesPerfilesForm
     success_message = "Registrado correctamente"  

@@ -148,7 +148,7 @@
         </div>
       </div>
 
-      {%if perms.Usuarios.base_voluntarios and es_voluntario %}
+      {%if perms.Bases.change_basevoluntariosperfiles and es_voluntario %}
       <div class="card card-gray-dark mx-3 mb-4">
         <div class="card-header ">
           <div class="card-title">
@@ -188,7 +188,7 @@
       </div>
       {% endif %}
 
-      {%if perms.Usuarios.base_fiscales and es_fiscal %}
+      {%if perms.Bases.change_basefiscalesperfiles and es_fiscal %}
       <div class="card card-gray-dark mx-3 mb-4">
         <div class="card-header ">
           <div class="card-title">
