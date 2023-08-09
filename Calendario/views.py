@@ -8,13 +8,13 @@ class CalendarioView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        eventos = Eventos.objects.filter(activo=True).values('id','nombre', 'fecha', 'hora', 'minutos', 'lugar', 'calle', 'altura', 'telefono', 'WEB', 'modo', 'observaciones', 'foto')
+        eventos = Eventos.objects.all().values('id','nombre', 'fecha', 'hora', 'minutos', 'lugar', 'calle', 'altura', 'telefono', 'web', 'modo', 'mensaje', 'flyer')
         context['eventos'] = list(eventos)
         return context
 
 class EventosJsonView(View):
     def get(self, request, *args, **kwargs):
-        eventos = Eventos.objects.filter(activo=True).values('id','nombre', 'fecha', 'hora', 'minutos', 'lugar', 'calle', 'altura', 'telefono', 'WEB', 'modo', 'observaciones', 'foto')
+        eventos = Eventos.objects.all().values('id','nombre', 'fecha', 'hora', 'minutos', 'lugar', 'calle', 'altura', 'telefono', 'web', 'modo', 'mensaje', 'flyer')
         return JsonResponse(list(eventos), safe=False)
 
 

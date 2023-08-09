@@ -11,7 +11,7 @@ from Eventos.models import Bases
 class Comunicaciones(models.Model):
     asunto                  = models.CharField(max_length=250)
     titulo                  = models.CharField(max_length=250)
-    mensaje                 = models.CharField (max_length= 500)
+    mensaje                 = models.CharField (max_length= 1000)
     fallo                   = models.CharField (max_length= 500, null=True, blank=True)
     destinatarios           = models.ManyToManyField(Perfiles,blank=True)
     creado                  = models.DateField(auto_now_add=True)

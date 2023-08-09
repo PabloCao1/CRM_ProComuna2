@@ -55,6 +55,13 @@ class EventosUpdateView(PermisosMixin,SuccessMessageMixin,UpdateView):
     form_class = EventosForm
     success_message = "%(nombre)s fue editado correctamente"
 
+    def form_invalid(self, form):
+        # Agrega un mensaje de error para cada campo con errores
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{form.fields[field].label}: {error}")
+        return super().form_invalid(form)
+
 def EnviarCorreo(request, pk):
     subject = "Email Pro Comuna 2"
     event = Eventos.objects.get(pk=pk)
