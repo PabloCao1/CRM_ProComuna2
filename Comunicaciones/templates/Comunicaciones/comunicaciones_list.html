@@ -39,20 +39,20 @@
   <div class="card-header mt-2">
     <h3 class="card-title">Bandeja de comunicaciones</h3>
     <div class="card-tools">
-    <span class="badge badge-secondary h6">total: {{ object_list.paginator.count}}</span> 
+    <span class="badge badge-secondary h6  mr-2">total: {{ object_list.paginator.count}}</span> 
     </div>
   </div>
 
   <div class="card-body p-0">
 
     <div class="table-responsive mailbox-messages">
-      <table class="table table-hover table-striped" id="tabla-derivaciones">
+      <table class="table table-hover table-striped" id="tabla-comunicaciones">
         <tbody>
           {% for o in object_list %}
           <tr class="clickable-row " data-href="{% url 'comunicaciones_ver' o.id %}" title="Ver detalle" role="button">
             <td class="mailbox-date">{{o.creado|date:'d/m/y'}}</td>
             <td class="d-none d-sm-table-cell">{{o.asunto}}</td>
-            <td> <span class="badge badge-secondary">{{o.destinatarios.count}}</span> destinatarios</td>
+            <td> <span class="badge badge-light">{{o.destinatarios.count}}</span> destinatarios</td>
             <td>
               {% if o.fallo %}
               <span class="badge badge-warning h6 font-weight-bold">Con fallos</span>
@@ -104,11 +104,11 @@
       const filtro = $(this).data('filtro');
 
       // Mostrar todas las filas de la tabla
-      $('#tabla-derivaciones tbody tr').show();
+      $('#tabla-comunicaciones tbody tr').show();
 
       // Filtrar la tabla ocultando las filas que no coincidan con el filtro
       if (filtro !== 'todos') {
-        $('#tabla-derivaciones tbody tr').each(function () {
+        $('#tabla-comunicaciones tbody tr').each(function () {
           const fila = $(this);
           const columna = fila.find('td:nth-child(3)'); // Obtener la columna 3 (índice 2)
 

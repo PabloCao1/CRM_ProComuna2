@@ -17,7 +17,7 @@
 <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data">
   <!-- Security token -->
   {% csrf_token %}
-  <div class="card card-primary">
+  <div class="card card-outline card-primary">
     <div class="card-header">
       <h3 class="card-title">Modificar datos</h3>
       <div class="card-tools">
@@ -89,6 +89,8 @@
   <div class="form-row ">
     <div class="col-sm-12 text-center mt-5 mb-5">
       <a href="{% url 'index' %}"><button type="button" class="btn btn-secondary">Cancelar</button></a>
+      
+      <a href="{% url 'cambiar_password' %}" class="btn btn-secondary mr-1">Cambiar Contraseña</a>
       <button type="submit" class="btn btn-primary">Guardar</button>
     </div>
   </div>

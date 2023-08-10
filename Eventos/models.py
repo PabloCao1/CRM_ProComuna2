@@ -14,36 +14,38 @@ class Bases(models.Model):
 #---------TABLA EVENTOS------------------
 
 class Eventos(models.Model):
-    nombre = models.CharField(max_length=250, null=False, blank=False)
-    fecha = models.DateField(null=False, blank=False)
-    hora = models.CharField(max_length= 2, null=True, blank=True)
-    minutos = models.CharField(max_length= 2, null=True, blank=True)
-    lugar = models.CharField(max_length=250, null=True, blank=True)
-    calle = models.CharField(max_length=250, null=True, blank=True)
-    altura = models.PositiveSmallIntegerField(null=True, blank=True)
-    telefono = models.PositiveIntegerField(null=True, blank=True)
-    WEB = models.URLField(max_length=250, null=True, blank=True)
-    modo = models.CharField(max_length=15, null=True, blank=True)
-    observaciones = models.CharField (max_length= 500, null=True, blank=True)
-    foto = models.ImageField(upload_to="img_eventos", default='default.png')
-    activo = models.BooleanField(default=True)
-    invitados_individuales = models.ManyToManyField(Perfiles, null=True, blank=True)
-    grupos_invitados = models.ManyToManyField(Bases, null=True, blank=True)
-    creado     = models.DateField(auto_now_add=True)
-    modificado = models.DateField(auto_now=True)
+    nombre                  = models.CharField(max_length=250)
+    fecha                   = models.DateField()
+    hora                    = models.CharField(max_length= 2, null=True, blank=True)
+    minutos                 = models.CharField(max_length= 2, null=True, blank=True)
+    lugar                   = models.CharField(max_length=250, null=True, blank=True)
+    calle                   = models.CharField(max_length=250, null=True, blank=True)
+    altura                  = models.PositiveSmallIntegerField(null=True, blank=True)
+    piso                    = models.CharField(max_length=10, null=True, blank=True)
+    departamento            = models.CharField(max_length=20, null=True, blank=True)
+    telefono                = models.PositiveIntegerField(null=True, blank=True)
+    web                     = models.URLField(max_length=250, null=True, blank=True)
+    modo                    = models.CharField(max_length=15, null=True, blank=True)
+    mensaje                 = models.CharField (max_length= 1000, null=True, blank=True)
+    flyer                   = models.ImageField(upload_to="eventos/", default='default.png')
+    invitados               = models.ManyToManyField(Perfiles,blank=True)
+    fallo                   = models.CharField (max_length= 1000, null=True, blank=True)
+    creado                  = models.DateField(auto_now_add=True)
+    modificado              = models.DateField(auto_now=True)
 
     def delete(self):
         if not (self.foto.name.endswith('default.png')):
             self.foto.delete() # borra la imagen fisica
         return super().delete()
 
-    def soft_delete(self):
-        self.activo = False
-        self.save()
-
-    def restore(self):
-        self.activo = True
-        self.save()
+    @property
+    def estado(self):
+        if self.fecha < date.today():
+            return "Finalizado"
+        elif self.fecha == date.today():
+            return "Vigente"
+        else:
+            return "Pendiente"
 
     class Meta:
         ordering = ['fecha']

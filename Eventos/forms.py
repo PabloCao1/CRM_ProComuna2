@@ -5,25 +5,29 @@ from .choices import *
 
 class EventosForm(forms.ModelForm):
 
-    foto = forms.ImageField(required=False, label="Foto evento", validators=[MaxSizeFileValidator(max_file_size=2)])
+    flyer = forms.ImageField(required=False, label="Flyer evento", validators=[MaxSizeFileValidator(max_file_size=2)])
+    grupo_de_invitados = forms.MultipleChoiceField(required=False,widget=forms.SelectMultiple(),
+    choices=[('Base Fiscales', 'Base Fiscales'),('Base Voluntarios', 'Base Voluntarios'),('Base General', 'Base General'),])
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        invitados = Perfiles.objects.filter(email__isnull=False, activo=True)
+        self.fields['invitados'].queryset = invitados
+    
     class Meta:
         model = Eventos
         exclude = ('creado','modificado',)
         widgets = {
-            'activo' :              forms.CheckboxInput(attrs={'class': 'btn-check btn-lg"', 'autocomplete':"off"}),
-            'observaciones' :       forms.Textarea(attrs={'rows':3, 'placeholder': ''}),
-            'grupos_invitados' :           forms.CheckboxSelectMultiple(choices=CHOICE_BASES, attrs={"class": "custom-control-input"},),
-            'invitados_individuales' :           forms.CheckboxSelectMultiple(attrs={"class": "custom-control-input"},),
-            #'invitados_individuales': forms.CheckboxSelectMultiple(attrs={"class": "custom-control-input", "id": "id_invitados_individuales"}),
-            'fecha' :    forms.DateInput(attrs={'type': 'date'}, format="%Y-%m-%d"),
-            'modo': forms.Select(choices=CHOICE_MODO),
-            'WEB': forms.URLInput(),
-            'hora': forms.Select(choices=CHOICE_HORA),
-            'minutos': forms.Select(choices=CHOICE_MINUTOS),
+            'mensaje' :               forms.Textarea(attrs={'rows':5, 'placeholder': ''}),
+            'fecha' :                       forms.DateInput(attrs={'type': 'date'}, format="%Y-%m-%d"),
+            'modo':                         forms.Select(choices=CHOICE_MODO),
+            'hora':                         forms.Select(choices=CHOICE_HORA),
+            'minutos':                      forms.Select(choices=CHOICE_MINUTOS),
         }
         labels = {
-            'foto': '',
-            'grupos_invitados': '',
-            'invitados_individuales': '',
+            'departamento': 'Depto./Oficina',
+            'nombre': 'Nombre del evento',
+            'telefono': 'Teléfono',
         }
+
+        

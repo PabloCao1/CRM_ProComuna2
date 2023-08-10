@@ -125,7 +125,7 @@
                     .then(data => {
                         // Formatear los eventos para el calendario
                         var eventos = data.map(evento => ({
-                            title: evento.nombre,
+                            title: evento.nombre.charAt(0).toUpperCase() + evento.nombre.slice(1),
                             start: evento.fecha,
                             url: '/eventos/ver/' + evento.id,  // URL de la vista detalle del evento
                             color: getRandomColor(), // Asignar un color aleatorio

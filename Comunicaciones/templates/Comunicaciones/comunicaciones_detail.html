@@ -12,6 +12,14 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+<div class="row">
+    <!-- botones -->
+    <div class="col-12 my-3 mx-2 d-print-none">
+        
+        <a href="{% url 'comunicaciones_eliminar' object.id %}" class="btn btn-danger">Eliminar</a>
+    </div>
+    <!-- ./botones -->
+</div>
 <div class="row ">
     <div class="col-sm-9  pb-3">
         <div class="card card-primary card-outline  h-100">
@@ -46,7 +54,7 @@
                     <li class="nav-item">
                         <div class="comment-text ml-2 pt-2">
                             Asunto
-                            <span class="username ml-2 mr-2">{{object.asunto|default:"-"}}</span>
+                            <span class="username ml-2 mr-2">{{object.asunto|capfirst|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
@@ -75,7 +83,7 @@
             </div>
             <div class="card-footer">
                 {% if object.fallo %}
-                <div class="card bg-warning py-3 mb-1 text-center">
+                <div class="card bg-warning py-2 mb-1 text-center">
                     <h5 class="font-weight-bold my-1">
                         CON FALLOS
                     </h5>
@@ -91,7 +99,7 @@
                 </div>
 
                 {% else %}
-                <div class="card bg-success py-3 mb-1  text-center">
+                <div class="card bg-success py-2 mb-1  text-center">
                     <h5 class="font-weight-bold my-1">
                         CORRECTO
                     </h5>
@@ -164,9 +172,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12 text-center">
-        <a href="{% url 'comunicaciones_eliminar' object.id %}" class="btn btn-danger">Eliminar</a>
-
+    <div class="col-12">
         <button id="boton-volver" class="btn btn-secondary">Volver</button>
     </div>
 </div>

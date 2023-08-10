@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Error 403{% endblock %};
+
+{% block titulo-pagina %}{% endblock %};
+
+{% block breadcrumb %}
+
+{% endblock %};
+
+{% block menu-adicional %}
+{% endblock %};
+
+{% block content %}
+
+<div class="error-page align-items-center">
+    <h2 class="headline text-info">
+        403
+    </h2>
+    <div class="error-content">
+        <h3><i class="fas fa-exclamation-triangle text-info"></i>
+            ¡Ups! Algo salió mal.
+        </h3>
+        <p>
+
+        <div>
+
+            No tiene permisos suficientes para realizar la acción que deseaba. Si se trata de un error, comuníquese con el administrador del sistema. </div>
+        <div class="mt-2">Mientras tanto, puede 
+        <a href="{% url 'index' %}">volver al inicio. </a>
+       
+
+        </p>
+        
+    </div>
+</div>
+
+{% endblock content%}

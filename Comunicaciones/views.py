@@ -1,8 +1,8 @@
 from django.contrib import messages
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView
-from Usuarios.mixins import PermisosMixin
+from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,View
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
@@ -19,9 +19,10 @@ from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+import json
 
-class ComunicacionesListView(PermisosMixin, ListView):    
-    permission_required = ('Usuarios.rol_admin')  
+class ComunicacionesListView(PermissionRequiredMixin, ListView):    
+    permission_required = ('Comunicaciones.view_comunicaciones')  
     model = Comunicaciones
     template_name = 'Comunicaciones/comunicaciones_list.html'
 
@@ -46,8 +47,8 @@ class ComunicacionesListView(PermisosMixin, ListView):
 
         return page
     
-class ComunicacionesDetailView(PermisosMixin,DetailView):
-    permission_required = ('Usuarios.rol_admin')    
+class ComunicacionesDetailView(PermissionRequiredMixin,DetailView):
+    permission_required = ('Comunicaciones.view_comunicaciones')    
     model = Comunicaciones
 
     def get_context_data(self, **kwargs):
@@ -59,29 +60,56 @@ class ComunicacionesDetailView(PermisosMixin,DetailView):
         context['archivos'] = True if archivos.exists() else False
         return context
 
-class ComunicacionesDeleteView(PermisosMixin,SuccessMessageMixin,DeleteView):   
-    permission_required = ('Usuarios.rol_admin')  
+class ComunicacionesDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView):   
+    permission_required = ('Comunicaciones.delete_comunicaciones')  
     model = Comunicaciones
     success_url= reverse_lazy("comunicaciones_listar")
     success_message = "El registro fue eliminado correctamente"   
 
-class ComunicacionesCreateView(PermisosMixin, SuccessMessageMixin, CreateView):    
-    permission_required = ('Usuarios.rol_admin') 
+class ComunicacionesCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):    
+    permission_required = ('Comunicaciones.create_comunicaciones') 
     model = Comunicaciones
     form_class = ComunicacionesForm
     success_message = "Comunicación enviada correctamente"  
+
 
     def get_success_url(self):
         return self.object.get_absolute_url()
 
     def form_valid(self, form):
+        grupo_de_destinatarios = form.cleaned_data['grupo_de_destinatarios']
+        destinatarios = form.cleaned_data['destinatarios']
         asunto = form.cleaned_data['asunto']
         titulo = form.cleaned_data['titulo']
         mensaje = form.cleaned_data['mensaje']
-        destinatarios = form.cleaned_data['destinatarios']
         files = self.request.FILES.getlist('archivos')  # Acceder a los archivos enviados desde Dropzone
+        
+        # Obtener todos los perfiles de destinatarios individuales
+        perfiles_destinatarios = destinatarios.all().distinct()
+
+        # Filtrar perfiles según grupos de destinatarios seleccionados
+        q = Q()
+        if grupo_de_destinatarios:
+            if 'Base General' in grupo_de_destinatarios:
+                q &= ~Q(es_voluntario=True) & ~Q(es_fiscal=True)
+            if 'Base Fiscales' in grupo_de_destinatarios:
+                q |= Q(es_fiscal=True)
+            if 'Base Voluntarios' in grupo_de_destinatarios:
+                q |= Q(es_voluntario=True)
+            perfiles_grupo_destinatarios = Perfiles.objects.filter(email__isnull=False, activo=True).filter(q).distinct()
+        else:
+            perfiles_grupo_destinatarios = Perfiles.objects.none()
+
+        # Combinar perfiles de destinatarios individuales y de grupo
+        perfiles_combinados = perfiles_destinatarios | perfiles_grupo_destinatarios
+        # Obtener una lista única de correos electrónicos de los perfiles combinados
+        lista_correos = list(set([perfil.email for perfil in perfiles_combinados]))
 
         obj = form.save()
+        obj.invitados.set(perfiles_combinados)
+        obj.save()
+
+        # contexto para renderizar los datos en el template
         context = {
         'titulo': titulo,
         'mensaje': mensaje,
@@ -90,7 +118,9 @@ class ComunicacionesCreateView(PermisosMixin, SuccessMessageMixin, CreateView):
         email_html_message = render_to_string('Comunicaciones/correo_comunicaciones_template.html', context)
         email_plain_message = strip_tags(email_html_message)
 
-        email = EmailMultiAlternatives(asunto, email_plain_message, settings.EMAIL_HOST_USER, [destinatario.email for destinatario in destinatarios.all()])
+       # Utiliza perfiles_combinados para enviar el correo
+        email = EmailMultiAlternatives(asunto, email_plain_message, settings.EMAIL_HOST_USER, lista_correos)
+
         email.attach_alternative(email_html_message, "text/html")
 
         for f in files:
@@ -124,72 +154,4 @@ class ComunicacionesCreateView(PermisosMixin, SuccessMessageMixin, CreateView):
 
         return super().form_valid(form)
 
-        
 
-def envio_mails(email_from, email_to,asunto,template_path,context):
-    template = get_template(template_path)
-    content = template.render(context)
-
-    mail = EmailMultiAlternatives(
-        subject = asunto,
-        body = '',
-        from_email = settings.EMAIL_HOST_USER,
-        to=[email_to],
-        cc='',
-    )
-    mail.attach_alternative(content,'text/html')
-    return mail
-
-def buscar_individuos(request):
-    if request.headers.get("x-requested-with") == "XMLHttpRequest":
-        res = None
-        busqueda = request.POST.get("busqueda")
-        if len(busqueda) > 3:
-            individuos = (
-                Perfiles.objects.filter((Q(apellidos__contains=busqueda) | Q(nombres__contains=busqueda))))
-
-            data = [
-                {
-                    'pk': individuo.pk,
-                    'nombre': individuo.nombres,
-                    'apellido':individuo.apellidos
-                }
-                for individuo in individuos
-            ]
-            res = data
-        return JsonResponse({"data": res})
-
-    return JsonResponse({"data": "this is data"})
-
-def EnviarCorreo(request, pk):
-    subject = "Email Pro Comuna 2"
-    event = Comunicaciones.objects.get(pk=pk)
-    grupo = event.grupos_invitados.all()
-    invitados = event.invitados_individuales.all()
-    nombre = event.nombre
-    texto = event.texto
-    foto = event.foto
-    
-    template = render_to_string('Eventos/correo_template.html', {
-        'nombre': nombre,
-        'texto': texto,
-        'foto': foto,
-    })
-    
-    for g in grupo:
-        print(g)
-    
-    for i in invitados:
-        #mail = i.email
-        print (i.email)
-
-    email = EmailMessage (
-        subject,
-        template,
-        ['pablocao@gmail.com']
-    )
-    email.fail_silently = False
-    email.send()
-
-    print(grupo, invitados,  nombre, texto, foto)
-    return render(request, 'Comunicaciones/correo.html')

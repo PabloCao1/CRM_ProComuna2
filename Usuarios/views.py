@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin,PermissionRequiredMixin
 from django.contrib.auth.views import PasswordChangeView, PasswordResetView,LoginView
 from django.contrib.auth import login as auth_login
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,FormView
@@ -10,8 +10,6 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 from django.core.files.storage import FileSystemStorage
 
-
-from .mixins import PermisosMixin
 from .models import *
 from .forms import *
 
@@ -46,8 +44,8 @@ class UsuariosLoginView(LoginView):
         return redirect('index')
 
 
-class UsuariosListView(PermisosMixin, ListView ):    
-    permission_required = ('Usuarios.base_admin')   
+class UsuariosListView(PermissionRequiredMixin, ListView ):    
+    permission_required = ('auth.view_user')   
     model = Usuarios
 
     #Funcion de busqueda
@@ -73,24 +71,25 @@ class UsuariosDetailView(UserPassesTestMixin,DetailView):
     def test_func(self):
     # accede a la vista de detalle si es admin o si es el mismo usuario
        if self.request.user.is_authenticated:
-            usuario_actual = self.request.user.id
+            usuario_actual = self.request.user.usuarios.id
             usuario_solicitado= int(self.kwargs['pk'])
-            if (usuario_actual == usuario_solicitado) or self.request.user.has_perm('Usuarios.base_admin') or self.request.user.has_perm('auth_user.view_user'):
+            print(usuario_actual,usuario_solicitado,'----------------')
+            if (usuario_actual == usuario_solicitado) or self.request.user.has_perm('auth..base_admin') or self.request.user.has_perm('auth_user.view_user'):
                 return True
        else:
            return False 
 
 
-class UsuariosDeleteView(PermisosMixin,SuccessMessageMixin,DeleteView):   
-    permission_required = ('Usuarios.base_admin')   
+class UsuariosDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView):   
+    permission_required = ('auth.delete_user')   
     model = Usuarios
     template_name = 'Usuarios/usuarios_confirm_delete.html'
     success_url= reverse_lazy("usuarios_listar")
     success_message = "El registro fue eliminado correctamente"   
 
     
-class UsuariosCreateView(PermisosMixin,SuccessMessageMixin,FormView):    
-    permission_required = ('Usuarios.base_admin')  
+class UsuariosCreateView(PermissionRequiredMixin,SuccessMessageMixin,FormView):    
+    permission_required = ('auth.create_user')  
     template_name = 'Usuarios/usuarios_create_form.html'
     form_class = UsuariosCreateForm    
     
@@ -117,8 +116,8 @@ class UsuariosCreateView(PermisosMixin,SuccessMessageMixin,FormView):
             return redirect('usuarios_listar')
 
 
-class UsuariosUpdateView(PermisosMixin,SuccessMessageMixin,UpdateView):
-    permission_required = ('Usuarios.base_admin')   
+class UsuariosUpdateView(PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+    permission_required = ('auth.change_user')   
     model = User
     form_class = UsuariosUpdateForm      
     template_name = 'Usuarios/usuarios_update_form.html'
@@ -149,7 +148,7 @@ class UsuariosUpdateView(PermisosMixin,SuccessMessageMixin,UpdateView):
 
 #region---------------------------------------------------------------------------------------PASSWORDS
 
-class UsuariosResetPassView(PermisosMixin,SuccessMessageMixin,PasswordResetView):
+class UsuariosResetPassView(PermissionRequiredMixin,SuccessMessageMixin,PasswordResetView):
     '''
     Permite al usuario staff resetear la clave a otros usuarios del sistema mediante el envío de un token por mail. 
     IMPORTANTE: el mail  al que se envía el token de recupero debe coincidir con el mail que el usuario tiene 
@@ -161,7 +160,7 @@ class UsuariosResetPassView(PermisosMixin,SuccessMessageMixin,PasswordResetView)
         that prevent inactive users and users with unusable passwords from
         resetting their password.
     '''
-    permission_required = ('Usuarios.base_admin')   
+    permission_required = ('auth.change_user')   
     template_name='Passwords/password_reset.html'
     form_class = MyResetPasswordForm
     success_url = reverse_lazy('usuarios_listar')
@@ -239,7 +238,7 @@ class PerfilChangePassView(LoginRequiredMixin,SuccessMessageMixin,PasswordChange
     '''
     template_name='Perfiles/perfil_change_password.html'
     form_class = MyPasswordChangeForm
-    success_url = reverse_lazy('legajos_busqueda')
+    success_url = reverse_lazy('index')
     success_message = "La contraseña fue modificada con éxito."  
 
 #endregion

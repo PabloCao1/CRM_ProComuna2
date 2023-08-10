@@ -7,9 +7,10 @@ class PerfilesForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        perfil=(Perfiles.objects.get(id=self.instance.pk))
-        self.fields['barrio'].initial = perfil.barrio
-        self.fields['comuna'].initial = perfil.comuna
+        if self.instance.pk:
+            perfil=Perfiles.objects.get(id=self.instance.pk)
+            self.fields['barrio'].initial = perfil.barrio
+            self.fields['comuna'].initial = perfil.comuna
     
     class Meta:
         model = Perfiles

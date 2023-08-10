@@ -1,77 +1,116 @@
 {% extends "layouts/base.html" %} {% load static %}
 {% block titulo %}CRM / Home{%endblock titulo%}
 {% block content %}
-
-  <div class="row">
-    <div class="col-sm-3">
-      <div class="small-box bg-gradient-success">
-        <div class="inner">
-          <h2>Base General</h2>
-          <p>{{general}} Personas</p>
-        </div>
-        <div class="icon">
-          <i class="fas fa-user"></i>
-        </div>
-        <a href="{% url 'perfiles_listar' %}" class="small-box-footer">
-          Más <i class="fas fa-arrow-circle-right"></i>
-        </a>
+<div class="row mb-3">
+  <div class="col-sm-4">
+    <div class="small-box bg-secondary">
+      <div class="inner pb-1">
+        <h3>{{total}} </h3>
+        <p class="font-weight-bold">Total Personas Registradas</p>
       </div>
+      <div class="icon">
+        <i class="fas fa-smile"></i>
+      </div>
+      <p></p>
     </div>
-
-    <div class="col-sm-3">
-      <div class="small-box bg-gradient-warning">
-        <div class="inner">
-          <h2>Voluntarios</h2>
-          <p>{{voluntarios}} Personas</p>
-        </div>
-        <div class="icon">
-          <i class="fas fa-hands-helping"></i>
-        </div>
-        <a href="{% url 'perfiles_listar' %}" class="small-box-footer">
-          Más <i class="fas fa-arrow-circle-right"></i>
-        </a>
+  </div>
+  <div class="col-sm-4">
+    <div class="small-box bg-secondary">
+      <div class="inner pb-1">
+        <h3>{{activos}} </h3>
+        <p class="font-weight-bold">Activos</p>
       </div>
+      <div class="icon">
+        <i class="fas fa-thumbs-up"></i>
+      </div>
+      <p></p>
     </div>
-
-    <div class="col-sm-3">
-      <div class="small-box bg-maroon">
-        <div class="inner">
-          <h2>Fiscales</h2>
-          <p>{{fiscales}} Personas</p>
-        </div>
-        <div class="icon">
-          <i class="fas fa-vote-yea"></i>
-        </div>
-        <a href="{% url 'perfiles_listar' %}" class="small-box-footer">
-          Más <i class="fas fa-arrow-circle-right"></i>
-        </a>
+  </div>
+  <div class="col-sm-4">
+    <div class="small-box bg-secondary">
+      <div class="inner pb-1">
+        <h3>{{desactivados}} </h3>
+        <p class="font-weight-bold">Desactivados</p>
       </div>
-    </div>
-
-    <div class="col-sm-3">
-      <div class="small-box bg-purple">
-        <div class="inner">
-          <h2>Hoy</h2>
-          <p>Calendario Hoy</p>
-        </div>
-        <div class="icon">
-          <i class="fas fa-calendar-alt"></i>
-        </div>
-        <a href="{% url 'calendario' %}" class="small-box-footer">
-          Más <i class="fas fa-arrow-circle-right"></i>
-        </a>
+      <div class="icon">
+        <i class="fas fa-thumbs-down"></i>
       </div>
+      <p></p>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-lg-7">
+</div>
 
+<div class="row">
+  <div class="col-sm-3">
+    <div class="small-box bg-gradient-success">
+      <div class="inner">
+        <h2>Base General</h2>
+        <p class="font-weight-bold">{{general}} Personas</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-user"></i>
+      </div>
+      <a href="{% url 'perfiles_listar' %}" class="small-box-footer">
+        Más <i class="fas fa-arrow-circle-right"></i>
+      </a>
     </div>
-    <div class="col-lg-5">
-      
+  </div>
+
+  <div class="col-sm-3">
+    <div class="small-box bg-gradient-warning">
+      <div class="inner">
+        <h2>Base Voluntarios</h2>
+        <p class="font-weight-bold">{{voluntarios}} Personas</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-hands-helping"></i>
+      </div>
+      <a href="{% url 'perfiles_listar' %}" class="small-box-footer">
+        Más <i class="fas fa-arrow-circle-right"></i>
+      </a>
     </div>
-  </div>  
+  </div>
+
+  <div class="col-sm-3">
+    <div class="small-box bg-maroon">
+      <div class="inner">
+        <h2>Base Fiscales</h2>
+        <p class="font-weight-bold">{{fiscales}} Personas</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-vote-yea"></i>
+      </div>
+      <a href="{% url 'perfiles_listar' %}" class="small-box-footer">
+        Más <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="col-sm-3">
+    <div class="small-box bg-purple">
+      <div class="inner">
+        <h2>Hoy</h2>
+        <p>Calendario Hoy</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      <a href="{% url 'calendario' %}" class="small-box-footer">
+        Más <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-7">
+
+  </div>
+  <div class="col-lg-5">
+
+  </div>
+</div>
 
 {% endblock content%}
 
