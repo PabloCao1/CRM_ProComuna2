@@ -29,6 +29,7 @@ class Eventos(models.Model):
     mensaje                 = models.CharField (max_length= 1000, null=True, blank=True)
     flyer                   = models.ImageField(upload_to="eventos/", default='default.png')
     invitados               = models.ManyToManyField(Perfiles,blank=True)
+    fallo                   = models.CharField (max_length= 1000, null=True, blank=True)
     creado                  = models.DateField(auto_now_add=True)
     modificado              = models.DateField(auto_now=True)
 

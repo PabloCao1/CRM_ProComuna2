@@ -3,18 +3,24 @@ from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView
-from Usuarios.mixins import PermisosMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import *
 from .forms import *
 from django.db.models import Q
 from django.urls import reverse_lazy
+from django.conf import settings
 from django.core.mail import EmailMessage
-from django.template.loader import render_to_string 
-from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+import json
 
-class EventosListView(PermisosMixin, ListView):
-    permission_required = ('Usuarios.rol_admin')
+
+class EventosListView(PermissionRequiredMixin, ListView):
+    permission_required = ('Eventos.view_eventos')
     model = Eventos
 
     #Funcion de busqueda
@@ -28,108 +34,91 @@ class EventosListView(PermisosMixin, ListView):
             object_list = self.model.objects.all()
         return object_list
 
-class EventosDetailView(PermisosMixin,DetailView):
-    permission_required = ('Usuarios.rol_admin')
+class EventosDetailView(PermissionRequiredMixin,DetailView):
+    permission_required = ('Eventos.view_eventos')
     model = Eventos
 
-class EventosDeleteView(PermisosMixin,SuccessMessageMixin,DeleteView):
-    permission_required = ('Usuarios.rol_admin')
+class EventosDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
+    permission_required = ('Eventos.delete_eventos')
     model = Eventos
     success_url= reverse_lazy("eventos_listar")
     success_message = "El registro fue eliminado correctamente"
 
-class EventosCreateView(PermisosMixin,SuccessMessageMixin,CreateView):
-    permission_required = ('Usuarios.rol_admin')
+class EventosCreateView(PermissionRequiredMixin,SuccessMessageMixin,CreateView):
+    permission_required = ('Eventos.create_eventos')
     model = Eventos
     form_class = EventosForm
     success_message = "%(nombre)s fue registrado correctamente"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['perfil'] = Perfiles.objects.all()
-        return context
+    def form_valid(self, form):
+        grupo_de_invitados = form.cleaned_data['grupo_de_invitados']
+        invitados = form.cleaned_data['invitados']
+        asunto = form.cleaned_data['nombre']
+        mensaje = form.cleaned_data['mensaje']
+        flyer = self.request.FILES.get('flyer')  # Acceder a los archivos enviados desde Dropzone
+        
+        # Obtener todos los perfiles de invitados individuales
+        perfiles_invitados = invitados.all().distinct()
 
-class EventosUpdateView(PermisosMixin,SuccessMessageMixin,UpdateView):
-    permission_required = ('Usuarios.rol_admin')
-    model = Eventos
-    form_class = EventosForm
-    success_message = "%(nombre)s fue editado correctamente"
+        # Filtrar perfiles según grupos de invitados seleccionados
+        q = Q()
+        if grupo_de_invitados:
+            if 'Base General' in grupo_de_invitados:
+                q &= ~Q(es_voluntario=True) & ~Q(es_fiscal=True)
+            if 'Base Fiscales' in grupo_de_invitados:
+                q |= Q(es_fiscal=True)
+            if 'Base Voluntarios' in grupo_de_invitados:
+                q |= Q(es_voluntario=True)
+            perfiles_grupo_invitados = Perfiles.objects.filter(email__isnull=False, activo=True).filter(q).distinct()
+        else:
+            perfiles_grupo_invitados = Perfiles.objects.none()
 
-    def form_invalid(self, form):
-        # Agrega un mensaje de error para cada campo con errores
-        for field, errors in form.errors.items():
-            for error in errors:
-                messages.error(self.request, f"{form.fields[field].label}: {error}")
-        return super().form_invalid(form)
+        # Combinar perfiles de invitados individuales y de grupo
+        perfiles_combinados = perfiles_invitados | perfiles_grupo_invitados
+        # Obtener una lista única de correos electrónicos de los perfiles combinados
+        lista_correos = list(set([perfil.email for perfil in perfiles_combinados]))
 
-def EnviarCorreo(request, pk):
-    subject = "Email Pro Comuna 2"
-    event = Eventos.objects.get(pk=pk)
-    grupo = event.grupos_invitados.all()
-    invitados = event.invitados_individuales.all()
-    nombre = event.nombre
-    fecha = event.fecha
-    hora = event.hora
-    minutos = event.minutos
-    lugar = event.lugar
-    calle = event.calle
-    altura = event.altura
-    telefono = event.telefono
-    web = event.WEB
-    modo = event.modo
-    foto = event.foto
-    observaciones = event.observaciones
+        obj = form.save()
+        obj.invitados.set(perfiles_combinados)
+        obj.save()
+        
+        email_html_message = render_to_string('Eventos/correo_eventos_template.html', {'evento': obj})
+        email_plain_message = strip_tags(email_html_message)
+
+        # Utiliza perfiles_combinados para enviar el correo
+        email = EmailMultiAlternatives(asunto, email_plain_message, settings.EMAIL_HOST_USER, lista_correos)
+
+        email.attach_alternative(email_html_message, "text/html")
+        if flyer:
+            email.mixed_subtype = 'related'  # Permite embeber contenido en el correo
+            email.attach_file(obj.flyer.path)  # Adjunta la imagen del flyer al correo
+
+       
+        try:
+            email.send()  # Enviar el correo con los archivos adjuntos
+        except Exception as e:
+            if obj.fallo:
+                obj.fallo += ', ' + ', '.join([destinatario.email for destinatario in invitados.all()])
+            else:
+                obj.fallo = ', '.join([destinatario.email for destinatario in invitados.all()])
+            obj.save()
+
+        if obj.fallo:
+            messages.error(self.request, f"Error al enviar el correo a: {obj.fallo}")
+
+        return super().form_valid(form)
+
+# class EventosUpdateView(PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+#     permission_required = ('Eventos.change_eventos')
+#     model = Eventos
+#     form_class = EventosForm
+#     success_message = "%(nombre)s fue editado correctamente"
+
+#     def form_invalid(self, form):
+#         # Agrega un mensaje de error para cada campo con errores
+#         for field, errors in form.errors.items():
+#             for error in errors:
+#                 messages.error(self.request, f"{form.fields[field].label}: {error}")
+#         return super().form_invalid(form)
+
     
-    template = render_to_string('Eventos/correo_template.html', {
-        'nombre': nombre,
-        'modo': modo,
-        'url': web,
-        'lugar': lugar,
-        'calle': calle,
-        'altura': altura,
-        'fecha': fecha,
-        'hora': hora,
-        'minutos': minutos,
-        'telefono': telefono,
-        'observaciones': observaciones
-    })
-    
-    for g in grupo:
-        print(g)
-    
-    for i in invitados:
-        #mail = i.email
-        print (i.email)
-
-    email = EmailMessage (
-        subject,
-        template,
-        ['pablocao@gmail.com']
-    )
-    email.fail_silently = False
-    email.send()
-
-    print(grupo, invitados,  fecha, hora, minutos, lugar, calle, altura, telefono, web, modo, foto)
-    return render(request, 'Eventos/correo.html')
-
-
-def buscar_individuos(request):
-    if request.headers.get("x-requested-with") == "XMLHttpRequest":
-        res = None
-        busqueda = request.POST.get("busqueda")
-        if len(busqueda) > 3:
-            individuos = (
-                Perfiles.objects.filter((Q(apellidos__contains=busqueda) | Q(nombres__contains=busqueda))))
-
-            data = [
-                {
-                    'pk': individuo.pk,
-                    'nombre': individuo.nombres,
-                    'apellido':individuo.apellidos
-                }
-                for individuo in individuos
-            ]
-            res = data
-        return JsonResponse({"data": res})
-
-    return JsonResponse({"data": "this is data"})

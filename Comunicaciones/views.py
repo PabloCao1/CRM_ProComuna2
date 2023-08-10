@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,View
-from Usuarios.mixins import PermisosMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
@@ -21,8 +21,8 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import json
 
-class ComunicacionesListView(PermisosMixin, ListView):    
-    permission_required = ('Usuarios.rol_admin')  
+class ComunicacionesListView(PermissionRequiredMixin, ListView):    
+    permission_required = ('Comunicaciones.view_comunicaciones')  
     model = Comunicaciones
     template_name = 'Comunicaciones/comunicaciones_list.html'
 
@@ -47,8 +47,8 @@ class ComunicacionesListView(PermisosMixin, ListView):
 
         return page
     
-class ComunicacionesDetailView(PermisosMixin,DetailView):
-    permission_required = ('Usuarios.rol_admin')    
+class ComunicacionesDetailView(PermissionRequiredMixin,DetailView):
+    permission_required = ('Comunicaciones.view_comunicaciones')    
     model = Comunicaciones
 
     def get_context_data(self, **kwargs):
@@ -60,14 +60,14 @@ class ComunicacionesDetailView(PermisosMixin,DetailView):
         context['archivos'] = True if archivos.exists() else False
         return context
 
-class ComunicacionesDeleteView(PermisosMixin,SuccessMessageMixin,DeleteView):   
-    permission_required = ('Usuarios.rol_admin')  
+class ComunicacionesDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView):   
+    permission_required = ('Comunicaciones.delete_comunicaciones')  
     model = Comunicaciones
     success_url= reverse_lazy("comunicaciones_listar")
     success_message = "El registro fue eliminado correctamente"   
 
-class ComunicacionesCreateView(PermisosMixin, SuccessMessageMixin, CreateView):    
-    permission_required = ('Usuarios.rol_admin') 
+class ComunicacionesCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):    
+    permission_required = ('Comunicaciones.create_comunicaciones') 
     model = Comunicaciones
     form_class = ComunicacionesForm
     success_message = "Comunicación enviada correctamente"  
@@ -106,6 +106,8 @@ class ComunicacionesCreateView(PermisosMixin, SuccessMessageMixin, CreateView):
         lista_correos = list(set([perfil.email for perfil in perfiles_combinados]))
 
         obj = form.save()
+        obj.invitados.set(perfiles_combinados)
+        obj.save()
 
         # contexto para renderizar los datos en el template
         context = {

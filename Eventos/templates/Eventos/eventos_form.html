@@ -12,27 +12,27 @@
   </li>
 </ol>
 {% endblock %}; {% load crispy_forms_tags %} {% block content %}
-<form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" id="formulario_evento">
-  <!-- Security token -->
-  {% csrf_token %}
 
-  <div class="row d-none">{{form.flyer| as_crispy_field}}</div>
 
-  <div class="row">
-    <div class="col-sm-9 ">
-      <div class="card card-gray-dark mx-3">
-        <div class="card-header">
-          <div class="card-title">
-            {%if request.resolver_match.url_name == "eventos_editar" %} Editar
-            {% else %} Cargar {% endif %} datos del evento
-          </div>
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-              <i class="fas fa-minus"></i>
-            </button>
-          </div>
+<div class="row">
+  <div class="col-sm-9 ">
+    <div class="card card-gray-dark mx-3">
+      <div class="card-header">
+        <div class="card-title">
+          {%if request.resolver_match.url_name == "eventos_editar" %} Editar
+          {% else %} Cargar {% endif %} datos del evento
         </div>
-        <div class="card-body mt-1">
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body mt-1" id="body_form_evento">
+          <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" id="formulario_evento">
+            <!-- Security token -->
+            {% csrf_token %}
+            <div class="row d-none">{{form.flyer| as_crispy_field}}</div>
           <div class="form-row mb-3">
             <div class="form-group col-12"> {{ form.nombre | as_crispy_field}} </div>
             <div class="form-group col-12"> {{ form.mensaje | as_crispy_field}} </div>
@@ -89,9 +89,7 @@
               </div>
               <div class="form-group mt-3">
                 <label for="id_flyer" class="btn btn-primary btn-block">
-                  <span>
-                    {%if request.resolver_match.url_name == 'eventos_editar' %}
-                    Cambiar flyer {% else %} Agregar flyer {% endif %}
+                  <span> Agregar flyer 
                   </span>
                 </label>
               </div>
@@ -103,7 +101,7 @@
 
     <div class="col-sm-12 text-center mt-5 mb-5">
       <a href="{% url 'eventos_listar' %}"><button type="button" class="btn btn-secondary">Cancelar</button></a>
-      <button type="submit" class="btn btn-primary">Guardar</button>
+      <button type="submit" class="btn btn-primary">Enviar</button>
     </div>
 </form>
 
@@ -117,17 +115,31 @@
 
     const form = document.querySelector("#formulario_evento");
     const webInput = form.querySelector("#id_web");
+    const grupoInvitados = document.querySelector("#id_grupo_de_invitados");
+    const invitados = document.querySelector("#id_invitados");
 
     form.addEventListener("submit", function (event) {
-      // Obtener el valor del campo "web"
-      const webValue = webInput.value;
-
-      // Verificar si no comienza con "http://" ni "https://"
-      if (webValue && !webValue.startsWith("http://") && !webValue.startsWith("https://")) {
-        // Agregar "http://" por defecto
-        webInput.value = "https://" + webValue;
+      
+      if (grupoInvitados.value === "" && invitados.value === "") {
+        event.preventDefault(); // Evita que el formulario se envíe
+        
+        const errorDiv = document.createElement("div");
+        errorDiv.classList.add("alert", "alert-danger");
+        errorDiv.textContent = "Debes seleccionar al menos un grupo de invitados o invitados individuales.";
+        
+        const cardBody = document.querySelector("#body_form_evento");
+        cardBody.insertBefore(errorDiv, form);
       }
+        // Obtener el valor del campo "web"
+        const webValue = webInput.value;
+  
+        // Verificar si no comienza con "http://" ni "https://"
+        if (webValue && !webValue.startsWith("http://") && !webValue.startsWith("https://")) {
+          // Agregar "http://" por defecto
+          webInput.value = "https://" + webValue;
+        }
     });
+
 
 
     id_flyer.onchange = (evt) => {
@@ -161,6 +173,7 @@
   });
   $("#id_modo").trigger("change");
 
+   
 </script>
 
 {% endblock %}

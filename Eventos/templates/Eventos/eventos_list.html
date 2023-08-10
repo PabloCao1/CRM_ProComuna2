@@ -52,6 +52,7 @@
             <th class="d-none d-sm-table-cell">Hora</th>
             <th>Nombre</th>
             <th class="d-none d-sm-table-cell">Modo</th>
+            <th class="d-none d-sm-table-cell">Invitados</th>
             <th class="d-none d-sm-table-cell text-center">Estado</th>
           </tr>
         </thead>
@@ -62,6 +63,7 @@
             <td class="d-none d-sm-table-cell">{{o.hora}}:{{o.minutos}} Hs.</td>
             <td>{{o.nombre|capfirst}}</td>
             <td class="d-none d-sm-table-cell">{{o.modo|default:'-'}}</td>
+            <td> <span class="badge badge-light">{{o.invitados.count}}</span> invitados</td>
             <td class="d-none d-sm-table-cell text-center">
               <span class=" badge h6 font-weight-bold
               {% if o.estado == 'Vigente' %} badge-info 
