@@ -1,4 +1,3 @@
-from typing import Any
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
@@ -17,6 +16,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import json
+from email.mime.image import MIMEImage
 
 
 class EventosListView(PermissionRequiredMixin, ListView):
@@ -45,7 +45,7 @@ class EventosDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     success_message = "El registro fue eliminado correctamente"
 
 class EventosCreateView(PermissionRequiredMixin,SuccessMessageMixin,CreateView):
-    permission_required = ('Eventos.create_eventos')
+    permission_required = ('Eventos.add_eventos')
     model = Eventos
     form_class = EventosForm
     success_message = "%(nombre)s fue registrado correctamente"
@@ -82,16 +82,25 @@ class EventosCreateView(PermissionRequiredMixin,SuccessMessageMixin,CreateView):
         obj.invitados.set(perfiles_combinados)
         obj.save()
         
-        email_html_message = render_to_string('Eventos/correo_eventos_template.html', {'evento': obj})
+        email_html_message = render_to_string('Eventos/eventos_email_template.html', {'evento': obj})
         email_plain_message = strip_tags(email_html_message)
 
-        # Utiliza perfiles_combinados para enviar el correo
         email = EmailMultiAlternatives(asunto, email_plain_message, settings.EMAIL_HOST_USER, lista_correos)
-
         email.attach_alternative(email_html_message, "text/html")
+
         if flyer:
             email.mixed_subtype = 'related'  # Permite embeber contenido en el correo
-            email.attach_file(obj.flyer.path)  # Adjunta la imagen del flyer al correo
+            # Adjunta la imagen al correo como archivo adjunto
+            email.attach(flyer.name, flyer.read(), flyer.content_type)
+
+            # Embeber la imagen en el correo utilizando MIMEImage
+            with flyer.open(mode='rb') as file:
+                img_data = file.read()
+                extension = flyer.name.split('.')[-1]  # Obtener la extensión de la imagen
+                img = MIMEImage(img_data, _subtype=extension)
+                img.add_header('Content-Id', '<myimage>')  # ID de contenido para embeber la imagen
+                img.add_header('Content-Disposition', 'inline', filename='myimage')  # Establecer como embebida
+                email.attach(img)
 
        
         try:

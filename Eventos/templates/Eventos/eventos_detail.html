@@ -15,7 +15,9 @@
 <div class="row">
     <!-- botones -->
     <div class="col-12 my-3 mx-2 d-print-none">
+        {%if perms.Eventos.delete_eventos %}
         <a href="{% url 'eventos_eliminar' object.id %}" class="btn btn-danger">Eliminar</a>
+        {%endif%}
     </div>
     <!-- ./botones -->
 </div>
@@ -26,7 +28,7 @@
         <div class="card card-primary card-outline">
             <div class="card-footer">
 
-                {% if object.flyer != "default.png"%}
+                {% if object.flyer%}
                 <a href="{{ MEDIA_URL }}{{ object.flyer.url }}" target="_blank" title="{{object.flyer|cut:'eventos/'}}">
                     <img class="card-img-top" src="{{object.flyer.url}}" alt="Flyer evento" />
                 </a>
@@ -73,7 +75,7 @@
                         <div class="comment-text">
                             Fecha
                             <span class="username">{{object.fecha|default:"-"}} -
-                                {{object.hora|default:"-"}}:{{object.minutos|default:"-"}} Hs.</span>
+                                {{object.horario|default:"-"}}</span>
                         </div>
                     </li>
                     <li class="nav-item">
