@@ -32,7 +32,7 @@
 
 <div class="row">
     <div class="col-sm-3 pb-3">
-        <div class="card card-gray-dark card-outline h-100">
+        <div class="card card-gray-dark card-outline">
             <div class="card-header mr-2 ml-2 mt-2 p-0">
                 {% if object.imagen != "default.png"%}
                 <img class="card-img-top" src="{{object.imagen.url}}" alt="User profile picture" />
@@ -128,11 +128,17 @@
                             
                             <span class="username">
                                 <ul class="list-unstyled m-0">
-                                    {%for g in object.usuario.groups.all %}
-                                            <li class="badge badge-info mt-2  h6">{{g}}</li>
-                                    {%empty%}
-                                    <li><span class="font-weight-bold">-</span></li>
-                                    {%endfor%}
+                                    {% for g in object.usuario.groups.all %}
+                                        <li class="badge badge-info mt-2 h6">{{ g }}</li>
+                                        <h6>Permisos:</h6>
+                                        <ul class="list-unstyled ml-3">
+                                            {% for permission in g.permissions.all %}
+                                                <li class="text-sm">{{ permission.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% empty %}
+                                        <li><span class="font-weight-bold">-</span></li>
+                                    {% endfor %}
                                 </ul>
                             </span>
                         </div>

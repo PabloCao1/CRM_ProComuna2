@@ -73,7 +73,6 @@ class UsuariosDetailView(UserPassesTestMixin,DetailView):
        if self.request.user.is_authenticated:
             usuario_actual = self.request.user.usuarios.id
             usuario_solicitado= int(self.kwargs['pk'])
-            print(usuario_actual,usuario_solicitado,'----------------')
             if (usuario_actual == usuario_solicitado) or self.request.user.has_perm('auth..base_admin') or self.request.user.has_perm('auth_user.view_user'):
                 return True
        else:
@@ -89,7 +88,7 @@ class UsuariosDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView)
 
     
 class UsuariosCreateView(PermissionRequiredMixin,SuccessMessageMixin,FormView):    
-    permission_required = ('auth.create_user')  
+    permission_required = ('auth.add_user')  
     template_name = 'Usuarios/usuarios_create_form.html'
     form_class = UsuariosCreateForm    
     

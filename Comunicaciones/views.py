@@ -67,7 +67,7 @@ class ComunicacionesDeleteView(PermissionRequiredMixin,SuccessMessageMixin,Delet
     success_message = "El registro fue eliminado correctamente"   
 
 class ComunicacionesCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):    
-    permission_required = ('Comunicaciones.create_comunicaciones') 
+    permission_required = ('Comunicaciones.add_comunicaciones') 
     model = Comunicaciones
     form_class = ComunicacionesForm
     success_message = "Comunicación enviada correctamente"  

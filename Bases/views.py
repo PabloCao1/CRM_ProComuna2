@@ -144,7 +144,7 @@ class PerfilesDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView)
 
 
 class PerfilesCreateView(PermissionRequiredMixin,SuccessMessageMixin,CreateView):   
-    permission_required = ('Bases.create_perfiles')  
+    permission_required = ('Bases.add_perfiles')  
     model = Perfiles
     form_class = PerfilesForm
     success_message = "Registrado correctamente"  
