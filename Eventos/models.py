@@ -67,7 +67,7 @@ class Eventos(models.Model):
             return "Pendiente"
 
     class Meta:
-        ordering = ['fecha']
+        ordering = ['-fecha']
         verbose_name = 'Evento'
         verbose_name_plural = 'Eventos'
 

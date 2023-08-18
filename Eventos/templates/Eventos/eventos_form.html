@@ -16,7 +16,7 @@
 
 <div class="row">
   <div class="col-sm-9 ">
-    <div class="card card-gray-dark mx-3">
+    <div class="card card-gray-dark mx-sm-3">
       <div class="card-header">
         <div class="card-title">
           {%if request.resolver_match.url_name == "eventos_editar" %} Editar
@@ -28,11 +28,11 @@
           </button>
         </div>
       </div>
-      <div class="card-body mt-1" id="body_form_evento">
-          <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" id="formulario_evento">
-            <!-- Security token -->
-            {% csrf_token %}
-            <div class="row d-none">{{form.flyer| as_crispy_field}}</div>
+      <div class="card-body mt-1">
+        <form novalidate method="POST" enctype="multipart/form-data" id="formulario_evento">
+          <!-- Security token -->
+          {% csrf_token %}
+          <div class="row d-none">{{form.flyer| as_crispy_field}}</div>
           <div class="form-row mb-3">
             <div class="form-group col-12"> {{ form.nombre | as_crispy_field}} </div>
             <div class="form-group col-12"> {{ form.mensaje | as_crispy_field}} </div>
@@ -47,133 +47,127 @@
                 <div class="col-sm-2 col-4"> {{ form.departamento | as_crispy_field}} </div>
               </div>
             </div>
-            <div class="form-group col-12">
-              <div class="row">
-                <div class="col-sm-4 col-12"> {{ form.fecha | as_crispy_field}} </div>
-                <div class="col-sm-2 col-6"> {{ form.hora | as_crispy_field}} </div>
-                <div class="col-sm-2 col-6"> {{ form.minutos | as_crispy_field}} </div>
-                <div class="col-sm-4 col-12"> {{ form.telefono | as_crispy_field}} </div>
-              </div>
-            </div>
+            <div class="form-group col-sm-4 col-6"> {{ form.fecha | as_crispy_field}} </div>
+            <div class="form-group col-sm-2 col-3"> {{ form.hora | as_crispy_field}} </div>
+            <div class="form-group col-sm-2 col-3"> {{ form.minutos | as_crispy_field}} </div>
+            <div class="form-group col-sm-4 col-12"> {{ form.telefono | as_crispy_field}} </div>
             <div class="form-group col-12"> {{ form.grupo_de_invitados | as_crispy_field}} </div>
             <div class="form-group col-12"> {{ form.invitados | as_crispy_field}} </div>
+            <div class="form-group col-12" id="error_div"> </div>
           </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="col-sm-3 ">
-      <div class="form-row justify-content-center">
-
-        <div class="form-group col-12">
-          <div class="card card-gray-dark">
-            <div class="card-header">
-              <div class="card-title">Flyer de evento</div>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
-              </div>
-            </div>
-            <div class="card-body p-1">
-              <div class="box-profile">
-                <div class="text-center">
-                  {% if object.flyer and object.flyer != "default.png"%}
-                  <img src="{{object.flyer.url}}" data-holder-rendered="true" alt="avatar" class="avatar p-1"
-                    height="150" id="blah" />
-                  {% else %}
-                  <img src="{% static 'images/img_default.png' %}" data-holder-rendered="true" alt="avatar"
-                    class="avatar p-1" height="150" id="blah" />
-                  {% endif %}
-                </div>
-              </div>
-              <div class="form-group mt-3">
-                <label for="id_flyer" class="btn btn-primary btn-block">
-                  <span> Agregar flyer 
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <div class="col-sm-12 text-center mt-5 mb-5">
-      <a href="{% url 'eventos_listar' %}"><button type="button" class="btn btn-secondary">Cancelar</button></a>
-      <button type="submit" class="btn btn-primary">Enviar</button>
+  </div>
+  <div class="col-sm-3 ">
+    <div class="form-row justify-content-center">
+
+      <div class="form-group col-12">
+        <div class="card card-gray-dark">
+          <div class="card-header">
+            <div class="card-title">Flyer de evento</div>
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-1">
+            <div class="box-profile">
+              <div class="text-center">
+                {% if object.flyer and object.flyer != "default.png"%}
+                <img src="{{object.flyer.url}}" data-holder-rendered="true" alt="avatar" class="avatar p-1" height="150"
+                  id="blah" />
+                {% else %}
+                <img src="{% static 'images/img_default.png' %}" data-holder-rendered="true" alt="avatar"
+                  class="avatar p-1" height="150" id="blah" />
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group mt-3">
+              <label for="id_flyer" class="btn btn-primary btn-block">
+                <span> Agregar flyer
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</form>
+  </div>
 
-{% endblock content%}
+  <div class="col-sm-12 text-center mt-5 mb-5">
+    <a href="{% url 'eventos_listar' %}"><button type="button" class="btn btn-secondary">Cancelar</button></a>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </div>
+  </form>
+
+  {% endblock content%}
 
 
-{% block customJS %}
+  {% block customJS %}
+  <script>
+    const form = document.getElementById("formulario_evento");
+    const grupoInvitados = document.getElementById("id_grupo_de_invitados");
+    const invitados = document.getElementById("id_invitados");
+    const errorContainer = document.getElementById("error_div");
+    let errorTimeout;
 
-<script type="text/javascript">
-  $(document).ready(function () {
+    // Función para mostrar el mensaje de error durante 5 segundos
+    function showErrorMessage() {
+      const errorDiv = document.createElement("div");
+      errorDiv.classList.add("alert", "alert-danger");
+      errorDiv.textContent = "Seleccionar al menos un invitado o grupo de invitados.";
 
-    const form = document.querySelector("#formulario_evento");
-    const webInput = form.querySelector("#id_web");
-    const grupoInvitados = document.querySelector("#id_grupo_de_invitados");
-    const invitados = document.querySelector("#id_invitados");
+      errorContainer.innerHTML = ""; // Limpiar errores existentes
+      errorContainer.appendChild(errorDiv);
+
+      // Configurar el timeout para ocultar el mensaje después de 5 segundos
+      errorTimeout = setTimeout(() => {
+        clearErrorMessage();
+      }, 5000); // El mensaje se mostrará durante 5 segundos
+    }
+
+    // Función para borrar el mensaje de error y cancelar el timeout
+    function clearErrorMessage() {
+      errorContainer.innerHTML = "";
+      clearTimeout(errorTimeout);
+    }
+
+    // Agregar escuchadores de eventos a los elementos select2
+    grupoInvitados.addEventListener("change", clearErrorMessage);
+    invitados.addEventListener("change", clearErrorMessage);
 
     form.addEventListener("submit", function (event) {
-      
       if (grupoInvitados.value === "" && invitados.value === "") {
-        event.preventDefault(); // Evita que el formulario se envíe
-        
-        const errorDiv = document.createElement("div");
-        errorDiv.classList.add("alert", "alert-danger");
-        errorDiv.textContent = "Debes seleccionar al menos un grupo de invitados o invitados individuales.";
-        
-        const cardBody = document.querySelector("#body_form_evento");
-        cardBody.insertBefore(errorDiv, form);
+        event.preventDefault(); // Evitar que el formulario se envíe
+        showErrorMessage();
       }
-        // Obtener el valor del campo "web"
-        const webValue = webInput.value;
-  
-        // Verificar si no comienza con "http://" ni "https://"
-        if (webValue && !webValue.startsWith("http://") && !webValue.startsWith("https://")) {
-          // Agregar "http://" por defecto
-          webInput.value = "http://" + webValue;
-        }
     });
 
-
-
-    id_flyer.onchange = (evt) => {
-      const [file] = id_flyer.files;
-      if (file) {
-        blah.src = URL.createObjectURL(file);
+    //Mostrar u ocultar divs segun modalidad del evento
+    $("#id_modo").change(function () {
+      if ($(this).val() == "VIRTUAL") {
+        $("#url").show();
+      } else {
+        $("#url").hide();
+        $("#id_web").val('');
       }
-    };
+      if ($(this).val() == "PRESENCIAL") {
+        $("#lugar").show();
+        $("#direccion").show();
+      } else {
+        $("#lugar").hide();
+        $("#direccion").hide();
+        $("#id_lugar").val('');
+        $("#id_calle").val('');
+        $("#id_altura").val('');
+
+      }
+    });
+    $("#id_modo").trigger("change");
 
 
-  });
+  </script>
 
-  $("#id_modo").change(function () {
-    if ($(this).val() == "VIRTUAL") {
-      $("#url").show();
-    } else {
-      $("#url").hide();
-      $("#id_web").val('');
-    }
-    if ($(this).val() == "PRESENCIAL") {
-      $("#lugar").show();
-      $("#direccion").show();
-    } else {
-      $("#lugar").hide();
-      $("#direccion").hide();
-      $("#id_lugar").val('');
-      $("#id_calle").val('');
-      $("#id_altura").val('');
-
-    }
-  });
-  $("#id_modo").trigger("change");
-
-   
-</script>
-
-{% endblock %}
+  {% endblock %}

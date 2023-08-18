@@ -106,7 +106,7 @@ class ComunicacionesCreateView(PermissionRequiredMixin, SuccessMessageMixin, Cre
         lista_correos = list(set([perfil.email for perfil in perfiles_combinados]))
 
         obj = form.save()
-        obj.invitados.set(perfiles_combinados)
+        obj.destinatarios.set(perfiles_combinados)
         obj.save()
 
         # contexto para renderizar los datos en el template

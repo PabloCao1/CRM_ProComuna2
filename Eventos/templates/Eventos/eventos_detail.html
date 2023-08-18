@@ -147,7 +147,7 @@
             <div class="card-footer card-comments p-2">
                 <ul class="list-unstyled m-0">
                     {%for b in object.invitados.all %}
-                    <li class="badge bg-secondary h6">{{b}}</li>
+                    <li class="badge bg-secondary h6">{{b.email}}</li>
                     {%empty%}
                     <li><span class="h5 pl-3">-</span></li>
                     {%endfor%}
