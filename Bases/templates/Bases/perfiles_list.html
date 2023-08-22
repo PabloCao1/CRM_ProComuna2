@@ -2,7 +2,6 @@
 {% load static %};
 
 {% block head %}
-
 <!-- Datatables -->
 <link rel="stylesheet" href="{% static 'plugins/Datatables/datatables.min.css' %}">
 {% endblock %}
@@ -16,6 +15,11 @@
 
 {% block content %}
 
+<!-- Imagen de CRM se muestra mientras carga la pantalla -->
+<div class="preloader flex-column justify-content-center align-items-center">
+  <img class="animation__shake" src="{% static 'images/favico.png' %}"  alt="CRMLogo" height="60" width="60">
+  </div>
+  
 <form method='GET'>
   <div class="card card-gray-dark card-outline mb-5">
     <div class="card-header">
@@ -280,11 +284,11 @@
             <th>Nombre</th>
             <th>Documento</th>
             <th>Edad</th>
-            <th class="d-none d-sm-table-cell">Sexo</th>
-            <th class="d-none d-sm-table-cell">Es militante</th>
-            <th class="d-none d-sm-table-cell">Es empleado</th>
-            <th class="d-none d-sm-table-cell">Bases</th>
-            <th class="d-none d-sm-table-cell text-center">Estado</th>
+            <th>Sexo</th>
+            <th>Es militante</th>
+            <th>Es empleado</th>
+            <th>Bases</th>
+            <th class="text-center">Estado</th>
           </tr>
         </thead>
         <tbody>
@@ -296,14 +300,14 @@
                 {{o.nombres |default:"-"}} {{o.apellidos |default:""}}</span></td>
             <td>{{o.documento}}</td>
             <td> {% if o.edad%}{{o.edad}} años {%else%} - {%endif%}</td>
-            <td class="d-none d-sm-table-cell">{{o.sexo|default:"-"}}</td>
-            <td class="d-none d-sm-table-cell">
+            <td>{{o.sexo|default:"-"}}</td>
+            <td>
               {{ o.es_militante|yesno:'SI,NO' }}
             </td>
-            <td class="d-none d-sm-table-cell">
+            <td>
               {{ o.es_empleadoGCBA|yesno:'SI,NO' }}
             </td>
-            <td class="d-none d-sm-table-cell">
+            <td>
               {% if o.es_fiscal or o.es_voluntario %}
               {% if o.es_fiscal %}
               <div class="badge badge-info h6 text-center"> Fiscales</div>
@@ -315,7 +319,7 @@
               <div class="badge badge-secondary h6 text-center"> General</div>
               {%endif%}
             </td>
-            <td class="d-none d-sm-table-cell text-center">
+            <td class="text-center">
               {% if o.activo %} <span class="text-success font-weight-bold">Activo</span>
               {% else %} <span class="text-danger font-weight-bold">Desactivado</span>
               {% endif %}

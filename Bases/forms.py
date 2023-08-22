@@ -3,6 +3,7 @@ from .models import *
 from .validators import MaxSizeFileValidator
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+
 class PerfilesForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -14,9 +15,8 @@ class PerfilesForm(forms.ModelForm):
     
     class Meta:
         model = Perfiles
-        exclude = ('creado','modificado',)
+        exclude = ('creado','modificado','fecha_inactivo', 'motivo_inactivo')
         widgets = {
-            'activo' :              forms.CheckboxInput(attrs={'class': 'btn-check btn-lg"', 'autocomplete':"off"}),
             'es_empleadoGCBA' :     forms.Select(choices=[(True, 'SI'), (False, 'NO')]),
             'es_militante' :        forms.Select(choices=[(True, 'SI'), (False, 'NO')]),
             'observaciones' :       forms.Textarea(attrs={'rows':3, 'placeholder': ''}),

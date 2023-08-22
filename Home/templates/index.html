@@ -1,6 +1,13 @@
 {% extends "layouts/base.html" %} {% load static %}
 {% block titulo %}CRM / Home{%endblock titulo%}
+
+
 {% block content %}
+<!-- Imagen de CRM se muestra mientras carga la pantalla -->
+<div class="preloader flex-column justify-content-center align-items-center">
+  <img class="animation__shake" src="{% static 'images/favico.png' %}"  alt="CRMLogo" height="60" width="60">
+  </div>
+
 <div class="row mb-3">
   <div class="col-sm-4">
     <div class="small-box bg-secondary">

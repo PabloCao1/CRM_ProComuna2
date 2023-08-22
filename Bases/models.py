@@ -39,7 +39,8 @@ class Perfiles(models.Model):
     es_voluntario       = models.BooleanField(default=False,blank=True,null=True)
     es_fiscal           = models.BooleanField(default=False,blank=True,null=True)
     activo              = models.BooleanField(default=True)
-    motivo_inactivo     = models.CharField(max_length=100,blank=True,null=True)
+    motivo_inactivo     = models.CharField(max_length=150,blank=True,null=True)
+    fecha_inactivo      = models.DateField(null=True, blank=True)
     creado              = models.DateField(auto_now_add=True)
     modificado          = models.DateField(auto_now=True)
 

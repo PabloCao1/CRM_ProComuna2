@@ -1,6 +1,5 @@
-from typing import Any
 from django.contrib import messages
-from django.shortcuts import redirect,render
+from django.shortcuts import redirect,render,get_object_or_404
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,FormView,View
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -11,10 +10,30 @@ from django.db.models import Q
 from django.core.paginator import Paginator,EmptyPage
 from django.urls import reverse_lazy
 from datetime import date
-
+from django.http import JsonResponse
 
 
 #region ############################################################### Base General (Perfiles)
+
+class PerfilActivarView(View):
+    def post(self, request, perfil_id):
+        perfil = get_object_or_404(Perfiles, pk=perfil_id)
+        perfil.activo = True
+        perfil.motivo_inactivo = ""  # Vaciamos el motivo al activar
+        perfil.fecha_inactivo = None  # Vaciamos la fecha al activar
+        perfil.save()
+        return redirect('perfiles_ver', pk=perfil_id)
+
+class PerfilDesactivarView(View):
+    def post(self, request, perfil_id):
+        print('bueno.....................................')
+        perfil = get_object_or_404(Perfiles, pk=perfil_id)
+        motivo = request.POST.get('motivo')
+        perfil.activo = False
+        perfil.motivo_inactivo = motivo
+        perfil.fecha_inactivo = date.today()  # Guarda la fecha actual
+        perfil.save()
+        return redirect('perfiles_ver', pk=perfil_id)
 
 
 class PerfilesListView(PermissionRequiredMixin, ListView):

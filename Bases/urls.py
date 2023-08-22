@@ -14,6 +14,10 @@ urlpatterns = [
 
     path('bases/perfiles/edicion/<pk>', login_required(EdicionMultipleFormView.as_view()),name='edicion_multiple'), 
 
+    path('perfil/<int:perfil_id>/activar/', login_required(PerfilActivarView.as_view()), name='activar_perfil'),
+    path('perfil/<int:perfil_id>/desactivar/', login_required(PerfilDesactivarView.as_view()), name='desactivar_perfil'),
+
+
     #base voluntarios
     path('bases/perfiles/voluntarios/crear/<pk>', login_required(VoluntariosCreateView.as_view()),name='voluntarios_crear'), 
 
