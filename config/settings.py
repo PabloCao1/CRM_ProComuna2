@@ -166,7 +166,7 @@ EMAIL_HOST_USER = 'novedades.procomuna2@gmail.com'
 EMAIL_HOST_PASSWORD = 'stnrunkeallsrvpg'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # DEFAULT_FROM_EMAIL = 'novedades.procomuna2@gmail.com'
 # SERVER_EMAIL = 'novedades.procomuna2@gmail.com'
 # EMAIL_USE_TLS = True
