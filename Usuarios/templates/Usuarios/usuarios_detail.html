@@ -23,7 +23,7 @@
             <a href="{% url 'cambiar_password' %}" class="btn btn-secondary mr-1">Cambiar Contraseña</a>
         {% elif perms.Usuarios.rol_admin %}
             <a href="{% url 'usuarios_editar' object.usuario_id %}" class="btn btn-primary mr-1">Editar</a>        
-            <a href="{% url 'password_reset' object.id %}" class="btn btn-secondary mr-1"> Resetear Contraseña</a>
+            <a href="{% url 'password_reset' object.usuario_id %}" class="btn btn-secondary mr-1"> Resetear Contraseña</a>
             <a href="{% url 'usuarios_eliminar' object.id %}" class="btn btn-danger mr-1">Eliminar</a>
         {% endif %}
     </div>
@@ -50,7 +50,7 @@
                                 {% if object.usuario.is_active %}
                                 <span class="text-success">Activo</span>
                                 {% else %}
-                                <span class="text-danger">Inactivo</span>
+                                <span class="text-danger">Desactivado</span>
                                 {% endif %}
                             </span>
                         </div>

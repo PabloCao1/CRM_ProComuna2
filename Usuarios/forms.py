@@ -52,15 +52,20 @@ class UsuariosUpdateForm(UserChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         usuario=(usuarios.get(usuario_id=self.instance.pk))
+        self.fields['is_active'].label = "Estado"
         self.fields['telefono'].initial = usuario.telefono
         self.fields['imagen'].initial = usuario.imagen
         self.fields['dni'].initial = usuario.dni        
-        for fieldname in ['username', 'telefono','groups', 'imagen','dni']:
+        for fieldname in ['username', 'telefono', 'imagen','dni']:
             self.fields[fieldname].help_text = None
 
     class Meta:
         model = User
         fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email','is_active','groups',)
+        widgets = {
+            'is_active' :     forms.Select(choices=[(True, 'Activo'), (False, 'Desactivado')]),   
+            
+        }
         
 
 class PerfilUpdateForm(UserChangeForm):

@@ -165,6 +165,19 @@ class UsuariosResetPassView(PermissionRequiredMixin,SuccessMessageMixin,Password
     success_url = reverse_lazy('usuarios_listar')
     success_message = "Mail de reseteo de contraseña enviado con éxito."
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id =self.kwargs['pk']
+        user = User.objects.get(id=user_id)
+        email=user.email
+        context.update(
+            {
+                "email": email, 
+                "usuario": user, 
+            }
+        )
+        return context
+
     def get_form_kwargs(self):
         """Devuelve los argumentos de palabras (kwargs) clave para instanciar el formulario."""
         user_id =self.kwargs['pk']
