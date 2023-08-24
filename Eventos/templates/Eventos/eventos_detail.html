@@ -44,7 +44,7 @@
                             {{object.estado}}
                         </h5>
                     </div>
-                    {% elif object.estado == "Pendiente" %}
+                    {% elif object.estado == "Próximamente" %}
                     <div class="card bg-success py-2 mb-1  text-center">
                         <h5 class="font-weight-bold my-1">
                             {{object.estado}}
@@ -74,8 +74,11 @@
                     <li class="nav-item">
                         <div class="comment-text">
                             Fecha
-                            <span class="username">{{object.fecha|default:"-"}} -
-                                {{object.horario|default:"-"}}</span>
+                            <span class="username">{{object.fecha|default:"-"}}
+                                {% if object.horario %}
+                                - {{object.horario}}
+                                {%endif%}
+                            </span>
                         </div>
                     </li>
                     <li class="nav-item">
@@ -96,13 +99,13 @@
                             Web
                             <span class="username">
                                 <a href="{{ MEDIA_URL }}{{object.web}}" target="_blank">
-                                    {{object.web}}
+                                    {{object.web|default:"-"}}
                                 </a>
                             </span>
                         </div>
                     </li>
                     {% elif object.modo == "PRESENCIAL" %}
-                    
+
                     <li class="nav-item">
                         <div class="comment-text">
                             Lugar
@@ -120,12 +123,7 @@
                         </div>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <div class="comment-text">
-                            Teléfono
-                            <span class="username">{{object.telefono|default:"-"}}</span>
-                        </div>
-                    </li>
+                    
                     <li class="nav-item">
                         <div class="comment-text">
                             Mensaje
@@ -147,7 +145,7 @@
             <div class="card-footer card-comments p-2">
                 <ul class="list-unstyled m-0">
                     {%for b in object.invitados.all %}
-                    <li class="badge bg-secondary h6">{{b.email}}</li>
+                    <li class="badge bg-secondary h6">{{b}}</li>
                     {%empty%}
                     <li><span class="h5 pl-3">-</span></li>
                     {%endfor%}

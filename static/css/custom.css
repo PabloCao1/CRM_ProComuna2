@@ -14,7 +14,6 @@ input:-internal-autofill-selected {
 .dark-mode .form-control:focus {
   background-color: #343a40 !important;
 }
-{% load static %}
 
 
 /* Chrome, Safari, Edge, Opera */
@@ -253,8 +252,23 @@ label:not(.form-check-label):not(.custom-file-label) {
   border-bottom: 2px solid #00cf1c !important;
   background: #f8f8f8 !important;
 }
+.dark-mode .select2-container--default.select2-container--focus .select2-selection--multiple {
+  border: none !important;
+  border-radius: 0px !important;
+  outline: 0;
+  border-bottom: 2px solid #00cf1c !important;
+  background-color: #2d3236 !important;
+}
 .select2-container--default .select2-selection__rendered {
-  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid #e6e6e6 !important;
+  display: block !important;
+  width: 100% !important;
+  border-radius: 0px !important;
+}
+.dark-mode .select2-container--default .select2-selection__rendered {
+  background-color: #343a40 !important;
   border: none !important;
   border-bottom: 1px solid #e6e6e6 !important;
   display: block !important;
@@ -297,3 +311,4 @@ label:not(.form-check-label):not(.custom-file-label) {
 .info-box-content .progress {
   background-color: rgba(0, 0, 0, 0.125) !important;
 }
+

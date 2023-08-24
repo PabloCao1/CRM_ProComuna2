@@ -36,7 +36,10 @@
           <div class="form-row mb-3">
             <div class="form-group col-12"> {{ form.nombre | as_crispy_field}} </div>
             <div class="form-group col-12"> {{ form.mensaje | as_crispy_field}} </div>
-            <div class="form-group col-12"> {{ form.modo | as_crispy_field}} </div>
+            <div class="form-group col-sm-4 col-12"> {{ form.modo | as_crispy_field}} </div>
+            <div class="form-group col-sm-4 col-6"> {{ form.fecha | as_crispy_field}} </div>
+            <div class="form-group col-sm-2 col-3"> {{ form.hora | as_crispy_field}} </div>
+            <div class="form-group col-sm-2 col-3"> {{ form.minutos | as_crispy_field}} </div>
             <div class="form-group col-12" name="lugar" id="lugar"> {{ form.lugar | as_crispy_field}} </div>
             <div class="form-group col-12" name="url" id="url"> {{ form.web | as_crispy_field}} </div>
             <div class="form-group col-12" name="direccion" id="direccion">
@@ -47,15 +50,16 @@
                 <div class="col-sm-2 col-4"> {{ form.departamento | as_crispy_field}} </div>
               </div>
             </div>
-            <div class="form-group col-sm-4 col-6"> {{ form.fecha | as_crispy_field}} </div>
-            <div class="form-group col-sm-2 col-3"> {{ form.hora | as_crispy_field}} </div>
-            <div class="form-group col-sm-2 col-3"> {{ form.minutos | as_crispy_field}} </div>
-            <div class="form-group col-sm-4 col-12"> {{ form.telefono | as_crispy_field}} </div>
             <div class="form-group col-12"> {{ form.grupo_de_invitados | as_crispy_field}} </div>
             <div class="form-group col-12"> {{ form.invitados | as_crispy_field}} </div>
             <div class="form-group col-12" id="error_div"> </div>
           </div>
       </div>
+
+      <div class="overlay dark sync-overlay d-none" id="">
+        <h3 class="display-6  ">Enviando correos... <i class="fa fa-sync fa-spin"></i></h3>
+      </div>
+
     </div>
 
   </div>
@@ -91,16 +95,20 @@
               </label>
             </div>
           </div>
+          <div class="overlay dark sync-overlay d-none">
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-sm-12 text-center mt-5 mb-5">
-    <a href="{% url 'eventos_listar' %}"><button type="button" class="btn btn-secondary">Cancelar</button></a>
-    <button type="submit" class="btn btn-primary">Enviar</button>
+  <div class="col-sm-12 text-center mt-5 mb-5 ">
+    <a href="{% url 'eventos_listar' %}" class="btn btn-secondary btn-form">Cancelar</a>
+    <button type="submit" class="btn btn-primary btn-form">Enviar</button>
   </div>
   </form>
+
+
 
   {% endblock content%}
 
@@ -111,7 +119,43 @@
     const grupoInvitados = document.getElementById("id_grupo_de_invitados");
     const invitados = document.getElementById("id_invitados");
     const errorContainer = document.getElementById("error_div");
+    const horaField = document.getElementById("id_hora");
+    const minutosField = document.getElementById("id_minutos");
+    const modoField = document.getElementById("id_modo");
+    const lugarField = document.getElementById("id_lugar");
+    const webField = document.getElementById("id_web");
     let errorTimeout;
+
+    horaField.addEventListener("change", function () {
+      if (horaField.value === "") {
+        minutosField.value = "";
+        minutosField.setAttribute("disabled", "disabled");
+        minutosField.removeAttribute("required");
+      } else {
+        minutosField.removeAttribute("disabled");
+        minutosField.setAttribute("required", "required");
+      }
+    });
+
+  // Función para actualizar la visibilidad y obligatoriedad de los campos cuando se elige MODO
+  function updateFieldsVisibility() {
+    const selectedMode = modoField.value;
+
+    if (selectedMode === "PRESENCIAL") {
+      lugarField.setAttribute("required", "required");
+      webField.removeAttribute("required");
+    } else if (selectedMode === "VIRTUAL") {
+      webField.setAttribute("required", "required");
+      lugarField.removeAttribute("required");
+    } else {
+      lugarField.removeAttribute("required");
+      webField.removeAttribute("required");
+    }
+  }
+
+  modoField.addEventListener("change", updateFieldsVisibility);
+  updateFieldsVisibility(); // Llama a la función para configurar inicialmente los campos
+
 
     // Función para mostrar el mensaje de error durante 5 segundos
     function showErrorMessage() {
@@ -142,6 +186,11 @@
       if (grupoInvitados.value === "" && invitados.value === "") {
         event.preventDefault(); // Evitar que el formulario se envíe
         showErrorMessage();
+      } else {
+        // Mostrar el ícono de sincronización
+        // syncOverlay.classList.remove("d-none");
+        $(".sync-overlay").remove("d-none");
+        $(".btn-form").addClass("disabled");
       }
     });
 

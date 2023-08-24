@@ -13,6 +13,11 @@ class EventosForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         invitados = Perfiles.objects.filter(email__isnull=False, activo=True)
         self.fields['invitados'].queryset = invitados
+        self.fields['minutos'].widget.attrs.update({'disabled': 'disabled'})
+
+        if 'hora' in self.data and self.data['hora']:
+            self.fields['minutos'].required = True
+            self.fields['minutos'].widget.attrs.update({'disabled': ''})
     
     class Meta:
         model = Eventos
@@ -27,7 +32,6 @@ class EventosForm(forms.ModelForm):
         labels = {
             'departamento': 'Depto./Oficina',
             'nombre': 'Nombre del evento',
-            'telefono': 'Teléfono',
         }
 
         
