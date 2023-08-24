@@ -36,10 +36,10 @@
           <div class="form-row mb-3">
             <div class="form-group col-12"> {{ form.nombre | as_crispy_field}} </div>
             <div class="form-group col-12"> {{ form.mensaje | as_crispy_field}} </div>
-            <div class="form-group col-sm-4 col-12"> {{ form.modo | as_crispy_field}} </div>
             <div class="form-group col-sm-4 col-6"> {{ form.fecha | as_crispy_field}} </div>
             <div class="form-group col-sm-2 col-3"> {{ form.hora | as_crispy_field}} </div>
             <div class="form-group col-sm-2 col-3"> {{ form.minutos | as_crispy_field}} </div>
+            <div class="form-group col-sm-4 col-12"> {{ form.modo | as_crispy_field}} </div>
             <div class="form-group col-12" name="lugar" id="lugar"> {{ form.lugar | as_crispy_field}} </div>
             <div class="form-group col-12" name="url" id="url"> {{ form.web | as_crispy_field}} </div>
             <div class="form-group col-12" name="direccion" id="direccion">
@@ -137,24 +137,24 @@
       }
     });
 
-  // Función para actualizar la visibilidad y obligatoriedad de los campos cuando se elige MODO
-  function updateFieldsVisibility() {
-    const selectedMode = modoField.value;
+    // Función para actualizar la visibilidad y obligatoriedad de los campos cuando se elige MODO
+    function updateFieldsVisibility() {
+      const selectedMode = modoField.value;
 
-    if (selectedMode === "PRESENCIAL") {
-      lugarField.setAttribute("required", "required");
-      webField.removeAttribute("required");
-    } else if (selectedMode === "VIRTUAL") {
-      webField.setAttribute("required", "required");
-      lugarField.removeAttribute("required");
-    } else {
-      lugarField.removeAttribute("required");
-      webField.removeAttribute("required");
+      if (selectedMode === "PRESENCIAL") {
+        lugarField.setAttribute("required", "required");
+        webField.removeAttribute("required");
+      } else if (selectedMode === "VIRTUAL") {
+        webField.setAttribute("required", "required");
+        lugarField.removeAttribute("required");
+      } else {
+        lugarField.removeAttribute("required");
+        webField.removeAttribute("required");
+      }
     }
-  }
 
-  modoField.addEventListener("change", updateFieldsVisibility);
-  updateFieldsVisibility(); // Llama a la función para configurar inicialmente los campos
+    modoField.addEventListener("change", updateFieldsVisibility);
+    updateFieldsVisibility(); // Llama a la función para configurar inicialmente los campos
 
 
     // Función para mostrar el mensaje de error durante 5 segundos
@@ -189,7 +189,7 @@
       } else {
         // Mostrar el ícono de sincronización
         // syncOverlay.classList.remove("d-none");
-        $(".sync-overlay").remove("d-none");
+        $(".sync-overlay").removeClass("d-none");
         $(".btn-form").addClass("disabled");
       }
     });
