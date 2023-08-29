@@ -337,6 +337,27 @@
 
   $(document).ready(function () {
 
+    const body = document.body;
+    const html = document.documentElement;
+
+    const observer = new MutationObserver(() => {
+      if (body.classList.contains('dark-mode')) {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
+    });
+
+    // Configurar el observador para observar cambios en la clase del cuerpo
+    const observerConfig = {
+      attributes: true,  // Observar cambios en los atributos (clases)
+      attributeFilter: ['class'],  // Observar solo cambios en la clase
+    };
+
+    // Iniciar la observación en el cuerpo con la configuración dada
+    observer.observe(body, observerConfig);
+
+
     $.fn.DataTable.ext.pager.numbers_length = 4;
 
     $("#export_table").DataTable({
@@ -351,26 +372,26 @@
         footer: true,
         title: 'Reporte CRM',
         filename: 'reporte_crm',
-        text: '<button class="btn btn-sm btn-default mx-0" title="Descargar en Excel"><i class="fas fa-table text-success"></i></button>'
+        text: '<button class="btn btn-sm btn-default m-0 h4" title="Descargar en Excel"><i class="fas fa-table text-success"></i></button>'
       },
       //Botón para PDF
       {
         extend: 'pdf',
-        exportOptions: { columns: [ 0, 1, 2, 3, 5, 6, 7, 8, 9, 13, 14, 15, 17, 18]},
+        exportOptions: { columns: ':not(.notexport)' },
         footer: true,
         title: 'Reporte CRM',
         filename: 'reporte_crm',
-        text: '<button class="btn btn-sm btn-default mx-0"  title="Descargar en PDF"><i class="fas fa-file-pdf text-danger"></i></button>',
+        text: '<button class="btn btn-sm btn-default m-0 h4"  title="Descargar en PDF"><i class="fas fa-file-pdf text-danger"></i></button>',
         orientation: 'landscape',
         pageSize: 'LEGAL'
       },
       //Botón para Imprimir
       {
         extend: 'print',
-        exportOptions: { columns: [ 0, 1, 2, 3, 5, 6, 7, 8, 9, 13, 14, 15, 17, 18]},
+        exportOptions: { columns: ':not(.notexport)' },
         footer: true,
         title: 'Reporte CRM',
-        text: '<button class="btn btn-sm btn-default mx-0" title="Imprimir"><i class="fas fa-print text-primary"></i></button>',
+        text: '<button class="btn btn-sm btn-default m-0 h4" title="Imprimir"><i class="fas fa-print text-primary"></i></button>',
 
       }],
       order: [[0, "asc"]],
@@ -390,7 +411,8 @@
       
     });
 
-    $('.dt-buttons').addClass('float-right mb-3')
+    $('.dt-buttons').addClass('float-right mb-3 bg-transparent')
+    $('.dt-button').addClass('bg-transparent p-0 mx-2')
     $('.dataTables_length').addClass('mb-3');
     $('.dataTables_filter').addClass('mb-3 mx-3 mt-1');
     $('.buttons-html5').addClass('border-0');
