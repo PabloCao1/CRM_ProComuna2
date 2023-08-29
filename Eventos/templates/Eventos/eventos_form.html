@@ -126,6 +126,13 @@
     const webField = document.getElementById("id_web");
     let errorTimeout;
 
+    $(function () {
+      //Initialize Select2 Elements
+      $('.select2').select2()
+
+    });
+
+
     horaField.addEventListener("change", function () {
       if (horaField.value === "") {
         minutosField.value = "";

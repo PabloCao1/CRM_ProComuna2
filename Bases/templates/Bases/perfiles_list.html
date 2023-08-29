@@ -1,10 +1,11 @@
 {% extends "layouts/base.html" %};
 {% load static %};
 
-{% block head %}
+{% block custom_head %}
 <!-- Datatables -->
-<link rel="stylesheet" href="{% static 'plugins/Datatables/datatables.min.css' %}">
-{% endblock %}
+<link rel="stylesheet" href="{% static 'plugins/DataTables/datatables.min.css' %}">
+
+{% endblock custom_head %}
 
 {% block title %}Perfiles{% endblock %};
 
@@ -17,9 +18,9 @@
 
 <!-- Imagen de CRM se muestra mientras carga la pantalla -->
 <div class="preloader flex-column justify-content-center align-items-center">
-  <img class="animation__shake" src="{% static 'images/favico.png' %}"  alt="CRMLogo" height="60" width="60">
-  </div>
-  
+  <img class="animation__shake" src="{% static 'images/favico.png' %}" alt="CRMLogo" height="60" width="60">
+</div>
+
 <form method='GET'>
   <div class="card card-gray-dark card-outline mb-5">
     <div class="card-header">
@@ -63,7 +64,7 @@
 
                       <div class="form-group clearfix ">
                         <div class="icheck-primary d-inline">
-                          <input type="checkbox" id="base_general" name="base_general" >
+                          <input type="checkbox" id="base_general" name="base_general">
                           <label for="base_general">
                             General
                           </label>
@@ -81,7 +82,7 @@
 
                       <div class="form-group clearfix ">
                         <div class="icheck-primary d-inline">
-                          <input type="checkbox" id="base_fiscal" name="base_fiscal" >
+                          <input type="checkbox" id="base_fiscal" name="base_fiscal">
                           <label for="base_fiscal">
                             Fiscales
                           </label>
@@ -122,7 +123,7 @@
                             Con domicilio
                           </label>
                         </div>
-                      </div>                      
+                      </div>
 
                       <div class="form-group clearfix ">
                         <div class="icheck-primary d-inline">
@@ -275,124 +276,128 @@
 <!-- Resultados-->
 
 <div class="card">
-  <div class="card-body p-0">
-    <div class="table-responsive text-nowrap  p-3">
-      <table class="table table-sm table-hover" id="export_table">
-        <thead>
-          <tr>
-            <th>Ingreso</th>
-            <th>Nombre</th>
-            <th>Documento</th>
-            <th>Edad</th>
-            <th>Sexo</th>
-            <th>Es militante</th>
-            <th>Es empleado</th>
-            <th>Bases</th>
-            <th class="text-center">Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for o in object_list %}
-          <tr class="clickable-row " role="button" data-href="{% url 'perfiles_ver' o.id %}" title="ver detalle">
-            <td>{{o.creado|date:"d/m/y"}}</td>
-            <td><span class="font-weight-bold small h6
-              {% if o.activo %} text-success {% else %}text-danger{% endif %}">
-                {{o.nombres |default:"-"}} {{o.apellidos |default:""}}</span></td>
-            <td>{{o.documento}}</td>
-            <td> {% if o.edad%}{{o.edad}} años {%else%} - {%endif%}</td>
-            <td>{{o.sexo|default:"-"}}</td>
-            <td>
-              {{ o.es_militante|yesno:'SI,NO' }}
-            </td>
-            <td>
-              {{ o.es_empleadoGCBA|yesno:'SI,NO' }}
-            </td>
-            <td>
-              {% if o.es_fiscal or o.es_voluntario %}
-              {% if o.es_fiscal %}
-              <div class="badge badge-info h6 text-center"> Fiscales</div>
-              {%endif%}
-              {% if o.es_voluntario %}
-              <div class="badge badge-info h6 text-center"> Voluntarios</div>
-              {%endif%}
-              {%else%}
-              <div class="badge badge-secondary h6 text-center"> General</div>
-              {%endif%}
-            </td>
-            <td class="text-center">
-              {% if o.activo %} <span class="text-success font-weight-bold">Activo</span>
-              {% else %} <span class="text-danger font-weight-bold">Desactivado</span>
-              {% endif %}
-            </td>
+  <div class="card-body p-3">
+    <table class="compact display nowrap" cellspacing="0" id="export_table" width="100%">
+      <thead>
+        <tr>
+          <th>Ingreso</th>
+          <th>Nombre</th>
+          <th>Documento</th>
+          <th>Edad</th>
+          <th>Teléfono</th>
+          <th>Email</th>          
+          <th>Bases</th>
+          <th class="text-center">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in object_list %}
+        <tr>
+          <td>{{o.creado|date:"d/m/y"}}</td>
+          <td><a class="font-weight-bold small h6
+              {% if o.activo %} text-success {% else %}text-danger{% endif %}" href="{% url 'perfiles_ver' o.id %}">
+              {{o.nombres |default:"-"}} {{o.apellidos |default:""}}</a></td>
+          <td> {{o.tipo_doc}} {{o.documento}}</td>
+          <td> {% if o.edad%}{{o.edad}} años {%else%} - {%endif%}</td>
+          <td>{{o.telefono|default:"-"}}</td>
+          <td>{{o.email|default:"-"}}</td>
+          <td>
+            {% if o.es_fiscal or o.es_voluntario %}
+            {% if o.es_fiscal %}
+            <div class="badge badge-info h6 text-center"> Fiscales</div>
+            {%endif%}
+            {% if o.es_voluntario %}
+            <div class="badge badge-info h6 text-center"> Voluntarios</div>
+            {%endif%}
+            {%else%}
+            <div class="badge badge-secondary h6 text-center"> General</div>
+            {%endif%}
+          </td>
+          <td class="text-center">
+            {% if o.activo %} <span class="text-success font-weight-bold">Activo</span>
+            {% else %} <span class="text-danger font-weight-bold">Desactivado </span>
+            {% endif %}
+          </td>
 
-            {% endfor %}
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock content %}
 
 {% block customJS %}
 
-<!-- Datatablles -->
+<!-- Datatables -->
 
-<script src="{% static 'plugins/Datatables/datatables.min.js' %}"></script>
+<script src="{% static 'plugins/DataTables/datatables.min.js' %}"></script>
 <script>
-  $("#export_table").DataTable({
 
-    pageLength: 25,
-    responsive: true,
-    dom: 'Bfrtip',
-    buttons: [{
-      //Botón para Excel
-      extend: 'excel',
-      exportOptions: { columns: ':not(.notexport)' },
-      footer: true,
-      title: 'crm',
-      filename: 'reporte_crm',
-      text: '<button class="btn btn-sm btn-default mx-0"><i class="fas fa-table text-success" title="Descargar en Excel"></i></button>'
-    },
-    //Botón para PDF
-    {
-      extend: 'pdf',
-      exportOptions: { columns: ':not(.notexport)' },
-      footer: true,
-      title: 'crm',
-      filename: 'reporte_crm',
-      text: '<button class="btn btn-sm btn-default mx-0"><i class="fas fa-file-pdf text-danger" title="Descargar en PDF"></i></button>',
-    },
-    //Botón para Imprimir
-    {
-      extend: 'print',
-      exportOptions: { columns: ':not(.notexport)' },
-      footer: true,
-      title: 'crm',
-      text: '<button class="btn btn-sm btn-default mx-0"><i class="fas fa-print text-primary" title="Imprimir"></i></button>'
-    }
-    ],
-    order: [[0, "asc"]],
-    language: {
-      lengthMenu: "Mostrar _MENU_ filas por página.",
-      zeroRecords: "No se encontraron registros.",
-      info: "<p class='ml-3 pt-3 font-weight-bold'> TOTAL: _TOTAL_ resultados <span class='font-weight-normal text-sm'>(Mostrando _START_ de _END_)</span>  </p> ",
-      infoEmpty: "No hay registros disponibles",
-      infoFiltered: "(filtrado por _MAX_ registros.)",
-      search: "",
-      searchPlaceholder: "Filtrar resultados",
-      paginate: {
-        next: "Siguiente",
-        previous: "Anterior",
+
+  $(document).ready(function () {
+
+    $.fn.DataTable.ext.pager.numbers_length = 4;
+
+    $("#export_table").DataTable({
+
+      responsive: true,
+      pageLength: 25,
+      dom: 'Blfrtip',
+      buttons: [{
+        //Botón para Excel
+        extend: 'excel',
+        exportOptions: { columns: ':not(.notexport)' },
+        footer: true,
+        title: 'Reporte CRM',
+        filename: 'reporte_crm',
+        text: '<button class="btn btn-sm btn-default mx-0" title="Descargar en Excel"><i class="fas fa-table text-success"></i></button>'
       },
-    },
-  });
-  $('.dt-buttons').addClass('float-left  pb-3')
-  $('.dataTables_filter').addClass('float-right pb-3')
-  $('.pagination').addClass('float-right')
-  $('.buttons-html5').removeClass('btn-secondary').addClass('px-1')
-  $('.buttons-print').removeClass('btn-secondary').addClass('px-1')
+      //Botón para PDF
+      {
+        extend: 'pdf',
+        exportOptions: { columns: [ 0, 1, 2, 3, 5, 6, 7, 8, 9, 13, 14, 15, 17, 18]},
+        footer: true,
+        title: 'Reporte CRM',
+        filename: 'reporte_crm',
+        text: '<button class="btn btn-sm btn-default mx-0"  title="Descargar en PDF"><i class="fas fa-file-pdf text-danger"></i></button>',
+        orientation: 'landscape',
+        pageSize: 'LEGAL'
+      },
+      //Botón para Imprimir
+      {
+        extend: 'print',
+        exportOptions: { columns: [ 0, 1, 2, 3, 5, 6, 7, 8, 9, 13, 14, 15, 17, 18]},
+        footer: true,
+        title: 'Reporte CRM',
+        text: '<button class="btn btn-sm btn-default mx-0" title="Imprimir"><i class="fas fa-print text-primary"></i></button>',
 
+      }],
+      order: [[0, "asc"]],
+      language: {
+        lengthMenu: "Mostrar _MENU_ filas por página.",
+        zeroRecords: "No se encontraron registros.",
+        info: "<p class='ml-3 pt-3 font-weight-bold'> TOTAL: _TOTAL_ resultados <span class='font-weight-normal text-sm'>(Mostrando _START_ de _END_)</span>  </p> ",
+        infoEmpty: "No hay registros disponibles",
+        infoFiltered: "(filtrado por _MAX_ registros.)",
+        search: "",
+        searchPlaceholder: "Filtrar resultados",
+        paginate: {
+          next: "Siguiente",
+          previous: "Anterior",
+        },
+      },
+      
+    });
+
+    $('.dt-buttons').addClass('float-right mb-3')
+    $('.dataTables_length').addClass('mb-3');
+    $('.dataTables_filter').addClass('mb-3 mx-3 mt-1');
+    $('.buttons-html5').addClass('border-0');
+    $('.buttons-print').addClass('border-0');
+
+
+  });
 
 </script>
 

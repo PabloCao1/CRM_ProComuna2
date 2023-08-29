@@ -1,9 +1,8 @@
 {% extends "layouts/base.html" %};
 {% load static %};
 
-{% block head %}
-
-{% endblock %}
+{% block custom_head %}
+{% endblock custom_head %}
 
 {% block title %}Eventos{% endblock %};
 
@@ -83,6 +82,10 @@
 {% block customJS %}
 <script>
   $(document).ready(function () {
+    $(".clickable-row").click(function () {
+	// se agrrega la clase en filas <tr> de un table para que sean links a la vista de detalle del elemento
+	window.location = $(this).data("href");
+});
 
 
 

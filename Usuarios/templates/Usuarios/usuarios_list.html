@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %};
 {% load static %};
 
-{% block head %}
+{% block custom_head %}
 {% endblock %}
 
 {% block title %}Usuarios{% endblock %};
@@ -85,9 +85,11 @@
 
 {% block customJS %}
 <script>
-
-
-
+  
+$(".clickable-row").click(function () {
+	// se agrrega la clase en filas <tr> de un table para que sean links a la vista de detalle del elemento
+	window.location = $(this).data("href");
+});
 
 </script>
 {% endblock %}

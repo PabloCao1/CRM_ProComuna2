@@ -207,16 +207,14 @@
         </div>
     </div>
     <div class="col-sm-2 pr-sm-0 text-center order-1 order-sm-4 pb-2">
-        {% if object.activo %}
-        <a href="#" data-toggle="modal" data-target="#modalActivo" title="Desactivar">
+        <a href="#" data-toggle="modal" data-target="#modalActivo" title="Click para modificar estado del perfil.">
+            {% if object.activo %}
             <div class="card bg-success py-3 mb-1">
                 <h5 class="font-weight-bold my-1">
                     ACTIVO
                 </h5>
             </div>
-        </a>
-        {% else %}
-        <a href="#" data-toggle="modal" data-target="#modalActivo" title="Activar">
+            {% else %}
             <div class="card card-danger">
                 <div class="card-header text-center"> 
                     <h5 class=" font-weight-bold  my-1">DESACTIVADO</h5>
@@ -228,10 +226,9 @@
                     {{object.motivo_inactivo}}
                 </div>
             </div>
-        </a>
-        
+            {% endif %}
+        </a>     
 
-        {% endif %}
         {% if object.es_fiscal or object.es_voluntario %}
         {% if object.es_fiscal %}
         <div class="card bg-secondary py-2 mb-1">
@@ -531,6 +528,10 @@
 <script>
     $(document).ready(function () {
 
+        //imprime los div excepto los elementos que tengan la clase 'd-print-none'
+        $(".print").click(function () {
+            window.print();
+        });
 
         // Agrega un evento click al botón "Volver" utilizando jQuery
         $("#boton-volver").on("click", function () {

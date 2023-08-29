@@ -17,6 +17,7 @@ from django.http import JsonResponse
 
 class PerfilActivarView(View):
     def post(self, request, perfil_id):
+        print('holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ')
         perfil = get_object_or_404(Perfiles, pk=perfil_id)
         perfil.activo = True
         perfil.motivo_inactivo = ""  # Vaciamos el motivo al activar
