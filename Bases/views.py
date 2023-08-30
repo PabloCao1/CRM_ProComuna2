@@ -9,10 +9,13 @@ from django.core.paginator import Paginator,EmptyPage
 from django.urls import reverse_lazy
 from datetime import date
 from django.http import JsonResponse
+from .resources import *
 from .models import *
 from .admin import *
 from .forms import *
 from .choices import *
+from django.utils.encoding import smart_bytes
+import json
 
 
 #region ############################################################### Base General (Perfiles)
@@ -144,12 +147,10 @@ class PerfilesListView(PermissionRequiredMixin, ListView):
 
         return object_list
 
-    def post(self,request,**kwargs):
-        qs = self.get_queryset()
-        dataset = PerfilesResource().export(qs)
-        ds = dataset.xls
-        response = HttpResponse(ds,content_type='xls')
-        response['Content-Disposition'] = f"attachment; filename = crm_datos_completos.xls"
+
+    def post(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        response = export_to_xls(queryset)
         return response
 
 

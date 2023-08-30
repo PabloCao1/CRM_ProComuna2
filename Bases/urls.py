@@ -16,7 +16,9 @@ urlpatterns = [
     path('perfil/<int:perfil_id>/desactivar/', login_required(PerfilDesactivarView.as_view()), name='desactivar_perfil'),
 
     # Exportar data completa
-    path('bases/perfiles/exportar', login_required(PerfilesListView.as_view()),name='exportar_data_completa'),
+    # path('bases/perfiles/exportar', login_required(PerfilesListView.as_view()),name='exportar_data_completa'),
+    # path('export/', export_to_xls, name='export_to_xls'),
+
 
     #base voluntarios
     path('bases/perfiles/voluntarios/crear/<pk>', login_required(VoluntariosCreateView.as_view()),name='voluntarios_crear'), 
