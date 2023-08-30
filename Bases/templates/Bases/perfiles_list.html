@@ -273,6 +273,8 @@
   </div>
 </form>
 
+
+
 <!-- Resultados-->
 
 <div class="card">
@@ -323,6 +325,15 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 text-center">
+    <form method='POST' class="">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-warning font-weight-bold" title="Descargar toda la información de cada perfil ">
+        Descargar datos completos <i class="fas fa-download"></i></button>
+    </form>
   </div>
 </div>
 {% endblock content %}

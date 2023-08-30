@@ -1,23 +1,24 @@
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import redirect,render,get_object_or_404
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,FormView,View
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from .models import *
-from .forms import *
-from .choices import *
 from django.db.models import Q
 from django.core.paginator import Paginator,EmptyPage
 from django.urls import reverse_lazy
 from datetime import date
 from django.http import JsonResponse
+from .models import *
+from .admin import *
+from .forms import *
+from .choices import *
 
 
 #region ############################################################### Base General (Perfiles)
 
 class PerfilActivarView(View):
     def post(self, request, perfil_id):
-        print('holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ')
         perfil = get_object_or_404(Perfiles, pk=perfil_id)
         perfil.activo = True
         perfil.motivo_inactivo = ""  # Vaciamos el motivo al activar
@@ -27,7 +28,6 @@ class PerfilActivarView(View):
 
 class PerfilDesactivarView(View):
     def post(self, request, perfil_id):
-        print('bueno.....................................')
         perfil = get_object_or_404(Perfiles, pk=perfil_id)
         motivo = request.POST.get('motivo')
         perfil.activo = False
@@ -143,6 +143,14 @@ class PerfilesListView(PermissionRequiredMixin, ListView):
         object_list = object_list.distinct()
 
         return object_list
+
+    def post(self,request,**kwargs):
+        qs = self.get_queryset()
+        dataset = PerfilesResource().export(qs)
+        ds = dataset.xls
+        response = HttpResponse(ds,content_type='xls')
+        response['Content-Disposition'] = f"attachment; filename = crm_datos_completos.xls"
+        return response
 
 
 class PerfilesDetailView(PermissionRequiredMixin,DetailView): 
