@@ -19,19 +19,19 @@
     <!-- botones -->
     <div class="col-12 my-3 mx-2 d-print-none">
         {% if request.user.usuarios.id == object.id %}
-            <a href="{% url 'perfil_editar' object.id %}" class="btn btn-primary mr-1">Editar</a>
-            <a href="{% url 'cambiar_password' %}" class="btn btn-secondary mr-1">Cambiar Contraseña</a>
+        <a href="{% url 'perfil_editar' object.id %}" class="btn btn-primary mr-1">Editar</a>
+        <a href="{% url 'cambiar_password' %}" class="btn btn-secondary mr-1">Cambiar Contraseña</a>
         {% elif perms.Usuarios.rol_admin %}
-            <a href="{% url 'usuarios_editar' object.usuario_id %}" class="btn btn-primary mr-1">Editar</a>        
-            <a href="{% url 'password_reset' object.usuario_id %}" class="btn btn-secondary mr-1"> Resetear Contraseña</a>
-            <a href="{% url 'usuarios_eliminar' object.id %}" class="btn btn-danger mr-1">Eliminar</a>
+        <a href="{% url 'usuarios_editar' object.usuario_id %}" class="btn btn-primary mr-1">Editar</a>
+        <a href="{% url 'password_reset' object.usuario_id %}" class="btn btn-secondary mr-1"> Resetear Contraseña</a>
+        <a href="{% url 'usuarios_eliminar' object.id %}" class="btn btn-danger mr-1">Eliminar</a>
         {% endif %}
     </div>
     <!-- ./botones -->
 </div>
 
 <div class="row">
-    <div class="col-sm-3 pb-3">
+    <div class="col-sm-3">
         <div class="card card-gray-dark card-outline">
             <div class="card-header mr-2 ml-2 mt-2 p-0">
                 {% if object.imagen != "default.png"%}
@@ -40,7 +40,7 @@
                 <img class="card-img-top" src="{% static 'images/perfil.png'%}" alt="User profile picture" />
                 {% endif %}
             </div>
-            <div class="card-footer card-comments p-2">
+            <div class="card-footer card-comments p-2  pb-4">
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item"></li>
                     <li class="nav-item">
@@ -67,6 +67,10 @@
                         <div class="card-title">
                             Datos del usuario
                         </div>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                            </button>
+                          </div>
                     </div>
                     <div class="card-footer card-comments p-2">
                         <ul class="nav nav-pills flex-column">
@@ -79,33 +83,34 @@
                             <li class="nav-item">
                                 <div class="comment-text ml-2 pt-2">
                                     Nombre
-                                    <span class="username">{{object.usuario.first_name|default_if_none:"-"|default:"-"}}</span>
+                                    <span
+                                        class="username">{{object.usuario.first_name|default_if_none:"-"|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
                                 <div class="comment-text ml-2 pt-2">
                                     Apellido
-                                    <span class="username">{{object.usuario.last_name|default_if_none:"-"|default:"-"}}</span>
+                                    <span
+                                        class="username">{{object.usuario.last_name|default_if_none:"-"|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
                                 <div class="comment-text ml-2 pt-2">
                                     DNI
-                                    <span
-                                        class="username">{{object.dni|default_if_none:"-"|default:"-"}}</span>
+                                    <span class="username">{{object.dni|default_if_none:"-"|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
                                 <div class="comment-text ml-2 pt-2">
                                     EMAIL
-                                    <span class="username">{{object.usuario.email|default_if_none:"-"|default:"-"}}</span>
+                                    <span
+                                        class="username">{{object.usuario.email|default_if_none:"-"|default:"-"}}</span>
                                 </div>
                             </li>
                             <li class="nav-item">
                                 <div class="comment-text ml-2 pt-2">
                                     Teléfono
-                                    <span
-                                        class="username">{{object.telefono|default_if_none:"-"|default:"-"}}</span>
+                                    <span class="username">{{object.telefono|default_if_none:"-"|default:"-"}}</span>
                                 </div>
                             </li>
                         </ul>
@@ -118,26 +123,62 @@
         <div class="card card-gray-dark card-outline">
             <div class="card-header">
                 <div class="card-title">
-                    Grupos del usuario
+                    Grupos asignados
                 </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                  </div>
             </div>
             <div class="card-footer card-comments p-2">
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <div class="comment-text ml-2 pt-2">
-                            
+                        <div class="comment-text ml-2 pt-2 pb-3">
+
                             <span class="username">
                                 <ul class="list-unstyled m-0">
-                                    {% for g in object.usuario.groups.all %}
-                                        <li class="badge badge-info mt-2 h6">{{ g }}</li>
-                                        <h6>Permisos:</h6>
-                                        <ul class="list-unstyled ml-3">
-                                            {% for permission in g.permissions.all %}
-                                                <li class="text-sm">{{ permission.name }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% empty %}
-                                        <li><span class="font-weight-bold">-</span></li>
+                                    {% for group in object.usuario.groups.all %}
+                                    <li class="badge badge-info mt-2 h6">{{ group }}</li>
+                                </ul>
+                                {% empty %}
+                    <li><span class="font-weight-bold">-</span></li>
+                    {% endfor %}
+                </ul>
+
+                </span>
+            </div>
+            </li>
+
+            </ul>
+        </div>
+
+        {% if permisos_por_modulo%}
+        <div class="card card-gray-dark card-outline collapsed-card">
+            <div class="card-header">
+                <div class="card-title">
+                    Permisos otorgados
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+            </div>
+            <div class="card-footer card-comments p-2">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <div class="comment-text ml-2 pt-2 pb-3">
+
+                            <span class="username">
+                                <ul class="list-unstyled ml-3">
+                                    {% for app_label, permisos in permisos_por_modulo.items %}
+                                    {% if app_label != 'auth' %}
+                                    <li class="font-weight-bold">{{ app_label }}</li>
+                                    <ul class="list-unstyled ml-5">
+                                        {% for codename in permisos %}
+                                        <li class=" font-weight-normal">{{codename}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
                                     {% endfor %}
                                 </ul>
                             </span>
@@ -147,15 +188,16 @@
                 </ul>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 {% if perms.Usuarios.rol_admin %}
 <div class="row mt-4 d-print-none">
     <div class="col-12 mx-2">
-      <a href="{% url 'usuarios_listar'%}" class="btn btn-secondary">Volver</a>
+        <a href="{% url 'usuarios_listar'%}" class="btn btn-secondary">Volver</a>
     </div>
-  </div>
-  {% endif %}
+</div>
+{% endif %}
 
 {% endblock content %}
 

@@ -9,6 +9,8 @@ from django.shortcuts import redirect
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.core.files.storage import FileSystemStorage
+from itertools import groupby
+from operator import attrgetter
 
 from .models import *
 from .forms import *
@@ -77,6 +79,39 @@ class UsuariosDetailView(UserPassesTestMixin,DetailView):
                 return True
        else:
            return False 
+
+    def get_permission_name_traduce(self, codename):
+        '''
+        Función para traducir los nombres de los permisos
+        '''
+        if codename.startswith('add_'):
+            return f"Agregar {codename[4:]}"
+        elif codename.startswith('delete_'):
+            return f"Borrar {codename[7:]}"
+        elif codename.startswith('change_'):
+            return f"Modificar {codename[7:]}"
+        elif codename.startswith('view_'):
+            return f"Visualizar {codename[5:]}"
+        else:
+            return codename
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        usuario = context['object']
+        grupos = usuario.usuario.groups.all()  
+        
+        permisos_por_modulo = {}
+        for grupo in grupos:
+            for permiso in grupo.permissions.all():
+                app_label, codename = permiso.content_type.app_label, permiso.codename
+                if app_label not in permisos_por_modulo:
+                    permisos_por_modulo[app_label] = []
+                permisos_por_modulo[app_label].append(self.get_permission_name_traduce(codename))
+        
+        context['permisos_por_modulo'] = permisos_por_modulo
+        
+        return context
 
 
 class UsuariosDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView):   
