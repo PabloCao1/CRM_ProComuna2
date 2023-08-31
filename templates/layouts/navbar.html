@@ -19,30 +19,30 @@
           style="opacity: .8" title="Ver perfil">
       </a>
       <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-        <span class="dropdown-item dropdown-header font-weight-bold py-3"> {{request.user.username}}</span>
+        <span class="dropdown-item dropdown-header font-weight-bold py-3" title="Nombre de usuario"> {{request.user.username}}</span>
         <div class="dropdown-divider"></div>
-        <div class="dropdown-item">
+        <div class="dropdown-item" title="Nombre y Apellido">
           <i class="fas fa-address-card mr-2 text-muted"></i>
           <span class="text-sm">
-            {{request.user.first_name|default:""}} {{request.user.last_name|default:""}}
+            {{request.user.get_full_name|default:""}}
           </span>
         </div>
         <div class="dropdown-divider"></div>
-        <div class="dropdown-item">
+        <div class="dropdown-item" title="Número de documento">
           <i class="fas fa-id-card mr-2 text-muted"></i>
           <span class="text-sm">
             {{request.user.usuarios.dni|default:"-"}}
           </span>
         </div>
         <div class="dropdown-divider"></div>
-        <div class="dropdown-item">
+        <div class="dropdown-item" title="Email">
           <i class="fas fa-envelope mr-2 text-muted"></i>
           <span class="text-sm">
             {{request.user.email|default:"-"}}
           </span>
         </div>
         <div class="dropdown-divider"></div>
-        <div class="dropdown-item">
+        <div class="dropdown-item" title="Teléfono">
           <i class="fas fa-mobile-alt mr-2 text-muted"></i>
           <span class="text-sm">
             {{request.user.usuarios.telefono|default:"-"}}
@@ -51,7 +51,7 @@
         <div class="dropdown-divider d-flex justify-content-"></div>
         <div class="dropdown-item dropdown-footer">
           <a href="{% url 'perfil_editar' request.user.id %}" class="btn btn-sm btn-primary mx-1">Editar Perfil</a>
-          <a href="{% url 'logout' %}" class="btn btn-sm btn-secondary mx-1">Cerrar sesión</a>
+          <a href=""title="Cerrar sesión" data-toggle="modal" data-target="#modal-logout" class="btn btn-sm btn-secondary mx-1">Cerrar sesión</a>
         </div>
       </div>
     </li>
