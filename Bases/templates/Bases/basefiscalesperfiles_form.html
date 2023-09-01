@@ -9,9 +9,9 @@
   <li class="breadcrumb-item text-muted  ">Bases </li>
   <li class="breadcrumb-item"><a href="{% url 'perfiles_listar' %}" class="text-muted text-decoration-none">Perfiles</a>
   </li>
-  <li class="breadcrumb-item active"> 
-    {%if request.resolver_match.url_name == "perfiles_editar" %} Editar 
-    {% else %} Crear 
+  <li class="breadcrumb-item active">
+    {%if request.resolver_match.url_name == "perfiles_editar" %} Editar
+    {% else %} Crear
     {% endif %}
   </li>
 </ol>
@@ -25,7 +25,7 @@
 
   <div class="row">
     <div class="col-12 col-md-10 m-auto">
-  
+
       <div class="card card-gray-dark mx-3">
         <div class="card-header ">
           <div class="card-title">
@@ -46,29 +46,32 @@
             <div class="form-group pt-2 col-12 d-none">
               {{form.fk_perfil_f| as_crispy_field}}
             </div>
-            <div class="form-group mt-2 col-md-2">
-              {{form.fue_fiscal| as_crispy_field}}
-            </div>
-            <div class="form-group mt-2 col-md-3">
-              {{form.fecha_fiscal| as_crispy_field}}
-            </div>
-            <div class="form-group mt-2 col-md-2">
-              {{form.rol_fiscal| as_crispy_field}}
-            </div>
-            <div class="form-group mt-2 col-md-2">
+            <div class="form-group mt-2 col-md-4">
               {{form.disp_jornada| as_crispy_field}}
             </div>
-            <div class="form-group mt-2 col-md-3">
+            <div class="form-group mt-2 col-md-4">
+              {{form.fue_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-4">
+              {{form.fecha_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-4">
+              {{form.rol_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-4">
+              {{form.escuela_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-4">
               {{form.desempeno| as_crispy_field}}
             </div>
             <div class="form-group mt-4 col-12">
               {{form.observaciones_f| as_crispy_field}}
             </div>
           </div>
-          
+
         </div>
       </div>
-      
+
     </div>
     <div class="col-12 col-md-10 text-center m-auto">
       {%if request.resolver_match.url_name == "perfiles_editar" %}
@@ -88,7 +91,30 @@
 <script>
 
   $(document).ready(function () {
+    // Escuchar cambios en el campo fue_fiscal
+    $('#id_fue_fiscal').change(function () {
+      if ($(this).val() === 'True') {
+        // Si fue_fiscal es "SI", habilitar campos
+        $('#id_fecha_fiscal').prop('disabled', false);
+        $('#id_rol_fiscal').prop('disabled', false);
+        $('#id_escuela_fiscal').prop('disabled', false);
+        $('#id_desempeno').prop('disabled', false);
+      } else {
+        // Si fue_fiscal es "NO" o no se selecciona nada, deshabilitar campos
+        $('#id_fecha_fiscal').prop('disabled', true);
+        $('#id_rol_fiscal').prop('disabled', true);
+        $('#id_escuela_fiscal').prop('disabled', true);
+        $('#id_desempeno').prop('disabled', true);
+      }
+    });
 
+    // Asegurarse de que los campos estén en el estado correcto al cargar la página
+    if ($('#id_fue_fiscal').val() !== 'True') {
+      $('#id_fecha_fiscal').prop('disabled', true);
+      $('#id_rol_fiscal').prop('disabled', true);
+      $('#id_escuela_fiscal').prop('disabled', true);
+      $('#id_desempeno').prop('disabled', true);
+    }
 
   });
 </script>

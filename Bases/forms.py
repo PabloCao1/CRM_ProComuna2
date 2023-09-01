@@ -76,7 +76,8 @@ class BaseFiscalesPerfilesForm(forms.ModelForm):
         labels = {
             'fue_fiscal': 'Fué fiscal antes?',
             'fecha_fiscal': 'Última fecha en que fue fiscal',
-            'rol_fiscal': 'Rol ejercido',            
+            'rol_fiscal': 'Rol ejercido',   
+            'escuela_fiscal': 'Escuela',         
             'disp_jornada': 'Disponibilidad',
             'desempeno': 'Desempeño',
             'observaciones_f': 'Observaciones',

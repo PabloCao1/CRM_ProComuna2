@@ -128,6 +128,7 @@ class BaseFiscalesPerfiles(models.Model):
     fue_fiscal      = models.BooleanField(default=False,null=True, blank=True)
     fecha_fiscal    = models.DateField(null=True, blank=True, )
     rol_fiscal      = models.CharField(max_length=50, null=True, blank=True, choices=CHOICE_ROL_FISCAL)
+    escuela_fiscal  = models.CharField(max_length=100, null=True, blank=True)
     disp_jornada    = models.CharField(max_length=50, null=True, blank=True, choices=CHOICE_DISP_JORNADA)
     desempeno       = models.CharField(max_length=50, null=True, blank=True, choices=CHOICE_FISCAL_DESEMPENO)
     observaciones_f   = models.CharField(max_length=300,blank=True,null=True)

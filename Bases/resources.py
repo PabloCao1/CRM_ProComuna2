@@ -69,6 +69,7 @@ def export_to_xls(queryset):
         "Fue Fiscal",
         "Última Fecha Fiscal",
         "Rol ejercido",
+        'Escuela',     
         "Disponibilidad",
         "Desempeño",
         "Observaciones B. Fiscales",
@@ -120,6 +121,7 @@ def export_to_xls(queryset):
             '',
             '',
             '',
+            '',
         ]
         
         # Lógica para obtener los objetos relacionados
@@ -142,9 +144,10 @@ def export_to_xls(queryset):
             row[34] = 'SI' if fiscal.fue_fiscal else 'NO'
             row[35] = fiscal.fecha_fiscal.strftime("%d/%m/%Y") if fiscal.fecha_fiscal else ''
             row[36] = fiscal.rol_fiscal if fiscal.rol_fiscal else ''
-            row[37] = fiscal.disp_jornada if fiscal.disp_jornada else ''
-            row[38] = fiscal.desempeno if fiscal.desempeno else ''
-            row[39] = fiscal.observaciones_f if fiscal.observaciones_f else ''
+            row[37] = fiscal.escuela_fiscal if fiscal.escuela_fiscal else ''
+            row[38] = fiscal.disp_jornada if fiscal.disp_jornada else ''
+            row[39] = fiscal.desempeno if fiscal.desempeno else ''
+            row[40] = fiscal.observaciones_f if fiscal.observaciones_f else ''
             
         
         for col_num, cell_value in enumerate(row):

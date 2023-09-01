@@ -294,11 +294,11 @@
       </thead>
       <tbody>
         {% for o in object_list %}
-        <tr>
+        <tr class="clickable-row " data-href="{% url 'perfiles_ver' o.id %}" title="Ver detalle" role="button">
           <td>{{o.creado|date:"d/m/y"}}</td>
-          <td><a class="font-weight-bold small h6
-              {% if o.activo %} text-success {% else %}text-danger{% endif %}" href="{% url 'perfiles_ver' o.id %}">
-              {{o.nombres |default:"-"}} {{o.apellidos |default:""}}</a></td>
+          <td class="font-weight-bold small h6
+              {% if o.activo %} text-success {% else %}text-danger{% endif %}">
+              {{o.nombres |default:"-"}} {{o.apellidos |default:""}}</td>
           <td> {{o.tipo_doc}} {{o.documento}}</td>
           <td> {% if o.edad%}{{o.edad}} años {%else%} - {%endif%}</td>
           <td>{{o.telefono|default:"-"}}</td>
@@ -431,6 +431,11 @@
     $('.buttons-html5').addClass('border-0');
     $('.buttons-print').addClass('border-0');
 
+
+    $(".clickable-row").click(function () {
+      // se agrrega la clase en filas <tr> de un table para que sean links a la vista de detalle del elemento
+      window.location = $(this).data("href");
+    });
 
   });
 
