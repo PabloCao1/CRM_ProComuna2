@@ -1,9 +1,8 @@
 {% extends "layouts/base.html" %};
 {% load static %};
 
-{% block head %}
-
-{% endblock %}
+{% block custom_head %}
+{% endblock custom_head %}
 
 {% block title %}Eventos{% endblock %};
 
@@ -39,7 +38,7 @@
   <div class="card-header mt-2">
     <h3 class="card-title">Listado de eventos</h3>
     <div class="card-tools">
-    <span class="badge badge-secondary h6 mr-2">total: {{ object_list.count}}</span> 
+    <span class="badge badge-secondary h6 mr-2 font-weight-bold">total: {{ object_list.count}}</span> 
     </div>
   </div>
 
@@ -59,15 +58,15 @@
         <tbody>
           {% for o in object_list %}
           <tr class="clickable-row " role="button" data-href="{% url 'eventos_ver' o.id %}" title="ver detalle">
-            <td>{{o.fecha|date:"d/m/y"}}</td>
-            <td class="d-none d-sm-table-cell">{{o.hora}}:{{o.minutos}} Hs.</td>
+            <td>{{o.fecha|date:"d/m/y"|default:'-'}}</td>
+            <td class="d-none d-sm-table-cell">{{o.horario|default:'-'}}</td>
             <td>{{o.nombre|capfirst}}</td>
             <td class="d-none d-sm-table-cell">{{o.modo|default:'-'}}</td>
             <td> <span class="badge badge-light">{{o.invitados.count}}</span> invitados</td>
             <td class="d-none d-sm-table-cell text-center">
               <span class=" badge h6 font-weight-bold
               {% if o.estado == 'Vigente' %} badge-info 
-              {% elif o.estado == 'Pendiente' %} badge-success
+              {% elif o.estado == 'Próximamente' %} badge-success
               {% else %} badge-secondary
               {% endif %}
               ">{{o.estado}}</span>
@@ -83,6 +82,10 @@
 {% block customJS %}
 <script>
   $(document).ready(function () {
+    $(".clickable-row").click(function () {
+	// se agrrega la clase en filas <tr> de un table para que sean links a la vista de detalle del elemento
+	window.location = $(this).data("href");
+});
 
 
 

@@ -15,7 +15,7 @@
 <div class="row">
     <!-- botones -->
     <div class="col-12 my-3 mx-2 d-print-none">
-        
+        <a href="" class="btn btn-secondary mr-1 print">Imprimir</a>
         <a href="{% url 'comunicaciones_eliminar' object.id %}" class="btn btn-danger">Eliminar</a>
     </div>
     <!-- ./botones -->
@@ -172,7 +172,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 d-print-none">
         <button id="boton-volver" class="btn btn-secondary">Volver</button>
     </div>
 </div>
@@ -185,10 +185,12 @@
 <script>
     $(document).ready(function () {
 
-        // desaparecer los Success messages
-        setTimeout(function () {
-            $(".alert").alert('close');
-        }, 3000);
+
+        $(".print").click(function () {
+            //imprime los div excepto los elementos que tengan la clase 'd-print-none'
+            window.print();
+        });
+
 
 
         // Agrega un evento click al botón "Volver" utilizando jQuery

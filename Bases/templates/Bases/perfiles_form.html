@@ -24,36 +24,6 @@
   {% csrf_token %}
 
   <div class="row">
-    <div class="col-12 col-md-10 m-auto 
-    {%if request.resolver_match.url_name != 'perfiles_editar' %}
-            d-none
-            {%endif%}
-            ">
-      <div class="form-row justify-content-center mb-5">
-        <div class="form-group pt-2 col-12">
-          <div class="card card-gray-dark mx-3">
-            <div class="card-header ">
-              <div class="card-title">
-                Editar estado</div>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                </button>
-              </div>
-            </div>
-            <div class="d-none">
-              {{form.activo}}
-            </div>
-            <div class="card-body py-2 px-1" title="Click para cambiar">
-              {%if object.activo%}
-              <button type="button" class="btn btn-flat btn-block btn-success p-2" id="label_activo">activo</button>
-              {%else%}
-              <button type="button" class="btn btn-flat btn-block btn-danger p-2" id="label_activo">Desactivado</button>
-              {%endif%}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="col-12 col-md-10 m-auto">
       <div class="card card-gray-dark mx-3">
         <div class="card-header ">
@@ -72,6 +42,9 @@
         </div>
         <div class="card-body mt-3">
           <div class="form-row">
+            <div class="form-group pt-2 col-md-4 d-none">
+              {{form.activo| as_crispy_field}}
+            </div>
             <div class="form-group pt-2 col-md-4">
               {{form.nombres| as_crispy_field}}
             </div>
@@ -192,16 +165,7 @@
 
   $(document).ready(function () {
 
-    // custom checkbox actvio
-    $('#label_activo').click(function () {
-      if ($('#label_activo').hasClass("btn-success")) {
-        $('#label_activo').removeClass("btn-success").addClass("btn-danger").text('Desactivado');
-        $('#id_activo').prop('checked', false);
-      } else {
-        $('#label_activo').removeClass("btn-danger").addClass("btn-success").text('Activo');
-        $('#id_activo').prop('checked', true);
-      };
-    });
+
 
   });
 

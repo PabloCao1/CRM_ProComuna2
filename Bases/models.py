@@ -30,16 +30,17 @@ class Perfiles(models.Model):
     instagram           = models.CharField(max_length=20, null=True, blank=True)
     facebook            = models.CharField(max_length=20, null=True, blank=True)
     equipo_futbol       = models.CharField(max_length=50, null=True, blank=True, choices=CHOICE_EQUIPO_FUTBOL)
-    socio_futbol        = models.BooleanField(default=False,blank=True,null=True)
+    socio_futbol        = models.BooleanField(blank=True,null=True)
     profesion           = models.CharField(max_length=50, null=True, blank=True, choices=CHOICE_PROFESION)
     matriculado         = models.BooleanField(default=False,blank=True,null=True)
     observaciones       = models.CharField(max_length=300,blank=True,null=True)
-    es_empleadoGCBA     = models.BooleanField(default=False,blank=True,null=True)
-    es_militante        = models.BooleanField(default=False,blank=True,null=True)
+    es_empleadoGCBA     = models.BooleanField(blank=True,null=True)
+    es_militante        = models.BooleanField(blank=True,null=True)
     es_voluntario       = models.BooleanField(default=False,blank=True,null=True)
-    es_fiscal           = models.BooleanField(default=False,blank=True,null=True)
+    es_fiscal           = models.BooleanField(blank=True,null=True)
     activo              = models.BooleanField(default=True)
-    motivo_inactivo     = models.CharField(max_length=100,blank=True,null=True)
+    motivo_inactivo     = models.CharField(max_length=150,blank=True,null=True)
+    fecha_inactivo      = models.DateField(null=True, blank=True)
     creado              = models.DateField(auto_now_add=True)
     modificado          = models.DateField(auto_now=True)
 
@@ -65,20 +66,22 @@ class Perfiles(models.Model):
         return None
 
     def direccion_completa(self):
-        direccion = self.calle if self.calle else ''
+        direccion = ''
+        if self.calle:
+            direccion += f"{self.calle}"
         if self.altura:
-            direccion += ' ' + str(self.altura) 
+            direccion += f" {self.altura} |"
         if self.piso:
-            direccion += '- Piso ' + self.piso 
+            direccion += f" Piso {self.piso} |"
         if self.departamento:
-            direccion += '- Depto. ' + self.departamento 
+            direccion += f" Depto {self.departamento} |" 
         if self.barrio:
-            direccion +=  ' - ' +self.barrio 
+            direccion += f" Barrio {self.barrio}"
         if self.comuna:
-            direccion +=  ' - ' +self.comuna 
+            direccion +=  f" {self.comuna}"
         if self.provincia:
-            direccion +=  ' - ' +self.provincia
-        return direccion.strip()
+            direccion +=  f" {self.provincia}"
+        return direccion
     
     def clean(self):
         if self.apellidos:
@@ -125,6 +128,7 @@ class BaseFiscalesPerfiles(models.Model):
     fue_fiscal      = models.BooleanField(default=False,null=True, blank=True)
     fecha_fiscal    = models.DateField(null=True, blank=True, )
     rol_fiscal      = models.CharField(max_length=50, null=True, blank=True, choices=CHOICE_ROL_FISCAL)
+    escuela_fiscal  = models.CharField(max_length=100, null=True, blank=True)
     disp_jornada    = models.CharField(max_length=50, null=True, blank=True, choices=CHOICE_DISP_JORNADA)
     desempeno       = models.CharField(max_length=50, null=True, blank=True, choices=CHOICE_FISCAL_DESEMPENO)
     observaciones_f   = models.CharField(max_length=300,blank=True,null=True)

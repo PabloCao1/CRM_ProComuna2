@@ -205,19 +205,22 @@
             <div class="form-group pt-2 col-12 d-none">
               {{form_fiscales.fk_perfil_f| as_crispy_field}}
             </div>
-            <div class="form-group mt-2 col-md-2">
-              {{form_fiscales.fue_fiscal| as_crispy_field}}
-            </div>
-            <div class="form-group mt-2 col-md-3">
-              {{form_fiscales.fecha_fiscal| as_crispy_field}}
-            </div>
-            <div class="form-group mt-2 col-md-2">
-              {{form_fiscales.rol_fiscal| as_crispy_field}}
-            </div>
-            <div class="form-group mt-2 col-md-2">
+            <div class="form-group mt-2 col-md-4">
               {{form_fiscales.disp_jornada| as_crispy_field}}
             </div>
-            <div class="form-group mt-2 col-md-3">
+            <div class="form-group mt-2 col-md-4">
+              {{form_fiscales.fue_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-4">
+              {{form_fiscales.fecha_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-4">
+              {{form_fiscales.rol_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-4">
+              {{form_fiscales.escuela_fiscal| as_crispy_field}}
+            </div>
+            <div class="form-group mt-2 col-md-4">
               {{form_fiscales.desempeno| as_crispy_field}}
             </div>
             <div class="form-group mt-4 col-12">
@@ -425,6 +428,31 @@
         comunaSelect.append(new Option("Seleccione un barrio primero", ""));
       }
     });
+
+     // Escuchar cambios en el campo fue_fiscal
+     $('#id_fue_fiscal').change(function () {
+      if ($(this).val() === 'True') {
+        // Si fue_fiscal es "SI", habilitar campos
+        $('#id_fecha_fiscal').prop('disabled', false);
+        $('#id_rol_fiscal').prop('disabled', false);
+        $('#id_escuela_fiscal').prop('disabled', false);
+        $('#id_desempeno').prop('disabled', false);
+      } else {
+        // Si fue_fiscal es "NO" o no se selecciona nada, deshabilitar campos
+        $('#id_fecha_fiscal').prop('disabled', true);
+        $('#id_rol_fiscal').prop('disabled', true);
+        $('#id_escuela_fiscal').prop('disabled', true);
+        $('#id_desempeno').prop('disabled', true);
+      }
+    });
+
+    // Asegurarse de que los campos estén en el estado correcto al cargar la página
+    if ($('#id_fue_fiscal').val() !== 'True') {
+      $('#id_fecha_fiscal').prop('disabled', true);
+      $('#id_rol_fiscal').prop('disabled', true);
+      $('#id_escuela_fiscal').prop('disabled', true);
+      $('#id_desempeno').prop('disabled', true);
+    }
 
   });
 </script>

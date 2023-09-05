@@ -67,7 +67,7 @@ class ComunicacionesDeleteView(PermissionRequiredMixin,SuccessMessageMixin,Delet
     success_message = "El registro fue eliminado correctamente"   
 
 class ComunicacionesCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):    
-    permission_required = ('Comunicaciones.create_comunicaciones') 
+    permission_required = ('Comunicaciones.add_comunicaciones') 
     model = Comunicaciones
     form_class = ComunicacionesForm
     success_message = "Comunicación enviada correctamente"  
@@ -106,7 +106,7 @@ class ComunicacionesCreateView(PermissionRequiredMixin, SuccessMessageMixin, Cre
         lista_correos = list(set([perfil.email for perfil in perfiles_combinados]))
 
         obj = form.save()
-        obj.invitados.set(perfiles_combinados)
+        obj.destinatarios.set(perfiles_combinados)
         obj.save()
 
         # contexto para renderizar los datos en el template

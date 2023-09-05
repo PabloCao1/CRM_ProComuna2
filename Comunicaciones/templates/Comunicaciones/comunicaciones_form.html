@@ -104,6 +104,14 @@
 {% block customJS %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+
+    $(function () {
+      //Initialize Select2 Elements
+      $('.select2').select2()
+
+    });
+
+
     $(function () {
       bsCustomFileInput.init();
     });

@@ -1,20 +1,43 @@
-from typing import Any
 from django.contrib import messages
-from django.shortcuts import redirect,render
+from django.http import HttpResponse
+from django.shortcuts import redirect,render,get_object_or_404
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,FormView,View
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from .models import *
-from .forms import *
-from .choices import *
 from django.db.models import Q
 from django.core.paginator import Paginator,EmptyPage
 from django.urls import reverse_lazy
 from datetime import date
-
+from django.http import JsonResponse
+from .resources import *
+from .models import *
+from .admin import *
+from .forms import *
+from .choices import *
+from django.utils.encoding import smart_bytes
+import json
 
 
 #region ############################################################### Base General (Perfiles)
+
+class PerfilActivarView(View):
+    def post(self, request, perfil_id):
+        perfil = get_object_or_404(Perfiles, pk=perfil_id)
+        perfil.activo = True
+        perfil.motivo_inactivo = ""  # Vaciamos el motivo al activar
+        perfil.fecha_inactivo = None  # Vaciamos la fecha al activar
+        perfil.save()
+        return redirect('perfiles_ver', pk=perfil_id)
+
+class PerfilDesactivarView(View):
+    def post(self, request, perfil_id):
+        perfil = get_object_or_404(Perfiles, pk=perfil_id)
+        motivo = request.POST.get('motivo')
+        perfil.activo = False
+        perfil.motivo_inactivo = motivo
+        perfil.fecha_inactivo = date.today()  # Guarda la fecha actual
+        perfil.save()
+        return redirect('perfiles_ver', pk=perfil_id)
 
 
 class PerfilesListView(PermissionRequiredMixin, ListView):
@@ -125,6 +148,12 @@ class PerfilesListView(PermissionRequiredMixin, ListView):
         return object_list
 
 
+    def post(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        response = export_to_xls(queryset)
+        return response
+
+
 class PerfilesDetailView(PermissionRequiredMixin,DetailView): 
     permission_required = ('Bases.view_perfiles')  
     model = Perfiles
@@ -144,7 +173,7 @@ class PerfilesDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView)
 
 
 class PerfilesCreateView(PermissionRequiredMixin,SuccessMessageMixin,CreateView):   
-    permission_required = ('Bases.create_perfiles')  
+    permission_required = ('Bases.add_perfiles')  
     model = Perfiles
     form_class = PerfilesForm
     success_message = "Registrado correctamente"  

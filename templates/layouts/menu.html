@@ -44,7 +44,7 @@
           </a>
         </li>
         
-        {%if perms.Usuarios.view_eventos %}
+        {%if perms.Eventos.change_eventos %}
         <li class="nav-item">
           <a href="{% url 'eventos_listar' %}"
           class="nav-link {% if 'eventos/' in pagina_actual%}active{% endif %}">
@@ -56,7 +56,7 @@
         </a>
       </li>
       {% endif%}
-      {%if perms.Usuarios.view_comunicaciones %}
+      {%if perms.Comunicaciones.change_comunicaciones %}
       
       <li class="nav-item">
         <a href="{% url 'comunicaciones_listar' %}"

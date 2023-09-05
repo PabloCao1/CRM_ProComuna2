@@ -1,27 +1,3 @@
-$(function () {
-	//Initialize Select2 Elements
-	$('.select2').select2()
-
-	//Initialize Select2 Elements
-	$('.select2bs4').select2({
-		theme: 'bootstrap4'
-	})
-});
-
-$(".clickable-row").click(function () {
-	// se agrrega la clase en filas <tr> de un table para que sean links a la vista de detalle del elemento
-	window.location = $(this).data("href");
-});
-
-setTimeout(function () {
-	// desaparecer los Success messages
-	$(".alert").alert('close');
-}, 3000);
-
-$(".print").click(function () {
-	//imprime los div excepto los elementos que tengan la clase 'd-print-none'
-	window.print();
-});
 
 (function () {
 	// Control de formularios invalidos.

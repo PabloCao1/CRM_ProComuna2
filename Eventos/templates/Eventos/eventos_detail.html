@@ -15,7 +15,10 @@
 <div class="row">
     <!-- botones -->
     <div class="col-12 my-3 mx-2 d-print-none">
+        <a href="" class="btn btn-secondary mr-1 print">Imprimir</a>
+        {%if perms.Eventos.delete_eventos %}
         <a href="{% url 'eventos_eliminar' object.id %}" class="btn btn-danger">Eliminar</a>
+        {%endif%}
     </div>
     <!-- ./botones -->
 </div>
@@ -26,7 +29,7 @@
         <div class="card card-primary card-outline">
             <div class="card-footer">
 
-                {% if object.flyer != "default.png"%}
+                {% if object.flyer%}
                 <a href="{{ MEDIA_URL }}{{ object.flyer.url }}" target="_blank" title="{{object.flyer|cut:'eventos/'}}">
                     <img class="card-img-top" src="{{object.flyer.url}}" alt="Flyer evento" />
                 </a>
@@ -42,7 +45,7 @@
                             {{object.estado}}
                         </h5>
                     </div>
-                    {% elif object.estado == "Pendiente" %}
+                    {% elif object.estado == "Próximamente" %}
                     <div class="card bg-success py-2 mb-1  text-center">
                         <h5 class="font-weight-bold my-1">
                             {{object.estado}}
@@ -72,8 +75,11 @@
                     <li class="nav-item">
                         <div class="comment-text">
                             Fecha
-                            <span class="username">{{object.fecha|default:"-"}} -
-                                {{object.hora|default:"-"}}:{{object.minutos|default:"-"}} Hs.</span>
+                            <span class="username">{{object.fecha|default:"-"}}
+                                {% if object.horario %}
+                                - {{object.horario}}
+                                {%endif%}
+                            </span>
                         </div>
                     </li>
                     <li class="nav-item">
@@ -94,13 +100,13 @@
                             Web
                             <span class="username">
                                 <a href="{{ MEDIA_URL }}{{object.web}}" target="_blank">
-                                    {{object.web}}
+                                    {{object.web|default:"-"}}
                                 </a>
                             </span>
                         </div>
                     </li>
                     {% elif object.modo == "PRESENCIAL" %}
-                    
+
                     <li class="nav-item">
                         <div class="comment-text">
                             Lugar
@@ -118,12 +124,7 @@
                         </div>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <div class="comment-text">
-                            Teléfono
-                            <span class="username">{{object.telefono|default:"-"}}</span>
-                        </div>
-                    </li>
+                    
                     <li class="nav-item">
                         <div class="comment-text">
                             Mensaje
@@ -155,7 +156,7 @@
     </div>
 
 </div>
-<div class="row mt-3">
+<div class="row mt-3 d-print-none">
     <div class="col-sm-12 ">
         <a href="{% url 'eventos_listar' %}" class="btn btn-secondary">Volver</a>
     </div>
@@ -168,6 +169,13 @@
 {% block customJS %}
 <script>
     $(document).ready(function () {
+
+        
+        $(".print").click(function () {
+            //imprime los div excepto los elementos que tengan la clase 'd-print-none'
+            window.print();
+        });
+
 
 
 

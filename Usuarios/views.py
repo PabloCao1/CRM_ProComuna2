@@ -9,6 +9,8 @@ from django.shortcuts import redirect
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.core.files.storage import FileSystemStorage
+from itertools import groupby
+from operator import attrgetter
 
 from .models import *
 from .forms import *
@@ -73,11 +75,43 @@ class UsuariosDetailView(UserPassesTestMixin,DetailView):
        if self.request.user.is_authenticated:
             usuario_actual = self.request.user.usuarios.id
             usuario_solicitado= int(self.kwargs['pk'])
-            print(usuario_actual,usuario_solicitado,'----------------')
             if (usuario_actual == usuario_solicitado) or self.request.user.has_perm('auth..base_admin') or self.request.user.has_perm('auth_user.view_user'):
                 return True
        else:
            return False 
+
+    def get_permission_name_traduce(self, codename):
+        '''
+        Función para traducir los nombres de los permisos
+        '''
+        if codename.startswith('add_'):
+            return f"Agregar {codename[4:]}"
+        elif codename.startswith('delete_'):
+            return f"Borrar {codename[7:]}"
+        elif codename.startswith('change_'):
+            return f"Modificar {codename[7:]}"
+        elif codename.startswith('view_'):
+            return f"Visualizar {codename[5:]}"
+        else:
+            return codename
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        usuario = context['object']
+        grupos = usuario.usuario.groups.all()  
+        
+        permisos_por_modulo = {}
+        for grupo in grupos:
+            for permiso in grupo.permissions.all():
+                app_label, codename = permiso.content_type.app_label, permiso.codename
+                if app_label not in permisos_por_modulo:
+                    permisos_por_modulo[app_label] = []
+                permisos_por_modulo[app_label].append(self.get_permission_name_traduce(codename))
+        
+        context['permisos_por_modulo'] = permisos_por_modulo
+        
+        return context
 
 
 class UsuariosDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView):   
@@ -89,7 +123,7 @@ class UsuariosDeleteView(PermissionRequiredMixin,SuccessMessageMixin,DeleteView)
 
     
 class UsuariosCreateView(PermissionRequiredMixin,SuccessMessageMixin,FormView):    
-    permission_required = ('auth.create_user')  
+    permission_required = ('auth.add_user')  
     template_name = 'Usuarios/usuarios_create_form.html'
     form_class = UsuariosCreateForm    
     
@@ -165,6 +199,19 @@ class UsuariosResetPassView(PermissionRequiredMixin,SuccessMessageMixin,Password
     form_class = MyResetPasswordForm
     success_url = reverse_lazy('usuarios_listar')
     success_message = "Mail de reseteo de contraseña enviado con éxito."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id =self.kwargs['pk']
+        user = User.objects.get(id=user_id)
+        email=user.email
+        context.update(
+            {
+                "email": email, 
+                "usuario": user, 
+            }
+        )
+        return context
 
     def get_form_kwargs(self):
         """Devuelve los argumentos de palabras (kwargs) clave para instanciar el formulario."""

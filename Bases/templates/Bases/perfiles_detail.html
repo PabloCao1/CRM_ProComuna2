@@ -24,26 +24,33 @@
         {% endif %}
         <a href="" class="btn btn-secondary mr-1 print">Imprimir</a>
         <a href="{% url 'perfiles_eliminar' object.id %}" class="btn btn-danger mr-1">Eliminar</a>
-        {%if perms.Usuarios.base_fiscales and not fiscal %}
+        {% if object.activo %}
+        {%if perms.Bases.add_basefiscalesperfiles and not fiscal %}
         <a href="{% url 'fiscales_crear' object.id %}"
             class="btn btn-outline-info mr-1 float-sm-right mt-2 mt-sm-0">Agregar como
             fiscal</a>
         {% endif %}
-        {%if perms.Usuarios.base_voluntarios and not voluntario %}
+        {%if perms.Bases.add_basevoluntariosperfiles and not voluntario %}
         <a href="{% url 'voluntarios_crear' object.id %}"
             class="btn btn-outline-info mr-1 float-sm-right mt-2 mt-sm-0">Agregar como
             voluntario</a>
+        {% endif %}
         {% endif %}
     </div>
 </div>
 <!-- ./botones -->
 
 <div class="row">
-    <div class="col-sm-4 pb-3">
+    <div class="col-sm-4 pb-3 order-2 order-sm-1">
         <div class="card card-gray-dark card-outline h-100">
             <div class="card-header">
                 <div class="card-title">
                     Datos del perfil
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool d-sm-none" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
                 </div>
             </div>
             <div class="card-footer card-comments p-2">
@@ -95,11 +102,16 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-3 pb-3">
+    <div class="col-sm-3 pb-3 order-3 order-sm-2">
         <div class="card card-gray-dark card-outline  h-100">
             <div class="card-header">
                 <div class="card-title">
                     Datos de contacto
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool d-sm-none" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
                 </div>
             </div>
             <div class="card-footer card-comments p-2">
@@ -139,11 +151,16 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-3 pb-3">
+    <div class="col-sm-3 pb-3 order-4 order-sm-3">
         <div class="card card-gray-dark card-outline  h-100">
             <div class="card-header">
                 <div class="card-title">
                     Otros datos
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool d-sm-none" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
                 </div>
             </div>
             <div class="card-footer card-comments p-2">
@@ -189,20 +206,29 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-2 pr-0 text-center">
-        {% if object.activo %}
-        <div class="card bg-success py-3 mb-1">
-            <h5 class="font-weight-bold my-1">
-                ACTIVO
-            </h5>
-        </div>
-        {% else %}
-        <div class="card bg-danger py-3 mb-1">
-            <h5 class="font-weight-bold my-1">
-                DESACTIVADO
-            </h5>
-        </div>
-        {% endif %}
+    <div class="col-sm-2 pr-sm-0 text-center order-1 order-sm-4 pb-2">
+        <a href="#" data-toggle="modal" data-target="#modalActivo" title="Click para modificar estado del perfil.">
+            {% if object.activo %}
+            <div class="card bg-success py-3 mb-1">
+                <h5 class="font-weight-bold my-1">
+                    ACTIVO
+                </h5>
+            </div>
+            {% else %}
+            <div class="card card-danger">
+                <div class="card-header text-center"> 
+                    <h5 class=" font-weight-bold  my-1">DESACTIVADO</h5>
+                </div>
+                <div class="card-body text-left text-danger">
+                    <p class="font-weight-bold">
+                        {{object.fecha_inactivo|date:'d/m/y'}}:
+                    </p>
+                    {{object.motivo_inactivo}}
+                </div>
+            </div>
+            {% endif %}
+        </a>     
+
         {% if object.es_fiscal or object.es_voluntario %}
         {% if object.es_fiscal %}
         <div class="card bg-secondary py-2 mb-1">
@@ -263,7 +289,7 @@
 
 <div class="row">
     {% if voluntario %}
-    <div class="col-12">
+    <div class="col-12 mt-3 mt-sm-0">
         <div class="card card-gray-dark card-outline collapsed-card">
             <div class="card-header">
                 <div class="card-tools">
@@ -360,7 +386,7 @@
     {%endif%}
 
     {% if fiscal%}
-    <div class="col-12">
+    <div class="col-12 mt-3 mt-sm-0">
         <div class="card card-gray-dark card-outline collapsed-card">
             <div class="card-header">
                 <div class="card-tools">
@@ -443,16 +469,78 @@
     </div>
 </div>
 
+<!----- MODAL ACTIVO--------->
+<div class="modal fade" id="modalActivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            {% if object.activo %}
+            <div class="modal-header bg-secondary">
+                <h5 class="modal-title" id="exampleModalLabel1">Confirme el motivo para DESACTIVAR el perfil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'desactivar_perfil' object.id %}" method="POST" id="formDesactivar" novalidate
+                    class="needs-validation">
+                    {% csrf_token %}
+                    <div class="col-12">
+                        <div id="div_motivo" class="form-group">
+                            <label for="motivo" class="">
+                                Motivo*
+                            </label>
+                            <div>
+                                <textarea name="motivo" rows="3" placeholder="" maxlength="150"
+                                    class="textarea form-control" id="motivo" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mt-3 justify-content-end">
+                        <button type="submit" class="btn btn-danger">Desactivar</button>
+                        <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+            {% else %}
+            <div class="modal-header bg-secondary">
+                <h5 class="modal-title" id="exampleModalLabel2">Confirme para ACTIVAR el perfil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'activar_perfil' object.id %}" method="POST" id="formActivar">
+                    {% csrf_token %}
+                    <div class="form-row mt-3 justify-content-end">
+                    <button type="submit" class="btn btn-primary">Activar</button>
+                    <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancelar</button>
+                </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
 {% endblock content %}
 
 
 {% block customJS %}
 <script>
-    // Agrega un evento click al botón "Volver" utilizando jQuery
-    $("#boton-volver").on("click", function () {
-        // Utiliza history.back() para navegar hacia atrás en la historia del navegador
-        history.back();
+    $(document).ready(function () {
+
+        //imprime los div excepto los elementos que tengan la clase 'd-print-none'
+        $(".print").click(function () {
+            window.print();
+        });
+
+        // Agrega un evento click al botón "Volver" utilizando jQuery
+        $("#boton-volver").on("click", function () {
+            history.back();
+        });
+
     });
+
 </script>
 {% endblock %}
