@@ -9,13 +9,13 @@ class CalendarioView(LoginRequiredMixin,TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        eventos = Eventos.objects.all().values('id','nombre', 'fecha', 'hora', 'minutos', 'lugar', 'calle', 'altura', 'web', 'modo', 'mensaje', 'flyer')
+        eventos = Eventos.objects.all().values('id','nombre', 'fecha')
         context['eventos'] = list(eventos)
         return context
 
 class EventosJsonView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
-        eventos = Eventos.objects.all().values('id','nombre', 'fecha', 'hora', 'minutos', 'lugar', 'calle', 'altura', 'web', 'modo', 'mensaje', 'flyer')
+        eventos = Eventos.objects.all().values('id','nombre', 'fecha')
         return JsonResponse(list(eventos), safe=False)
 
 
